@@ -10,12 +10,11 @@
 
 #include <stdbool.h>
 
-#define ENABLE true  // disable or enable everything
-#define SHOW_DEBUG true 
-#define CHECK_LEAKS true // setup below
+#define ENABLE_HELP true  // disable or enable everything in the help files
+#define SHOW_DEBUG  true  // print out debug information
 
-#define MAX_NUM_MALLOC_LOCATIONS 100
-#define MAX_NUM_MALLOC_FILES 50          // files  where malloc is called
+#define MAX_NUM_MALLOC_LOCATIONS 100 // lines where malloc is called
+#define MAX_NUM_MALLOC_FILES 50      // files where malloc is called
 
 
 

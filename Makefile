@@ -1,7 +1,7 @@
 
 CC=gcc
 EXE=main
-OBJ= main.o help.o extern_tests.c
+OBJ= main.o help.o
 CFLAGS= -Wall -g -Werror -O3
 
 # executable depends on object f

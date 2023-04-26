@@ -7,7 +7,7 @@
 #define HELP
 
 #include "help_readme.h"
-#ifdef ENABLE
+#if ENABLE_HELP
 
 // define functions to help with development and debugging
 

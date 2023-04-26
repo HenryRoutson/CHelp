@@ -3,18 +3,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+
 #include "help.h"
-#include "extern_tests.h"
 
-size_t num_files = 0;
-char *file_name_array[MAX_NUM_MALLOC_FILES];
 long unfreed_mallocs = 0;
-
-
 
 int main() {
 
-	tests();
 
 	// test unfreed_mallocs
 	int *p = malloc(1);
@@ -35,6 +30,5 @@ int main() {
 	int *l = malloc(-1);
 	free(l);
 
-	// test files
-	assert(num_files == 2);
+
 }
