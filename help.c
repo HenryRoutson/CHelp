@@ -10,6 +10,10 @@
 
 //
 
+#define PRINT_LOCATION printf("on line %u \nin file %s\n\n", line_number, file_name);
+
+
+
 void *safe_malloc(long size, char*file_name, int line_number) {
 	// always assert after malloc
 
@@ -21,7 +25,7 @@ void *safe_malloc(long size, char*file_name, int line_number) {
 
 	if ((long) size < 0) {
 		printf("\nError: malloc size may be negative, unsigned value was %li\n", (long) size);
-		printf("on line %u \nin file %s\n\n", line_number, file_name);
+		PRINT_LOCATION
 	}
 
 
@@ -31,7 +35,7 @@ void *safe_malloc(long size, char*file_name, int line_number) {
 
 	if (p == NULL) {
 		printf("\n\nError: malloc of size %lu failed \n", size);
-		printf("on line %u \nin file %s\n\n", line_number, file_name);
+		PRINT_LOCATION
 		exit(1);
 	}
 
@@ -49,9 +53,9 @@ void free_null(void **pp, char*file_name, int line_number) {
 
 	if (*pp == NULL && FREE_NULL_ERROR) { 
 		printf("\n	You may be freeing twice, pointer is NULL\n"); 
-		printf("on line %u \nin file %s\n\n", line_number, file_name);
+		PRINT_LOCATION
 
-		printf("\n\n	exiting program, freeing nulls is not allowed"); 
+		printf("\n\n	exit() program, freeing nulls is not allowed"); 
 		printf("\n		change this bevaviour in help_readme.h\n\n\n");
 		exit(1); 
 	}
@@ -72,8 +76,9 @@ void free_without_null(void *p) {
 
 	if (p == NULL && FREE_NULL_ERROR) { 
 		printf("\n	You may be freeing twice, pointer is NULL\n"); 
+		printf("\n	in the free_without_null function\n"); 
 
-		printf("\n\n	exiting program, freeing nulls is not allowed"); 
+		printf("\n\n	exit() program, freeing nulls is not allowed"); 
 		printf("\n		change this bevaviour in help_readme.h\n\n\n");
 		exit(1); 
 	}
