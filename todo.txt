@@ -1,14 +1,16 @@
 
-Add automated testing 
 
+Create more tests with multiple files
+Create passing tests and assert valgrind output with grep
 
+create define for global variables
 
-Store list of line and file strings with count of unfreed mallocs
-Store size and list index in space before malloc + Update free
+Store list of file names
+Store list of line number and file indexes with count of unfreed mallocs + Update free
 
 test inside of python tutor
 
-
+use hash table for file names?
 
 
 NOT DOING

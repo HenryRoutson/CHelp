@@ -14,7 +14,8 @@
 #define SHOW_DEBUG true 
 #define CHECK_LEAKS true // setup below
 
-
+#define MAX_NUM_MALLOC_LOCATIONS 100
+#define MAX_NUM_MALLOC_FILES 50          // files  where malloc is called
 
 
 

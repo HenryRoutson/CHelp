@@ -1,7 +1,7 @@
 
 CC=gcc
 EXE=main
-OBJ= main.o help.o
+OBJ= main.o help.o extern_tests.c
 CFLAGS= -Wall -g -Werror -O3
 
 # executable depends on object f
@@ -24,3 +24,4 @@ RUNWITH =
 run: $(EXE)
 	
 	./main | grep -q "Error" 
+	
