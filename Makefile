@@ -22,4 +22,5 @@ RUNWITH =
 # RUNWITH = valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all
 
 run: $(EXE)
-	./main
+	
+	./main | grep -q "Error" 
