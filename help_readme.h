@@ -11,8 +11,9 @@
 #include <stdbool.h>
 
 #define ENABLE_HELP true        // disable or enable everything in the help files
+
 #define SHOW_DEBUG  true        // print out debug information
-#define FREE_NULL_ERROR false   // will freeing a null pointer throw an error
+#define FREE_NULL_ERROR true   // will freeing a null pointer throw an error
 
 
 
@@ -30,7 +31,3 @@ At the end of main  ----------------
 and at any point where you know how many unfreed_mallocs there should be ----------------
 
 *///  ----------------
-
-
-
-

@@ -23,7 +23,9 @@ int main() {
 	// test nulled memory
 	int *n;
 	n = malloc(1);
+	assert(unfreed_mallocs == 1);
 	free(n);
+	assert(unfreed_mallocs == 0);
 	assert(!n);
 
 	// test large malloc failure
