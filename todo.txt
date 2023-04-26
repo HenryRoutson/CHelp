@@ -1,6 +1,4 @@
 
-create define for global variables
-
 
 NOT DOING
 Malloc more and check if out of bounds is modified   - leave to valgrind

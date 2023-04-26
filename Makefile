@@ -23,5 +23,5 @@ RUNWITH =
 
 run: $(EXE)
 	
-	./main | grep -q "Error" 
+	./main | grep -q "Error: malloc" 
 	

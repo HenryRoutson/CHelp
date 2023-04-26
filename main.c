@@ -29,6 +29,4 @@ int main() {
 	// test large malloc failure
 	int *l = malloc(-1);
 	free(l);
-
-
 }

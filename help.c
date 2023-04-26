@@ -25,7 +25,7 @@ void *safe_malloc(long size, char*file_name, int line_number) {
 	}
 
 
-	char *p = malloc(size); // char is 1 byte
+	void *p = malloc(size);
 
 	unfreed_mallocs++;
 
@@ -40,17 +40,20 @@ void *safe_malloc(long size, char*file_name, int line_number) {
 		printf("on line %u in file %s\n", line_number, file_name);
 	}
 
-	return (void *) p;
+	return p;
 }
 
 
 void free_null(void **pp, char*file_name, int line_number) {
 	// always null after free
 
-	if (*pp == NULL) { 
-		printf("\n	You may be freeing twice\n"); 
+	if (*pp == NULL && FREE_NULL_ERROR) { 
+		printf("\n	You may be freeing twice, pointer is NULL\n"); 
 		printf("on line %u \nin file %s\n\n", line_number, file_name);
-		exit(1);
+
+		printf("\n\n	exiting program, freeing nulls is not allowed"); 
+		printf("\n		change this bevaviour in help_readme.h\n\n\n");
+		exit(1); 
 	}
 
 	if (SHOW_DEBUG) {
@@ -65,10 +68,18 @@ void free_null(void **pp, char*file_name, int line_number) {
 
 }
 
-void free_without_null(void *pointer) {
+void free_without_null(void *p) {
+
+	if (p == NULL && FREE_NULL_ERROR) { 
+		printf("\n	You may be freeing twice, pointer is NULL\n"); 
+
+		printf("\n\n	exiting program, freeing nulls is not allowed"); 
+		printf("\n		change this bevaviour in help_readme.h\n\n\n");
+		exit(1); 
+	}
 
 	unfreed_mallocs--;
-	free(pointer);
+	free(p);
 }
 
 
