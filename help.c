@@ -8,11 +8,11 @@
 
 
 #if CHECK_LEAKS
-extern unsigned long unfreed_mallocs;
+extern long unfreed_mallocs;
 #endif
 
 
-void *safe_malloc(unsigned long size, char*file_name, int line_number) {
+void *safe_malloc(long size, char*file_name, int line_number) {
 	// always assert after malloc
 
 
@@ -32,14 +32,6 @@ void *safe_malloc(unsigned long size, char*file_name, int line_number) {
 
 	char *p = malloc(size); // char is 1 byte
 
-	/*
-	#if CHECK_OUT_OF_BOUNDS
-	size /= 2;
-	// memset
-	memset(p + size, BOUNDS_BYTE, size);
-	assert(unmodified_bounds(p, size));
-	#endif
-	*/
 
 	#if CHECK_LEAKS
 	unfreed_mallocs++;

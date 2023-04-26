@@ -5,11 +5,9 @@
 #include <assert.h>
 #include "help.h"
 
-unsigned long unfreed_mallocs = 0;
+long unfreed_mallocs = 0;
 
 int main() {
-
-
 
 
 	// test large malloc failure
@@ -19,12 +17,15 @@ int main() {
 	*/
 
 	// test unfreed_mallocs
-	/*
+
 	int *p;
 	p = malloc(1);
+	printf("\n%zu\n", unfreed_mallocs);
 	p = malloc(1);
+	printf("\n%zu\n", unfreed_mallocs);
 	free(p);
-	*/
+	printf("\n%zu\n", unfreed_mallocs);
+
 
 
 
@@ -39,6 +40,6 @@ int main() {
 	
 	
 
-
+	printf("\n%zu\n", unfreed_mallocs);
 	check_memory_leaks();
 }

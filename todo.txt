@@ -1,17 +1,12 @@
 
+Add automated testing 
+
 
 
 Store list of line and file strings with count of unfreed mallocs
 Store size and list index in space before malloc + Update free
 
 test inside of python tutor
-
-Push to github
-
-Add automated testing 
-
-Support realloc for out of bounds checks
-
 
 
 

@@ -21,7 +21,5 @@ void *safe_malloc(unsigned long size, char*file_name, int line_number);
 
 void check_memory_leaks();
 
-
-
 #endif
 #endif

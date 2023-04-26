@@ -12,7 +12,7 @@
 
 #define ENABLE true  // disable or enable everything
 #define SHOW_DEBUG true 
-#define CHECK_LEAKS false // setup below
+#define CHECK_LEAKS true // setup below
 
 
 
@@ -23,7 +23,7 @@
 
 		H o w   t o   s e t u p   C H E C K _ L E A K S
 
-		unsigned long unfreed_mallocs = 0;
+		long unfreed_mallocs = 0;
 
 Before main (to initialise) ----------------
 
