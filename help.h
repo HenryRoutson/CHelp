@@ -16,6 +16,14 @@
 void *safe_malloc(size_t size, char *file_name, size_t line_number);
 #define malloc(size) safe_malloc(size, __FILE__, __LINE__)
 
+/*
+void *attach_message(void **p, char *message);
+#define attach_message(void **p, char *message) attach_message(void **p, char *message, __FILE__, __LINE__)
+*/
+
+
+void print_malloc_data(void *p);
+
 void free_null(void **pp, char *file_name, size_t line_number);
 #define free(pointer) free_null((void **) &pointer, __FILE__, __LINE__ )
 

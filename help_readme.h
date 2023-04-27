@@ -15,7 +15,7 @@
 
 #define SHOW_DEBUG  true        // print out debug information
 #define FREE_NULL_ERROR true    // will freeing a null pointer throw an error?
-#define MALLOC_MESSAGE true     // allow attatching messages to mallocs
+
 
 
 /* 

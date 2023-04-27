@@ -16,14 +16,14 @@ typedef struct {
 	char *file_name;
 	size_t line_number;
 	char *message;
-} pre_malloc_t;
-
-
+} malloc_info_t;
 
 //
 
 void *safe_malloc(size_t size, char *file_name, size_t line_number) {
 	// always assert after malloc
+
+	assert(file_name);
 
 
 	if (size == 0) { 
@@ -36,8 +36,12 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
 		PRINT_LOCATION
 	}
 
-
-	void *p = malloc(size);
+	malloc_info_t *p = malloc(sizeof(malloc_info_t) + size);
+	p->file_name = file_name;
+	p->line_number = line_number;
+	p->message = NULL;
+	
+	p += 1;
 
 	unfreed_mallocs++;
 
@@ -52,8 +56,40 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
 		PRINT_LOCATION
 	}
 
-	return p;
+	return (void *) p;
 }
+
+
+
+
+void print_malloc_data(void *p) {
+	malloc_info_t *data = p - sizeof(malloc_info_t);
+
+	printf("MALLOC DATA   ---\n");
+	printf("file_name %s\n", data->file_name);
+	printf("line_number  %zu\n", data->line_number);
+	printf("message   %s\n", data->message);
+	printf("              ---\n");
+}
+
+
+/*
+void *attach_message(void *p, char *message, char *file_name, size_t line_number) {
+	pre_malloc_t *pre = p - sizeof(pre_malloc_t);
+
+}
+*/
+
+
+
+/*
+void *attach_message(void *p, char *message, char *file_name, size_t line_number) {
+	pre_malloc_t *pre = p - sizeof(pre_malloc_t);
+
+}
+*/
+
+
 
 
 void free_null(void **pp, char *file_name, size_t line_number) {
@@ -73,7 +109,11 @@ void free_null(void **pp, char *file_name, size_t line_number) {
 		PRINT_LOCATION
 	}
 
-	free(*pp);
+
+	// 
+
+	char *free_location = *pp - sizeof(malloc_info_t);
+	free(free_location);
 	*pp = NULL;
 
 	unfreed_mallocs--;
