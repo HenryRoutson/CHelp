@@ -1,7 +1,13 @@
 
 
-Add messages to malloc?
+Add messages to malloc - include line number and file name
+Add example of how to use malloc messages
+print out line number and file name of unfreed mallocs
+
+create new assert unfreed_mallocs which will print out if not equal - include max min and print actual
+
+
+
 
 NOT DOING
 Malloc more and check if out of bounds is modified   - leave to valgrind
-Check what location memory is not freed from         - leave to valgrind

@@ -14,8 +14,8 @@
 #define ENABLE_HELP true        // disable or enable everything in the help files
 
 #define SHOW_DEBUG  true        // print out debug information
-#define FREE_NULL_ERROR true   // will freeing a null pointer throw an error
-
+#define FREE_NULL_ERROR true    // will freeing a null pointer throw an error?
+#define MALLOC_MESSAGE true     // allow attatching messages to mallocs
 
 
 /* 
@@ -32,8 +32,6 @@ long unfreed_mallocs = 0;
 					( There should always be no unfreed mallocs at the end of main() )
 
 assert(unfreed_mallocs == 0); 
-
-
 
 H o w   t o   u s e   M A L L O C    M E S S A G E
 
