@@ -9,6 +9,8 @@
 #include "help_readme.h"
 #if ENABLE_HELP
 
+#include <stdlib.h>
+
 // define functions to help with development and debugging
 
 void *safe_malloc(size_t size, char *file_name, size_t line_number);
@@ -18,6 +20,8 @@ void free_null(void **pp, char *file_name, size_t line_number);
 #define free(pointer) free_null((void **) &pointer, __FILE__, __LINE__ )
 
 void free_without_null(void *pointer);
+
+extern long unfreed_mallocs;
 
 #endif
 #endif

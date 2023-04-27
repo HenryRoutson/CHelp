@@ -5,7 +5,8 @@
 #include <assert.h>
 
 #include "help_readme.h"
-#include "globals.h"
+
+extern long unfreed_mallocs;
 
 #define PRINT_LOCATION printf("on line %zu \nin file %s\n\n", line_number, file_name);
 

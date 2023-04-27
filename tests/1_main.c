@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "help.h"
+#include "../help.h"
 
 long unfreed_mallocs = 0;
 
