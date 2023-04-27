@@ -3,7 +3,8 @@
 
 // use 
 // #include help.h 
-// in your file 
+// in your files
+// and follow the setup instructions below
 
 // code by Henry Routson
 // Credit https://www.youtube.com/watch?v=443UNeGrFoM
@@ -17,17 +18,36 @@
 
 
 
-/*  ----------------
+/* 
 
-		H o w   t o   s e t u p   C H E C K _ L E A K S
 
-		long unfreed_mallocs = 0;
 
-Before main (to initialise) ----------------
+H o w   t o   s e t u p   C H E C K _ L E A K S
 
-		assert(unfreed_mallocs == 0); 
+	Step 1: Insert long unfreed_mallocs = 0; before main()
 
-At the end of main  ----------------
-and at any point where you know how many unfreed_mallocs there should be ----------------
+long unfreed_mallocs = 0;
 
-*///  ----------------
+	Step 2: Assert unfreed_mallocs where the number is know
+					( There should always be no unfreed mallocs at the end of main() )
+
+assert(unfreed_mallocs == 0); 
+
+
+
+H o w   t o   u s e   M A L L O C    M E S S A G E
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/

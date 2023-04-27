@@ -19,7 +19,5 @@ void free_without_null(void *pointer);
 void *safe_malloc(unsigned long size, char*file_name, int line_number);
 #define malloc(size) safe_malloc(size, __FILE__, __LINE__)
 
-void check_memory_leaks();
-
 #endif
 #endif

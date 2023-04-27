@@ -88,14 +88,3 @@ void free_without_null(void *p) {
 }
 
 
-
-
-void check_memory_leaks() {
-	if (unfreed_mallocs != 0) {
-		printf("\n\n\n\nTHERE ARE MEMORY LEAKS\n\n	unfreed_mallocs == %li\n\n\n\n", unfreed_mallocs);
-		exit(1);
-	}
-}
-
-
-

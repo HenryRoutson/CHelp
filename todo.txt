@@ -1,5 +1,7 @@
 
 
+Add messages to malloc?
+
 NOT DOING
 Malloc more and check if out of bounds is modified   - leave to valgrind
 Check what location memory is not freed from         - leave to valgrind
