@@ -22,7 +22,9 @@ void *attach_message(void **p, char *message);
 */
 
 
+void add_message_to_malloc(void *p, char *message);
 void print_malloc_data(void *p);
+
 
 void free_null(void **pp, char *file_name, size_t line_number);
 #define free(pointer) free_null((void **) &pointer, __FILE__, __LINE__ )

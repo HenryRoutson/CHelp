@@ -66,10 +66,16 @@ void print_malloc_data(void *p) {
 	malloc_info_t *data = p - sizeof(malloc_info_t);
 
 	printf("MALLOC DATA   ---\n");
-	printf("file_name %s\n", data->file_name);
-	printf("line_number  %zu\n", data->line_number);
-	printf("message   %s\n", data->message);
+	printf("file_name   : %s\n", data->file_name);
+	printf("line_number : %zu\n", data->line_number);
+	printf("message     : %s\n", data->message);
 	printf("              ---\n");
+}
+
+
+void add_message_to_malloc(void *p, char *message) {
+	malloc_info_t *data = p - sizeof(malloc_info_t);
+	data->message = message;
 }
 
 

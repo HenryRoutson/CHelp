@@ -1,6 +1,6 @@
 
 
-Add messages to malloc - include line number and file name
+Add messages to malloc
 Add example of how to use malloc messages
 print out line number and file name of unfreed mallocs
 
