@@ -44,4 +44,4 @@ run: all
 	./tests/2_main | grep -q "TEST: PASSED" 
 	./tests/3_main | grep -q "TEST: PASSED" 
 	./tests/4_main | grep -q "file_name   : tests/4_main.c" 
-	./tests/5_main | grep -q "TEST: PASSED" 
+	./tests/5_main | grep -q "message     : This is a number 10" 

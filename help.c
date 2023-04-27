@@ -5,20 +5,13 @@
 #include <assert.h>
 
 #include "help_readme.h"
+#include "help_structs.h"
 
 extern long unfreed_mallocs;
 
 #define PRINT_LOCATION printf("on line %zu \nin file %s\n\n", line_number, file_name);
 
-//
 
-typedef struct {
-	char *file_name;
-	size_t line_number;
-	char *message;
-} malloc_info_t;
-
-//
 
 void *safe_malloc(size_t size, char *file_name, size_t line_number) {
 	// always assert after malloc
@@ -39,7 +32,7 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
 	malloc_info_t *p = malloc(sizeof(malloc_info_t) + size);
 	p->file_name = file_name;
 	p->line_number = line_number;
-	p->message = NULL;
+	p->message[0] = 0;
 	
 	p += 1;
 
@@ -62,40 +55,24 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
 
 
 
-void print_malloc_data(void *p) {
-	malloc_info_t *data = p - sizeof(malloc_info_t);
+void print_malloc_info(void *p) {
+	malloc_info_t *info = p;
+	info -= 1;
 
 	printf("MALLOC DATA   ---\n");
-	printf("file_name   : %s\n", data->file_name);
-	printf("line_number : %zu\n", data->line_number);
-	printf("message     : %s\n", data->message);
+	printf("file_name   : %s\n", info->file_name);
+	printf("line_number : %zu\n", info->line_number);
+	printf("message     : %s\n", info->message);
 	printf("              ---\n");
 }
 
 
-void add_message_to_malloc(void *p, char *message) {
-	malloc_info_t *data = p - sizeof(malloc_info_t);
-	data->message = message;
+malloc_info_t *info_from_malloc(void *p) {
+	
+	malloc_info_t *info = (malloc_info_t *) p;
+	info -= 1;
+	return info;
 }
-
-
-/*
-void *attach_message(void *p, char *message, char *file_name, size_t line_number) {
-	pre_malloc_t *pre = p - sizeof(pre_malloc_t);
-
-}
-*/
-
-
-
-/*
-void *attach_message(void *p, char *message, char *file_name, size_t line_number) {
-	pre_malloc_t *pre = p - sizeof(pre_malloc_t);
-
-}
-*/
-
-
 
 
 void free_null(void **pp, char *file_name, size_t line_number) {

@@ -16,7 +16,7 @@
 #define SHOW_DEBUG  true        // print out debug information
 #define FREE_NULL_ERROR true    // will freeing a null pointer throw an error?
 
-
+#define MAX_NUM_MESSAGE_CHARS 100
 
 /* 
 
@@ -38,13 +38,21 @@ assert(unfreed_mallocs == 0);
 H o w   t o   u s e   M A L L O C    M E S S A G E
 
 
+	#include <stdlib.h>
 
+	#include "help.h"
 
+	long unfreed_mallocs = 0;
 
+	int main() {
+		
+		int *p = malloc(100);
+		add_message_to_malloc(p, "message in malloc");
+		print_malloc_info(p); // this will print out the message
 
-
-
-
+		// TODO add function to check all free
+		// TODO use for loop
+	}
 
 
 

@@ -9,7 +9,7 @@ long unfreed_mallocs = 0;
 
 int main() {
 	int *p = malloc(100);
-	print_malloc_data(p); // test
+	print_malloc_info(p); // test
 	free(p);
 	assert(p == NULL);
 }
