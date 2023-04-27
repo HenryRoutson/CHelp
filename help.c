@@ -7,15 +7,21 @@
 #include "help_readme.h"
 #include "globals.h"
 
+#define PRINT_LOCATION printf("on line %zu \nin file %s\n\n", line_number, file_name);
+
+//
+
+typedef struct {
+	char *file_name;
+	size_t line_number;
+	char *message;
+} pre_malloc_t;
+
 
 
 //
 
-#define PRINT_LOCATION printf("on line %u \nin file %s\n\n", line_number, file_name);
-
-
-
-void *safe_malloc(long size, char*file_name, int line_number) {
+void *safe_malloc(size_t size, char *file_name, size_t line_number) {
 	// always assert after malloc
 
 
@@ -42,14 +48,14 @@ void *safe_malloc(long size, char*file_name, int line_number) {
 
 	if (SHOW_DEBUG) {
 		printf("MALLOC %p bytes %lu ", p, size);
-		printf("on line %u in file %s\n", line_number, file_name);
+		PRINT_LOCATION
 	}
 
 	return p;
 }
 
 
-void free_null(void **pp, char*file_name, int line_number) {
+void free_null(void **pp, char *file_name, size_t line_number) {
 	// always null after free
 
 	if (*pp == NULL && FREE_NULL_ERROR) { 
@@ -63,7 +69,7 @@ void free_null(void **pp, char*file_name, int line_number) {
 
 	if (SHOW_DEBUG) {
 		printf("FREE   %p ", pp);
-		printf("on line %u in file %s\n", line_number, file_name);
+		PRINT_LOCATION
 	}
 
 	free(*pp);
