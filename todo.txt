@@ -2,7 +2,6 @@
 
 
 print out line number and file name of unfreed mallocs
-Attatch function to print out malloc data
 
 check when num chars is 0 
 create tests to test max and assert last char is NULL

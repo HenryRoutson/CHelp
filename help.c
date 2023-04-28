@@ -74,6 +74,7 @@ void print_func_malloc(void *p) {
 
 void print_malloc_info(void *p) {
 	malloc_info_t *info = info_from_malloc(p);
+	assert(MAX_NUM_MESSAGE_CHARS != 0);
 
 	printf("MALLOC DATA   ---\n");
 	printf("file_name   : %s\n", info->file_name);
