@@ -1,6 +1,10 @@
 
 This is a memory debugger I'm writing to make writing c easier
 
+To set it up, just copy all of the files starting with help in your c project
+And then read the file help_readme.h to setup and configure
+
+
 Features
 
 + Auto assert mallocs and check if the size is negative or zero
