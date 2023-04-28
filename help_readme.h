@@ -6,7 +6,7 @@
 // in your files
 // and follow the setup instructions below
 
-// code by Henry Routson https://github.com/HenryRoutson/CHelp
+// code by Henry Routson https://github.com/henryroutson/CHelp
 // Credit https://www.youtube.com/watch?v=443UNeGrFoM
 
 #include <stdbool.h>
