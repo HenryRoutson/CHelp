@@ -32,21 +32,14 @@ void print_malloc_info(void *p);
 void add_print_func_to_malloc(void *p, void (*print_func)(void *p));
 void print_func_malloc(void *p);
 
+void assert_n_unfreed_mallocs(size_t n);
+void print_all_mallocs();
+
 // https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html
 // https://cplusplus.com/reference/cstdio/snprintf/
 
 #define add_message_to_malloc(p, format_str, format_args...) \
 				snprintf((char *) &info_from_malloc(p)->message, MAX_NUM_MESSAGE_CHARS, format_str, format_args);
-
-
-
-//
-
-
-#if PRINT_UNFREED_MALLOCS
-extern void *unfreed_mallocs[MAX_NUM_MALLOCS];
-#endif
-
 
 
 #endif

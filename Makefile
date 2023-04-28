@@ -3,7 +3,7 @@ CC=gcc
 OBJ= help.o 
 CFLAGS= -Wall -g -Werror -O3
 
-TESTS =  tests/1_main tests/2_main tests/3_main tests/4_main tests/5_main tests/6_main
+TESTS =  tests/1_main tests/2_main tests/3_main tests/4_main tests/5_main tests/6_main tests/7_main
 
 # executable depends on object files
 
@@ -27,6 +27,9 @@ tests/5_main: $(OBJ) tests/5_main.o
 tests/6_main: $(OBJ) tests/6_main.o
 	$(CC) -o tests/6_main tests/6_main.c $(OBJ) $(CFLAGS)
 
+tests/7_main: $(OBJ) tests/7_main.o
+	$(CC) -o tests/7_main tests/7_main.c $(OBJ) $(CFLAGS)
+
 # o depends on c
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c -o $@ $<
@@ -47,8 +50,8 @@ test: all
 	./tests/3_main | grep -q "TEST: PASSED" 
 	./tests/4_main | grep -q "file_name   : tests/4_main.c" 
 	./tests/5_main | grep -q "message     : This is a number 10" 
-	./tests/6_main | grep -q "something" 
-
+	./tests/6_main | grep -q "1 2 3" 
+	./tests/7_main | grep -q "ERROR: wrong number of unfreed mallocs" 
 
 run: all
 	
@@ -58,4 +61,5 @@ run: all
 	-./tests/4_main
 	-./tests/5_main
 	-./tests/6_main
+	-./tests/7_main
 

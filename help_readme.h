@@ -26,6 +26,7 @@
 
 /* 
 
+REQUIRED
 
 
 H o w    t o    s e t u p    U N F R E E D _ M A L L O C S
@@ -38,6 +39,11 @@ long num_unfreed_mallocs = 0;
 					( There should always be no unfreed mallocs at the end of main() )
 
 assert(num_unfreed_mallocs == 0); 
+
+
+
+
+OPTIONAL
 
 
 
@@ -56,15 +62,98 @@ H o w    t o    u s e    A D D _ M E S S A G E _ T O _ M A L L O C
 		add_message_to_malloc(p, "message in malloc");
 		print_malloc_info(p); // this will print out the message
 
-		// TODO add function to check all free
-		// TODO use for loop
 	}
 
 
 
 H o w   t o   s e t u p   P R I N T _ U N F R E E D 
 
-	// TODO
+
+	Step 1: set PRINT_UNFREED_MALLOCS to true
+
+#define PRINT_UNFREED_MALLOCS true
+
+	Step 2: Include the below code before main()
+
+size_t num_mallocs = 0;
+void *mallocs[MAX_NUM_MALLOCS];
+
+	Step 3: Add the below code before the end of main()
+
+assert_n_unfreed_mallocs(size_t n)
+
+
+
+
+H o w   t o   u s e   A D D _ P R I N T _ F U N C _ T O _ M A L L O C
+
+	#include <stdlib.h>
+	#include <stdio.h>
+
+	#include "help.h"
+
+	long num_unfreed_mallocs = 0;
+
+	typedef struct {
+		int i;
+		char *c;
+		float f;
+	} struct_t;
+
+
+	void print_struct(void *v) {
+		struct_t *s = v;
+		printf("%i %s %f\n", s->i, s->c, s->f);
+	}
+
+	int main() {
+		
+		struct_t *s = malloc(sizeof(*s));
+		s->i = 1;
+		s->c = "2";
+		s->f = 3;
+
+		add_print_func_to_malloc(s, print_struct);
+		print_malloc_info((void *) s);
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 */

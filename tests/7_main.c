@@ -31,6 +31,11 @@ int main() {
 	s->f = 3;
 
 	add_print_func_to_malloc(s, print_struct);
-	print_malloc_info((void *) s);
+	
 
+
+
+
+
+	assert_n_unfreed_mallocs(0);
 }

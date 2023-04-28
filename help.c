@@ -15,7 +15,6 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
 
 	assert(file_name);
 
-
 	if (size == 0) { 
 		printf("\nError: trying to malloc 0 bytes\n");  
 		exit(1);
@@ -27,13 +26,25 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
 	}
 
 	malloc_info_t *p = malloc(sizeof(malloc_info_t) + size);
+
 	p->file_name = file_name;
 	p->line_number = line_number;
+	p->size = size;
 	p->message[0] = 0;
 	p->print_func = NULL;
-	
+
+	#if PRINT_UNFREED_MALLOCS
+	p->mallocs_index = num_mallocs;
+	#endif
+
 	p += 1;
 
+	#if PRINT_UNFREED_MALLOCS
+	assert(num_mallocs < MAX_NUM_MALLOCS);
+	mallocs[num_mallocs] = p;
+	num_mallocs++;
+	#endif
+	
 	num_unfreed_mallocs++;
 
 	if (p == NULL) {
@@ -126,6 +137,7 @@ void free_null(void **pp, char *file_name, size_t line_number) {
 
 }
 
+
 void free_without_null(void *p) {
 
 	if (p == NULL && FREE_NULL_ERROR) { 
@@ -143,19 +155,30 @@ void free_without_null(void *p) {
 
 
 
-
-
-
-
-/*
-
-void assert_n_mallocs(size_t n) {
-	if ()
-}
-
+#if PRINT_UNFREED_MALLOCS
 void print_all_mallocs() {
+	assert(num_mallocs > 0);
+	int i = num_mallocs;
 
+	while (i--) { // print reverse
+		print_malloc_info(mallocs[i]);
+	}
 }
+#endif 
 
 
-*/
+void assert_n_unfreed_mallocs(size_t n) {
+	if (n != num_unfreed_mallocs) {
+
+
+		printf("ERROR: wrong number of unfreed mallocs\n");
+		printf("	expected : %zu\n", n);
+		printf("	found    : %zu\n\n", num_unfreed_mallocs);
+
+		#if PRINT_UNFREED_MALLOCS
+		print_all_mallocs();
+		#endif
+
+		exit(0);
+	}
+}

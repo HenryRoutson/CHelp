@@ -1,10 +1,11 @@
 
-
-
-print out line number and file name of unfreed mallocs
-create new assert num_unfreed_mallocs which will print out if not equal - include max min and print actual
+assert num_unfreed_mallocs >= 0
 
 check TODO
+
+test enabling and disabling options
+
+improve make file
 
 NOT DOING
 Malloc more and check if out of bounds is modified   - leave to valgrind
