@@ -10,6 +10,29 @@
 
 #define PRINT_LOCATION printf("on line %zu \nin file %s\n\n", line_number, file_name);
 
+
+
+
+// 
+// --------------------------------
+// Sub Functions
+// 
+
+
+malloc_info_t *info_from_malloc(void *p) {
+
+	malloc_info_t *info = (malloc_info_t *) p;
+	info -= 1;
+	return info;
+}
+
+
+// 
+// --------------------------------
+// #define MACRO functions 
+// (not called directly) 
+
+
 void *safe_malloc(size_t size, char *file_name, size_t line_number) {
 	// always assert after malloc
 
@@ -62,55 +85,6 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
 }
 
 
-
-malloc_info_t *info_from_malloc(void *p) {
-	
-	malloc_info_t *info = (malloc_info_t *) p;
-	info -= 1;
-	return info;
-}
-
-
-
-
-void print_func_malloc(void *p) {
-	malloc_info_t *info = info_from_malloc(p);
-	(*info->print_func)(p);
-}
-
-
-
-void print_malloc_info(void *p) {
-	malloc_info_t *info = info_from_malloc(p);
-	assert(MAX_NUM_MESSAGE_CHARS != 0);
-
-	printf("MALLOC DATA   ---\n");
-	printf("file_name   : %s\n", info->file_name);
-	printf("line_number : %zu\n", info->line_number);
-
-	if (info->message[0]) {
-		printf("message     : \n%s", info->message);
-	}
-	if (info->print_func) {
-		printf("print_func  : \n");
-		(*info->print_func)(p);
-	}
-
-	printf("              ---\n");
-}
-
-
-
-void add_print_func_to_malloc(void *p, void (*print_func)(void *p)) {
-	malloc_info_t *info = info_from_malloc(p);
-	info->print_func = print_func;
-} 
-
-
-
-
-
-
 void free_null(void **pp, char *file_name, size_t line_number) {
 	// always null after free
 
@@ -128,20 +102,73 @@ void free_null(void **pp, char *file_name, size_t line_number) {
 		PRINT_LOCATION
 	}
 
-
-	// 
-
 	malloc_info_t *info = info_from_malloc(*pp);
+	mallocs[info->mallocs_index] = NULL;
+
 	free(info);
 	*pp = NULL;
 
 	num_unfreed_mallocs--;
-
 }
 
 
+// 
+// --------------------------------
+// Called functions
+//
+
+
+
+
+void print_func_malloc(void *p) {
+	#if ENABLE_HELP
+
+	malloc_info_t *info = info_from_malloc(p);
+	(*info->print_func)(p);
+
+	#endif
+}
+
+
+
+void print_malloc_info(void *p) {
+	#if ENABLE_HELP
+
+	if (p == NULL) { printf("FREED\n"); return; }
+
+	malloc_info_t *info = info_from_malloc(p);
+	assert(MAX_NUM_MESSAGE_CHARS != 0);
+
+	printf("MALLOC DATA   ---\n");
+	printf("file_name   : %s\n", info->file_name);
+	printf("line_number : %zu\n", info->line_number);
+
+	if (info->message[0]) {
+		printf("message     : \n%s", info->message);
+	}
+	if (info->print_func) {
+		printf("print_func  : \n");
+		(*info->print_func)(p);
+	}
+
+	printf("              ---\n");
+
+	#endif
+}
+
+
+void add_print_func_to_malloc(void *p, void (*print_func)(void *p)) {
+	#if ENABLE_HELP
+
+	malloc_info_t *info = info_from_malloc(p);
+	info->print_func = print_func;
+
+	#endif
+} 
+
 void free_without_null(void *p) {
 
+	#if ENABLE_HELP
 	if (p == NULL && FREE_NULL_ERROR) { 
 		printf("\n	You may be freeing twice, pointer is NULL\n"); 
 		printf("\n	in the free_without_null function\n"); 
@@ -152,10 +179,11 @@ void free_without_null(void *p) {
 	}
 
 	num_unfreed_mallocs--;
+
+	#endif
+
 	free(p);
 }
-
-
 
 #if PRINT_UNFREED_MALLOCS
 void print_all_mallocs() {
@@ -170,6 +198,8 @@ void print_all_mallocs() {
 
 
 void assert_n_unfreed_mallocs(size_t n) {
+	#if ENABLE_HELP
+
 	if (n != num_unfreed_mallocs) {
 
 
@@ -185,4 +215,6 @@ void assert_n_unfreed_mallocs(size_t n) {
 
 		exit(0);
 	}
+
+	#endif
 }

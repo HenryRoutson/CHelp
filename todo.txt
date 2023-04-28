@@ -1,9 +1,4 @@
 
-
-Null in mallocs
-test null in mallocs
-
-
 improve make file
 
 NOT DOING

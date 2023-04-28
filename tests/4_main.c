@@ -16,5 +16,8 @@ int main() {
 	int *p = malloc(100);
 	print_malloc_info(p); // test
 	free(p);
+	
+	#if ENABLE_HELP
 	assert(p == NULL);
+	#endif
 }

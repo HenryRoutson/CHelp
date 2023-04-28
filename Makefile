@@ -3,7 +3,7 @@ CC=gcc
 OBJ= help.o 
 CFLAGS= -Wall -g -Werror -O3
 
-TESTS =  tests/1_main tests/2_main tests/3_main tests/4_main tests/5_main tests/6_main tests/7_main tests/8_main
+TESTS =  tests/1_main tests/2_main tests/3_main tests/4_main tests/5_main tests/6_main tests/7_main tests/8_main tests/9_main
 HEADERS = help_structs.h help_readme.h help.h
 
 # executable depends on object files
@@ -34,7 +34,8 @@ tests/7_main: $(OBJ) tests/7_main.o $(HEADERS)
 tests/8_main: $(OBJ) tests/8_main.o $(HEADERS)
 	$(CC) -o tests/8_main tests/8_main.c $(OBJ) $(CFLAGS)
 
-
+tests/9_main: $(OBJ) tests/9_main.o $(HEADERS)
+	$(CC) -o tests/9_main tests/9_main.c $(OBJ) $(CFLAGS)
 
 # o depends on c
 %.o: %.c %.h
@@ -59,6 +60,7 @@ test: all
 	./tests/6_main | grep -q "1 2 3" 
 	./tests/7_main | grep -q "ERROR: wrong number of unfreed mallocs" 
 	./tests/8_main | grep -q "1 s1 3.000000" 
+	./tests/9_main | grep -q "FREED" 
 
 run: all
 	
@@ -70,3 +72,4 @@ run: all
 	-./tests/6_main
 	-./tests/7_main
 	-./tests/8_main
+	-./tests/9_main 

@@ -7,7 +7,7 @@
 #define HELP
 
 #include "help_readme.h"
-#if ENABLE_HELP
+
 
 #include <stdlib.h>
 #include "help_structs.h"
@@ -15,14 +15,12 @@
 //
 
 void *safe_malloc(size_t size, char *file_name, size_t line_number);
-#define malloc(size) safe_malloc(size, __FILE__, __LINE__)
+
 
 void add_message_to_malloc(void *p, char *message);
 
-
-
 void free_null(void **pp, char *file_name, size_t line_number);
-#define free(pointer) free_null((void **) &pointer, __FILE__, __LINE__ )
+
 
 void free_without_null(void *pointer);
 
@@ -38,9 +36,18 @@ void print_all_mallocs();
 // https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html
 // https://cplusplus.com/reference/cstdio/snprintf/
 
+
+#if ENABLE_HELP
+#define malloc(size) safe_malloc(size, __FILE__, __LINE__)
+#define free(pointer) free_null((void **) &pointer, __FILE__, __LINE__ )
 #define add_message_to_malloc(p, format_str, format_args...) \
 				snprintf((char *) &info_from_malloc(p)->message, MAX_NUM_MESSAGE_CHARS, format_str, format_args);
 
-
 #endif
+
+#if !ENABLE_HELP
+#define add_message_to_malloc(p, format_str, format_args...)
+#endif
+
+
 #endif

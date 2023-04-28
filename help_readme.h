@@ -21,7 +21,7 @@
 #define MAX_NUM_MESSAGE_CHARS 128       // if your messages are being cutoff, increase this value
 
 #define PRINT_UNFREED_MALLOCS true      // - Warning: this can make your program assert crash, don't use in deployment. setup below
-#define MAX_NUM_MALLOCS 128          // - Warning: this can make your program assert crash if this value isn't large enough 
+#define MAX_NUM_MALLOCS 1024          // - Warning: this can make your program assert crash if this value isn't large enough 
 
 
 /* 
@@ -38,7 +38,16 @@ long num_unfreed_mallocs = 0;
 	Step 2: Assert num_unfreed_mallocs where the number is know
 					( There should always be no unfreed mallocs at the end of main() )
 
-assert(num_unfreed_mallocs == 0); 
+assert(num_unfreed_mallocs == 0); // DONT DO THIS (HARD TO DISABLE)
+
+// do this (will print out all mallocs if not equal value)
+
+assert_n_unfreed_mallocs(0);
+
+
+
+
+
 
 
 
