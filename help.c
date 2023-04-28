@@ -7,11 +7,8 @@
 #include "help_readme.h"
 #include "help_structs.h"
 
-extern long num_unfreed_mallocs;
 
 #define PRINT_LOCATION printf("on line %zu \nin file %s\n\n", line_number, file_name);
-
-
 
 void *safe_malloc(size_t size, char *file_name, size_t line_number) {
 	// always assert after malloc

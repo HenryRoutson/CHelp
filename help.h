@@ -42,7 +42,6 @@ void print_func_malloc(void *p);
 
 //
 
-extern long num_unfreed_mallocs;
 
 #if PRINT_UNFREED_MALLOCS
 extern void *unfreed_mallocs[MAX_NUM_MALLOCS];

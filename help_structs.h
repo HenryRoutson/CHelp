@@ -8,3 +8,5 @@ typedef struct {
 	char message[MAX_NUM_MESSAGE_CHARS];
 	void (*print_func)(void *p);
 } malloc_info_t;
+
+extern long num_unfreed_mallocs;
