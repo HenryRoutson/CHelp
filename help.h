@@ -1,6 +1,5 @@
 
-// code by Henry Routson
-// Credit https://www.youtube.com/watch?v=443UNeGrFoM
+// code by Henry Routson https://github.com/henryroutson/CHelp
 
 
 #ifndef HELP

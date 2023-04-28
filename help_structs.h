@@ -1,4 +1,6 @@
 
+// code by Henry Routson https://github.com/henryroutson/CHelp
+
 #include <stdlib.h>
 #include "help_readme.h"
 
