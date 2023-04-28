@@ -53,7 +53,7 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
 		exit(1);
 	}
 
-	if (PRINT_MALLOC_FREE) {
+	if (PRINT_MALLOC_AND_FREE) {
 		printf("MALLOC %p bytes %lu ", p, size);
 		PRINT_LOCATION
 	}
@@ -87,14 +87,16 @@ void print_malloc_info(void *p) {
 	printf("MALLOC DATA   ---\n");
 	printf("file_name   : %s\n", info->file_name);
 	printf("line_number : %zu\n", info->line_number);
-	printf("message     : %s\n", info->message);
-	printf("              ---\n");
 
-	if (info->print_func) {
-		printf("print_func - found\n");
-		(*info->print_func)(p);
-		printf("              ---\n");
+	if (info->message[0]) {
+		printf("message     : \n%s", info->message);
 	}
+	if (info->print_func) {
+		printf("print_func  : \n");
+		(*info->print_func)(p);
+	}
+
+	printf("              ---\n");
 }
 
 
@@ -121,7 +123,7 @@ void free_null(void **pp, char *file_name, size_t line_number) {
 		exit(1); 
 	}
 
-	if (PRINT_MALLOC_FREE) {
+	if (PRINT_MALLOC_AND_FREE) {
 		printf("FREE   %p ", pp);
 		PRINT_LOCATION
 	}

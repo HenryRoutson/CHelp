@@ -1,9 +1,4 @@
 
-assert num_unfreed_mallocs >= 0
-
-check TODO
-
-test enabling and disabling options
 
 improve make file
 

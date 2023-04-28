@@ -11,17 +11,17 @@
 
 #include <stdbool.h>
 
-#define ENABLE_HELP true             // disable or enable everything in the help files 
-                                     // and options below
+#define ENABLE_HELP true                // disable or enable everything in the help files 
+                                        // and options below
 
-#define PRINT_MALLOC_FREE  false     // print out malloc and free
+#define PRINT_MALLOC_AND_FREE false     // print out malloc and free
 
-#define FREE_NULL_ERROR true         // will freeing a null pointer throw an error?
+#define FREE_NULL_ERROR true            // will freeing a null pointer throw an error?
 
-#define MAX_NUM_MESSAGE_CHARS 128    // if your messages are being cutoff, increase this value
+#define MAX_NUM_MESSAGE_CHARS 128       // if your messages are being cutoff, increase this value
 
-#define PRINT_UNFREED_MALLOCS true   // - Warning: this can make your program assert crash, don't use in deployment. setup below
-#define MAX_NUM_MALLOCS 1024         // - Warning: this can make your program assert crash if this value isn't large enough 
+#define PRINT_UNFREED_MALLOCS true      // - Warning: this can make your program assert crash, don't use in deployment. setup below
+#define MAX_NUM_MALLOCS 128          // - Warning: this can make your program assert crash if this value isn't large enough 
 
 
 /* 
