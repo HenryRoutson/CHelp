@@ -173,13 +173,15 @@ void assert_n_unfreed_mallocs(size_t n) {
 	if (n != num_unfreed_mallocs) {
 
 
-		printf("ERROR: wrong number of unfreed mallocs\n");
+		printf("\n\nERROR: wrong number of unfreed mallocs\n");
 		printf("	expected : %zu\n", n);
 		printf("	found    : %zu\n\n", num_unfreed_mallocs);
 
 		#if PRINT_UNFREED_MALLOCS
 		print_all_mallocs();
 		#endif
+
+		printf("\n\n");
 
 		exit(0);
 	}
