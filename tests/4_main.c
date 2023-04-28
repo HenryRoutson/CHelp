@@ -5,7 +5,7 @@
 
 #include "../help.h"
 
-long unfreed_mallocs = 0;
+long num_unfreed_mallocs = 0;
 
 int main() {
 	int *p = malloc(100);

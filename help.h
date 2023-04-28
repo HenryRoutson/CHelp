@@ -12,13 +12,13 @@
 #include <stdlib.h>
 #include "help_structs.h"
 
-// define functions to help with development and debugging
+//
 
 void *safe_malloc(size_t size, char *file_name, size_t line_number);
 #define malloc(size) safe_malloc(size, __FILE__, __LINE__)
 
 void add_message_to_malloc(void *p, char *message);
-void print_malloc_info(void *p);
+
 
 
 void free_null(void **pp, char *file_name, size_t line_number);
@@ -28,13 +28,27 @@ void free_without_null(void *pointer);
 
 malloc_info_t *info_from_malloc(void *p);
 
+void print_malloc_info(void *p);
+void add_print_func_to_malloc(void *p, void (*print_func)(void *p));
+void print_func_malloc(void *p);
+
 // https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html
 // https://cplusplus.com/reference/cstdio/snprintf/
 
 #define add_message_to_malloc(p, format_str, format_args...) \
 				snprintf((char *) &info_from_malloc(p)->message, MAX_NUM_MESSAGE_CHARS, format_str, format_args);
 
-extern long unfreed_mallocs;
+
+
+//
+
+extern long num_unfreed_mallocs;
+
+#if PRINT_UNFREED_MALLOCS
+extern void *unfreed_mallocs[MAX_NUM_MALLOCS];
+#endif
+
+
 
 #endif
 #endif

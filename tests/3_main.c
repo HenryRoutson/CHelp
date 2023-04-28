@@ -5,14 +5,14 @@
 #include "3_external.h"
 #include "../help.h"
 
-long unfreed_mallocs = 0;
+long num_unfreed_mallocs = 0;
 
 int main() {
 
 	// test use of multiple files
 	tests();
 
-	if (unfreed_mallocs != 0) {
-		printf("TEST: PASSED");
+	if (num_unfreed_mallocs != 0) {
+		printf("TEST: PASSED\n");
 	}
 }

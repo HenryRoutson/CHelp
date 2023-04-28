@@ -7,7 +7,7 @@
 #include "help_readme.h"
 #include "help_structs.h"
 
-extern long unfreed_mallocs;
+extern long num_unfreed_mallocs;
 
 #define PRINT_LOCATION printf("on line %zu \nin file %s\n\n", line_number, file_name);
 
@@ -33,10 +33,11 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
 	p->file_name = file_name;
 	p->line_number = line_number;
 	p->message[0] = 0;
+	p->print_func = NULL;
 	
 	p += 1;
 
-	unfreed_mallocs++;
+	num_unfreed_mallocs++;
 
 	if (p == NULL) {
 		printf("\n\nError: malloc of size %lu failed \n", size);
@@ -44,7 +45,7 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
 		exit(1);
 	}
 
-	if (SHOW_DEBUG) {
+	if (PRINT_MALLOC_FREE) {
 		printf("MALLOC %p bytes %lu ", p, size);
 		PRINT_LOCATION
 	}
@@ -54,25 +55,49 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
 
 
 
-
-void print_malloc_info(void *p) {
-	malloc_info_t *info = p;
-	info -= 1;
-
-	printf("MALLOC DATA   ---\n");
-	printf("file_name   : %s\n", info->file_name);
-	printf("line_number : %zu\n", info->line_number);
-	printf("message     : %s\n", info->message);
-	printf("              ---\n");
-}
-
-
 malloc_info_t *info_from_malloc(void *p) {
 	
 	malloc_info_t *info = (malloc_info_t *) p;
 	info -= 1;
 	return info;
 }
+
+
+
+
+void print_func_malloc(void *p) {
+	malloc_info_t *info = info_from_malloc(p);
+	(*info->print_func)(p);
+}
+
+
+
+void print_malloc_info(void *p) {
+	malloc_info_t *info = info_from_malloc(p);
+
+	printf("MALLOC DATA   ---\n");
+	printf("file_name   : %s\n", info->file_name);
+	printf("line_number : %zu\n", info->line_number);
+	printf("message     : %s\n", info->message);
+	printf("              ---\n");
+
+	if (info->print_func) {
+		printf("print_func - found\n");
+		(*info->print_func)(p);
+		printf("              ---\n");
+	}
+}
+
+
+
+void add_print_func_to_malloc(void *p, void (*print_func)(void *p)) {
+	malloc_info_t *info = info_from_malloc(p);
+	info->print_func = print_func;
+} 
+
+
+
+
 
 
 void free_null(void **pp, char *file_name, size_t line_number) {
@@ -87,7 +112,7 @@ void free_null(void **pp, char *file_name, size_t line_number) {
 		exit(1); 
 	}
 
-	if (SHOW_DEBUG) {
+	if (PRINT_MALLOC_FREE) {
 		printf("FREE   %p ", pp);
 		PRINT_LOCATION
 	}
@@ -95,11 +120,11 @@ void free_null(void **pp, char *file_name, size_t line_number) {
 
 	// 
 
-	char *free_location = *pp - sizeof(malloc_info_t);
-	free(free_location);
+	malloc_info_t *info = info_from_malloc(*pp);
+	free(info);
 	*pp = NULL;
 
-	unfreed_mallocs--;
+	num_unfreed_mallocs--;
 
 }
 
@@ -114,8 +139,25 @@ void free_without_null(void *p) {
 		exit(1); 
 	}
 
-	unfreed_mallocs--;
+	num_unfreed_mallocs--;
 	free(p);
 }
 
 
+
+
+
+
+
+/*
+
+void assert_n_mallocs(size_t n) {
+	if ()
+}
+
+void print_all_mallocs() {
+
+}
+
+
+*/
