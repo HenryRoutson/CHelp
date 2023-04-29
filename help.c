@@ -135,12 +135,12 @@ void print_func_malloc(void *p) {
 void print_malloc_info(void *p) {
 	#if ENABLE_HELP
 
-	if (p == NULL) { printf("FREED\n"); return; }
+	if (p == NULL) { printf("  FREED       ---\n"); return; }
 
 	malloc_info_t *info = info_from_malloc(p);
 	assert(MAX_NUM_MESSAGE_CHARS != 0);
 
-	printf("MALLOC DATA   ---\n");
+	printf("UNFREED       ---\n");
 	printf("file_name   : %s\n", info->file_name);
 	printf("line_number : %zu\n", info->line_number);
 
@@ -207,6 +207,8 @@ void assert_n_unfreed_mallocs(size_t n) {
 		printf("\n\nERROR: wrong number of unfreed mallocs\n");
 		printf("	expected : %zu\n", n);
 		printf("	found    : %zu\n\n", num_unfreed_mallocs);
+		printf("\n");
+		printf("	mallocs are listed below,\n	in reverse allocation order\n");
 
 		#if PRINT_UNFREED_MALLOCS
 		print_all_mallocs();
