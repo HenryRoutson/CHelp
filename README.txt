@@ -17,3 +17,4 @@ Pros
 
 + Runs in O(1) overhead
 + Uses static memory allocation, there is no chance for memory leaks
++ Uses Automated testing 
