@@ -17,7 +17,7 @@
 #define ENABLE_HELP true                // disable or enable everything in the help files 
                                         // and options below
 
-#define PRINT_MALLOC_AND_FREE false     // print out malloc and free
+#define PRINT_MALLOC_AND_FREE true     // print out malloc and free
 
 #define FREE_NULL_ERROR true            // will freeing a null pointer throw an error?
 

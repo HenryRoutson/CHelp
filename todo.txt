@@ -1,4 +1,6 @@
 
+test freenull print
+
 improve make file
 
 NOT DOING

@@ -3,7 +3,7 @@
 
 #include "../help.h"
 
-void tests() {
+void tests(void) {
 	int *p = malloc(10);
 	*p = 1;
 }

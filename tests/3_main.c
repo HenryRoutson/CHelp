@@ -12,7 +12,7 @@ size_t num_mallocs = 0;
 void *mallocs[MAX_NUM_MALLOCS];
 #endif
 
-int main() {
+int main(void) {
 
 	// test use of multiple files
 	tests();

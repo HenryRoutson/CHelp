@@ -23,7 +23,7 @@ void print_struct(void *v) {
 	printf("%i %s %f\n", s->i, s->c, s->f);
 }
 
-int main() {
+int main(void) {
 	
 	struct_t *s = malloc(sizeof(*s));
 	s->i = 1;

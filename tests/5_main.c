@@ -12,7 +12,7 @@ size_t num_mallocs = 0;
 void *mallocs[MAX_NUM_MALLOCS];
 #endif
 
-int main() {
+int main(void) {
 	
 	int *p = malloc(100);
 	assert(info_from_malloc(p)->print_func == NULL);

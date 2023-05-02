@@ -24,7 +24,7 @@ void print_struct(void *v) {
 	printf("%i %s %f\n", s->i, s->c, s->f);
 }
 
-int main() {
+int main(void) {
 	
 	struct_t *s1 = malloc(sizeof(*s1));
 	add_print_func_to_malloc(s1, print_struct);

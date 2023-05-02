@@ -1,7 +1,9 @@
 
 CC=gcc
 OBJ= help.o 
-CFLAGS= -Wall -g -Werror -O3
+CFLAGS= -Wall -g -Werror -O3  -Wextra -Wsign-compare -Wint-conversion # -pedantic
+
+
 
 TESTS =  tests/1_main tests/2_main tests/3_main tests/4_main tests/5_main tests/6_main tests/7_main tests/8_main tests/9_main tests/10_main
 HEADERS = help_structs.h help_readme.h help.h

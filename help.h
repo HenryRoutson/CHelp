@@ -29,7 +29,7 @@ void print_malloc_info(void *p);
 void add_print_func_to_malloc(void *p, void (*print_func)(void *p));
 void print_func_malloc(void *p);
 
-void assert_n_unfreed_mallocs(size_t n);
+void assert_n_unfreed_mallocs(long n);
 void print_all_mallocs();
 
 // https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html

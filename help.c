@@ -78,7 +78,7 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
 	}
 
 	if (PRINT_MALLOC_AND_FREE) {
-		printf("MALLOC %p bytes %lu ", p, size);
+		printf("MALLOC %p bytes %lu ", (void *) p, size);
 		PRINT_LOCATION
 	}
 
@@ -99,7 +99,7 @@ void free_null(void **pp, char *file_name, size_t line_number) {
 	}
 
 	if (PRINT_MALLOC_AND_FREE) {
-		printf("FREE   %p ", pp);
+		printf("FREE   %p ", *pp);
 		PRINT_LOCATION
 	}
 
@@ -187,7 +187,7 @@ void free_without_null(void *p) {
 }
 
 #if PRINT_UNFREED_MALLOCS
-void print_all_mallocs() {
+void print_all_mallocs(void) {
 	assert(num_mallocs > 0);
 	int i = num_mallocs;
 
@@ -198,7 +198,7 @@ void print_all_mallocs() {
 #endif 
 
 
-void assert_n_unfreed_mallocs(size_t n) {
+void assert_n_unfreed_mallocs(long n) {
 	#if ENABLE_HELP
 
 	if (n != num_unfreed_mallocs) {

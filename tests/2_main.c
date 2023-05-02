@@ -13,7 +13,7 @@ size_t num_mallocs = 0;
 void *mallocs[MAX_NUM_MALLOCS];
 #endif
 
-int main() {
+int main(void) {
 
 	// test num_unfreed_mallocs errors
 	int *p = malloc(1);
