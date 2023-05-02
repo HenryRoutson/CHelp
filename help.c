@@ -88,8 +88,9 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
 
 void free_null(void **pp, char *file_name, size_t line_number) {
 	// always null after free
+	void *p = *pp;
 
-	if (*pp == NULL && FREE_NULL_ERROR) { 
+	if (p == NULL && FREE_NULL_ERROR) { 
 		printf("\n	You may be freeing twice, pointer is NULL\n"); 
 		PRINT_LOCATION
 
@@ -99,11 +100,11 @@ void free_null(void **pp, char *file_name, size_t line_number) {
 	}
 
 	if (PRINT_MALLOC_AND_FREE) {
-		printf("FREE   %p ", *pp);
+		printf("FREE   %p ", p);
 		PRINT_LOCATION
 	}
 
-	malloc_info_t *info = info_from_malloc(*pp);
+	malloc_info_t *info = info_from_malloc(p);
 	mallocs[info->mallocs_index] = NULL;
 
 	free(info);
