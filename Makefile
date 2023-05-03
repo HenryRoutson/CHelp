@@ -47,7 +47,7 @@ tests/10_main: $(OBJ) tests/10_main.o $(HEADERS)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 format:
-	clang-format -style=file -i *.c
+	clang-format -style=file -i *.c  *.h
 
 clean:
 	rm -f -rf $(EXE) *.o $(TESTS) tests/*.o tests/*dSYM
