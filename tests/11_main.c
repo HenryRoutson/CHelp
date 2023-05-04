@@ -1,6 +1,6 @@
 
 
-// test num_unfreed_mallocs
+// tests using  messages without formatting
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -16,10 +16,11 @@ void *mallocs[MAX_NUM_MALLOCS];
 #endif
 
 int main(void) {
+	
+	int *p = malloc(100);
+	assert(info_from_malloc(p)->print_func == NULL);
 
-	// test num_unfreed_mallocs errors
-	int *p = malloc(1);
-	*p = 10;
+	add_message_to_malloc(p,  "Test no formatting");
 
-	assert_n_unfreed_mallocs(0);
+	print_malloc_info(p);
 }

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../help.h"
+#include "../help/help.h"
 
 long num_unfreed_mallocs = 0;
 
@@ -31,11 +31,7 @@ int main(void) {
 	s->f = 3;
 
 	add_print_func_to_malloc(s, print_struct);
-	
+	add_print_func_to_malloc(s, NULL);
+	print_malloc_info((void *) s);
 
-
-
-
-
-	assert_n_unfreed_mallocs(0);
 }

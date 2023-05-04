@@ -1,8 +1,11 @@
 
+// tests assert_n_unfreed_mallocs
+
+
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../help.h"
+#include "../help/help.h"
 
 long num_unfreed_mallocs = 0;
 
@@ -36,9 +39,6 @@ int main(void) {
 	s2->i = 1;
 	s2->c = "s2";
 	s2->f = 3;
-
-	
-	
 
 	assert_n_unfreed_mallocs(0);
 }

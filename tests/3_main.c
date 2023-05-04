@@ -1,9 +1,14 @@
 
+
+
+// tests using external files and num_unfreed_mallocs
+
+
 #include <assert.h>
 #include <stdio.h>
 
 #include "3_external.h"
-#include "../help.h"
+#include "../help/help.h"
 
 long num_unfreed_mallocs = 0;
 

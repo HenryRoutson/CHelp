@@ -7,6 +7,7 @@
 #include "help_readme.h"
 
 #include "help_structs.h"
+
 #include <stdlib.h>
 
 //
@@ -29,9 +30,7 @@ void print_all_mallocs();
 
 #define malloc(size) safe_malloc(size, __FILE__, __LINE__)
 #define free(pointer) free_null((void **)&pointer, __FILE__, __LINE__)
-#define add_message_to_malloc(p, format_str, format_args...)                   \
-  snprintf((char *)&info_from_malloc(p)->message, MAX_NUM_MESSAGE_CHARS,       \
-           format_str, format_args);
+#define add_message_to_malloc(p, format_and_args...) snprintf((char *)&info_from_malloc(p)->message, MAX_NUM_MESSAGE_CHARS, format_and_args);
 
 #endif
 

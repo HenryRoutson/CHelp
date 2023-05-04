@@ -1,8 +1,10 @@
 
+// tsets add_print_func_to_malloc
+
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../help.h"
+#include "../help/help.h"
 
 long num_unfreed_mallocs = 0;
 

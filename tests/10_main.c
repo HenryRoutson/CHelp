@@ -1,9 +1,15 @@
 
+
+// tests assert_n_unfreed_mallocs
+
+
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
 
-#include "../help.h"
+#include "../help/help.h"
 
 long num_unfreed_mallocs = 0;
 

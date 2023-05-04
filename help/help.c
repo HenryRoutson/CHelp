@@ -19,6 +19,8 @@
 
 malloc_info_t *info_from_malloc(void *p) {
 
+  assert(p);
+
   malloc_info_t *info = (malloc_info_t *)p;
   info -= 1;
   return info;
@@ -83,6 +85,8 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
 
 void free_null(void **pp, char *file_name, size_t line_number) {
   // always null after free
+  assert(pp);
+
   void *p = *pp;
 
   if (p == NULL && FREE_NULL_ERROR) {
@@ -153,7 +157,17 @@ void print_malloc_info(void *p) {
 void add_print_func_to_malloc(void *p, void (*print_func)(void *p)) {
 #if ENABLE_HELP
 
+  if (!print_func) {
+    printf("Error: NULL function passed into add_print_func_to_malloc");
+    exit(1);
+  }
   malloc_info_t *info = info_from_malloc(p);
+
+  if (info->print_func) {
+    printf("Error: overwriting print function in add_print_func_to_malloc (function already set)");
+    exit(1);
+  }
+
   info->print_func = print_func;
 
 #endif

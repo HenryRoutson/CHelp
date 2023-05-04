@@ -1,9 +1,15 @@
 
+
+
+// tests free null
+
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
 
-#include "../help.h"
+#include "../help/help.h"
 
 long num_unfreed_mallocs = 0;
 
@@ -19,5 +25,9 @@ int main(void) {
 	
 	#if ENABLE_HELP
 	assert(p == NULL);
+	#endif
+
+	#if !ENABLE_HELP
+	assert(p != NULL);
 	#endif
 }

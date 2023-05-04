@@ -1,6 +1,6 @@
 
 
-// test num_unfreed_mallocs
+// test large / negative malloc
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -17,9 +17,7 @@ void *mallocs[MAX_NUM_MALLOCS];
 
 int main(void) {
 
-	// test num_unfreed_mallocs errors
-	int *p = malloc(1);
-	*p = 10;
-
-	assert_n_unfreed_mallocs(0);
+	// test large malloc failure
+	int *l = malloc(-1);
+	free(l);
 }

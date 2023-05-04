@@ -1,7 +1,11 @@
 
+
+
+
+
 #include <stdlib.h>
 
-#include "../help.h"
+#include "../help/help.h"
 
 void tests(void) {
 	int *p = malloc(10);
