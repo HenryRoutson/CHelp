@@ -1,9 +1,5 @@
 
 
-rename main files
-add tests for long messages
-add test 11
-
 improve make file
 
 NOT DOING
