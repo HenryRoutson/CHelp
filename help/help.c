@@ -103,13 +103,28 @@ void free_null(void **pp, char *file_name, size_t line_number) {
     PRINT_LOCATION
   }
 
+  num_unfreed_mallocs--;
+
+  if (num_unfreed_mallocs < 0) {
+    printf("Error: Unfreed_mallocs < 0");
+    printf("  There are mallocs in files where the include statement is missing\n");
+    printf("#include \"help/help.h\"");
+    exit(1);
+  }
+
   malloc_info_t *info = info_from_malloc(p);
+
+  if (info->mallocs_index >= MAX_NUM_MALLOCS) {
+    printf("Error: mallocs_index is not valid");
+    exit(1);
+  }
+
   mallocs[info->mallocs_index] = NULL;
 
   free(info);
   *pp = NULL;
 
-  num_unfreed_mallocs--;
+
 }
 
 //

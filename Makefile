@@ -5,24 +5,23 @@ CFLAGS= -Wall -g -Werror -O3  -Wextra -Wsign-compare -Wint-conversion # -pedanti
 
 
 
-TESTS =  tests/0_main tests/1_main tests/2_main tests/3_main tests/4_main tests/5_main tests/6_main tests/7_main tests/8_main tests/9_main tests/10_main tests/11_main tests/12_main
+TESTS =  tests/1_main tests/2_main tests/3_main tests/4_main tests/5_main tests/6_main tests/7_main tests/8_main tests/9_main tests/10_main tests/11_main tests/12_main       tests_ext/1_ext_main
 HEADERS = help/help_structs.h help/help_readme.h help/help.h
 
 # executable depends on object files
 
 all: $(TESTS)
 
-tests/0_main: $(OBJ) tests/0_main.o $(HEADERS)
-	$(CC) -o tests/0_main tests/0_main.c $(OBJ) $(CFLAGS)
+
 
 tests/1_main: $(OBJ) tests/1_main.o $(HEADERS)
 	$(CC) -o tests/1_main tests/1_main.c $(OBJ) $(CFLAGS)
 
 tests/2_main: $(OBJ) tests/2_main.o $(HEADERS)
 	$(CC) -o tests/2_main tests/2_main.c $(OBJ) $(CFLAGS)
- 
-tests/3_main: $(OBJ) tests/3_main.o tests/3_external.o $(HEADERS)
-	$(CC) -o tests/3_main tests/3_main.c tests/3_external.o $(OBJ) $(CFLAGS)
+
+tests/3_main: $(OBJ) tests/3_main.o $(HEADERS)
+	$(CC) -o tests/3_main tests/3_main.c $(OBJ) $(CFLAGS)
 
 tests/4_main: $(OBJ) tests/4_main.o $(HEADERS)
 	$(CC) -o tests/4_main tests/4_main.c $(OBJ) $(CFLAGS)
@@ -51,6 +50,13 @@ tests/11_main: $(OBJ) tests/11_main.o $(HEADERS)
 tests/12_main: $(OBJ) tests/12_main.o $(HEADERS)
 	$(CC) -o tests/12_main tests/12_main.c $(OBJ) $(CFLAGS)
 
+
+
+# tests with external files
+
+tests_ext/1_ext_main: $(OBJ) tests_ext/1_ext_main.o tests_ext/external_1.o $(HEADERS)
+	$(CC) -o tests_ext/1_ext_main tests_ext/1_ext_main.c tests_ext/external_1.o $(OBJ) $(CFLAGS)
+
 # o depends on c
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c -o $@ $<
@@ -59,17 +65,17 @@ format:
 	clang-format -style=file -i *.c  *.h
 
 clean:
-	rm -f -rf $(EXE) *.o $(TESTS) tests/*.o tests/*dSYM help/*.o
+	find . -name '*.o' -type f -delete
+	rm -f -rf $(EXE) $(TESTS) 
 
 RUNWITH = 
 # RUNWITH = valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all
 
 test: all
 	
-	./tests/0_main  | grep -q "Error: malloc size may be negative, unsigned value was -1" 
 	./tests/1_main  | grep -q "TEST: PASSED" 
 	./tests/2_main  | grep -q "ERROR: wrong number of unfreed mallocs" 
-	./tests/3_main  | grep -q "TEST: PASSED" 
+	./tests/3_main  | grep -q "Error: malloc size may be negative, unsigned value was -1" 
 	./tests/4_main  | grep -q "file_name   : tests/4_main.c" 
 	./tests/5_main  | grep -q "This is a number: 10" 
 	./tests/6_main  | grep -q "1 2 3" 
@@ -80,9 +86,10 @@ test: all
 	./tests/11_main | grep -q "Test no formatting" 
 	./tests/12_main | grep -q "TEST: PASSED" 
 
+	./tests_ext/1_ext_main  | grep -q "TEST: PASSED" 
+
 run: all
 	
-	-./tests/0_main 
 	-./tests/1_main
 	-./tests/2_main
 	-./tests/3_main
@@ -95,3 +102,5 @@ run: all
 	-./tests/10_main 
 	-./tests/11_main 
 	-./tests/12_main 
+
+	./tests_ext/1_ext_main

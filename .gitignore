@@ -1,5 +1,5 @@
 *.o
 main
 .DS_Store
-.vscode/settings.json
+.vscode/*
 *.dSYM

@@ -1,13 +1,11 @@
 
 
+// test large / negative malloc
 
-// tests using external files and num_unfreed_mallocs
-
-
-#include <assert.h>
+#include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 
-#include "3_external.h"
 #include "../help/help.h"
 
 long num_unfreed_mallocs = 0;
@@ -19,10 +17,7 @@ void *mallocs[MAX_NUM_MALLOCS];
 
 int main(void) {
 
-	// test use of multiple files
-	tests();
-
-	if (num_unfreed_mallocs != 0) {
-		printf("TEST: PASSED\n");
-	}
+	// test large malloc failure
+	int *l = malloc(-1);
+	free(l);
 }
