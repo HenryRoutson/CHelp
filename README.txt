@@ -15,6 +15,6 @@ Features
 
 Pros
 
-+ Runs in O(1) overhead
++ Runs in O(1) overhead (with check functions disabled) 
 + Uses static memory allocation, there is no chance for memory leaks
 + Uses Automated testing 

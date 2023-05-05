@@ -3,8 +3,12 @@
 Test if malloc not found file is not included O(n)
 Or if unfreed is negative
 
+
+test check_malloc_is_saved
+
 extract multifile tests
 
+optimised without error checking
 
 improve make file
 

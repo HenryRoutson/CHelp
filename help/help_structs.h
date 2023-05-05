@@ -14,8 +14,6 @@ typedef struct {
 } malloc_info_t;
 
 extern long num_unfreed_mallocs;
-
-#if PRINT_UNFREED_MALLOCS
 extern size_t num_mallocs;
 extern void *mallocs[MAX_NUM_MALLOCS];
-#endif
+

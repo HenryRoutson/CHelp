@@ -9,15 +9,45 @@
 #include "help_readme.h"
 #include "help_structs.h"
 
-#define PRINT_LOCATION                                                         \
+#define PRINT_LOCATION \
   printf("on line %zu \nin file %s\n\n", line_number, file_name);
+#define PRINT_HEADER \
+  printf("#include \"help/help.h\"");
 
 //
 // --------------------------------
 // Sub Functions
 //
 
+
+void check_null(void *p, char *file_name, size_t line_number) {
+  if (p == NULL && FREE_NULL_ERROR) {
+    printf("\n	You may be freeing twice, pointer is NULL\n");
+    PRINT_LOCATION
+
+    printf("\n\n	exit() program, freeing nulls is not allowed");
+    printf("\n		change this bevaviour in help_readme.h\n\n\n");
+    exit(1);
+  }
+}
+
+void check_malloc_is_saved(void *p) {
+  for (size_t i = 0; i < num_mallocs; i++) {
+    if (p == mallocs[i]) { return; }
+  }
+
+  // not in mallocs array
+  // file with malloc doesn't contain help.h header
+
+  printf("Error: malloc being freed cannot be found in array");
+  printf("  Make sure all files contain the header\n");
+  PRINT_HEADER
+
+}
+
 malloc_info_t *info_from_malloc(void *p) {
+
+  check_malloc_is_saved(p);
 
   assert(p);
 
@@ -25,6 +55,18 @@ malloc_info_t *info_from_malloc(void *p) {
   info -= 1;
   return info;
 }
+
+void check_pos_unfreed() {
+
+  if (num_unfreed_mallocs < 0) {
+    printf("Error: Unfreed_mallocs < 0");
+    printf("  There are mallocs in files where the include statement is missing\n");
+    PRINT_HEADER
+    exit(1);
+  }
+}
+
+
 
 //
 // --------------------------------
@@ -55,17 +97,16 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
   p->message[0] = 0;
   p->print_func = NULL;
 
-#if PRINT_UNFREED_MALLOCS
+
   p->mallocs_index = num_mallocs;
-#endif
+
 
   p += 1;
 
-#if PRINT_UNFREED_MALLOCS
+
   assert(num_mallocs < MAX_NUM_MALLOCS);
   mallocs[num_mallocs] = p;
   num_mallocs++;
-#endif
 
   num_unfreed_mallocs++;
 
@@ -89,14 +130,7 @@ void free_null(void **pp, char *file_name, size_t line_number) {
 
   void *p = *pp;
 
-  if (p == NULL && FREE_NULL_ERROR) {
-    printf("\n	You may be freeing twice, pointer is NULL\n");
-    PRINT_LOCATION
-
-    printf("\n\n	exit() program, freeing nulls is not allowed");
-    printf("\n		change this bevaviour in help_readme.h\n\n\n");
-    exit(1);
-  }
+  check_null(p, file_name, line_number);
 
   if (PRINT_MALLOC_AND_FREE) {
     printf("FREE   %p ", p);
@@ -104,13 +138,7 @@ void free_null(void **pp, char *file_name, size_t line_number) {
   }
 
   num_unfreed_mallocs--;
-
-  if (num_unfreed_mallocs < 0) {
-    printf("Error: Unfreed_mallocs < 0");
-    printf("  There are mallocs in files where the include statement is missing\n");
-    printf("#include \"help/help.h\"");
-    exit(1);
-  }
+  check_pos_unfreed();
 
   malloc_info_t *info = info_from_malloc(p);
 
@@ -188,26 +216,25 @@ void add_print_func_to_malloc(void *p, void (*print_func)(void *p)) {
 #endif
 }
 
-void free_without_null(void *p) {
+void free_without_null(void *p, char *file_name, size_t line_number) {
 
 #if ENABLE_HELP
-  if (p == NULL && FREE_NULL_ERROR) {
-    printf("\n	You may be freeing twice, pointer is NULL\n");
-    printf("\n	in the free_without_null function\n");
 
-    printf("\n\n	exit() program, freeing nulls is not allowed");
-    printf("\n		change this bevaviour in help_readme.h\n\n\n");
-    exit(1);
-  }
+  check_null(p, file_name, line_number);
 
   num_unfreed_mallocs--;
+  check_pos_unfreed();
+
+
+  check_malloc_is_saved(p);
+
 
 #endif
 
   free(p);
 }
 
-#if PRINT_UNFREED_MALLOCS
+
 void print_all_mallocs(void) {
   assert(num_mallocs > 0);
   int i = num_mallocs;
@@ -216,7 +243,7 @@ void print_all_mallocs(void) {
     print_malloc_info(mallocs[i]);
   }
 }
-#endif
+
 
 void assert_n_unfreed_mallocs(long n) {
 #if ENABLE_HELP
@@ -229,9 +256,7 @@ void assert_n_unfreed_mallocs(long n) {
     printf("\n");
     printf("	mallocs are listed below,\n	in reverse allocation order\n");
 
-#if PRINT_UNFREED_MALLOCS
     print_all_mallocs();
-#endif
 
     printf("\n\n");
 

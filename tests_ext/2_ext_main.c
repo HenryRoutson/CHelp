@@ -18,9 +18,8 @@ void *mallocs[MAX_NUM_MALLOCS];
 int main(void) {
 
 	// test use of multiple files
-	external_malloc();
+	int *i = external_malloc_without_help();
+	free(i);
 
-	if (num_unfreed_mallocs != 0) {
-		printf("TEST: PASSED\n");
-	}
+	assert_n_unfreed_mallocs(0);
 }
