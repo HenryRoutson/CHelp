@@ -14,7 +14,7 @@
 
 #define ENABLE_HELP true // enable or disable everything
 
-#define PRINT_MALLOC_AND_FREE true // print out malloc and free when called
+#define PRINT_ALLOC_AND_FREE true // print out malloc and free when called
 #define FREE_NULL_ERROR true // will freeing a null pointer throw an error?
 #define MAX_NUM_MESSAGE_CHARS 128  // if your messages are being cutoff, increase this value
 #define MAX_NUM_MALLOCS 1024  // - Warning:  program may assert crash if this value isn't large enough
@@ -30,19 +30,19 @@ REQUIRED
 
         Step 1: Include the below code before main()
 
-long num_unfreed_mallocs = 0;
-size_t num_mallocs = 0;
-void *mallocs[MAX_NUM_MALLOCS];
+long num_unfreed_allocs = 0;
+size_t num_allocs = 0;
+void *allocs[MAX_NUM_MALLOCS];
 
         Step 2: Add the below code before the end of main()
         Step 2: Add the below code anywhere you know 
-                the number of unfreed mallocs
+                the number of unfreed allocs
 
-assert_n_unfreed_mallocs(size_t n)
+assert_n_unfreed_allocs(size_t n)
 
-        Step 3: Remember not all mallocs are explicit
+        Step 3: Remember not all allocs are explicit
                 and you may have to use 
-                num_mallocs++;
+                num_allocs++;
                 occasionally
 
 
@@ -60,15 +60,15 @@ H o w    t o    u s e    A D D _ M E S S A G E _ T O _ M A L L O C
 
         #include "help/help.h"
 
-        long num_unfreed_mallocs = 0;
-        size_t num_mallocs = 0;
-        void *mallocs[MAX_NUM_MALLOCS];
+        long num_unfreed_allocs = 0;
+        size_t num_allocs = 0;
+        void *allocs[MAX_NUM_MALLOCS];
 
         int main() {
 
                 int *p = malloc(100);
-                add_message_to_malloc(p, "message in malloc, this can be formatted like %s", "this");
-                print_malloc_info(p); // this will print out the message
+                add_message_to_alloc(p, "message in malloc, this can be formatted like %s", "this");
+                print_alloc_info(p); // this will print out the message
 
         }
 
@@ -82,9 +82,9 @@ H o w   t o   u s e   A D D _ P R I N T _ F U N C _ T O _ M A L L O C
 
         #include "help.h"
 
-        long num_unfreed_mallocs = 0;
-        size_t num_mallocs = 0;
-        void *mallocs[MAX_NUM_MALLOCS];
+        long num_unfreed_allocs = 0;
+        size_t num_allocs = 0;
+        void *allocs[MAX_NUM_MALLOCS];
 
         typedef struct { // some struct
                 int i;
@@ -104,8 +104,8 @@ H o w   t o   u s e   A D D _ P R I N T _ F U N C _ T O _ M A L L O C
                 s->c = "2";
                 s->f = 3;
 
-                add_print_func_to_malloc(s, print_struct);
-                print_malloc_info((void *) s);
+                add_print_func_to_alloc(s, print_struct);
+                print_alloc_info((void *) s);
 
         }
 

@@ -8,16 +8,16 @@
 
 #include "../help/help.h"
 
-long num_unfreed_mallocs = 0;
-size_t num_mallocs = 0;
-void *mallocs[MAX_NUM_MALLOCS];
+long num_unfreed_allocs = 0;
+size_t num_allocs = 0;
+void *allocs[MAX_NUM_MALLOCS];
 
 int main(void) {
 	
 	int *p = malloc(100);
-	assert(info_from_malloc(p)->print_func == NULL);
+	assert(info_from_alloc(p)->print_func == NULL);
 
-	add_message_to_malloc(p,  "Test no formatting");
+	add_message_to_alloc(p,  "Test no formatting");
 
-	print_malloc_info(p);
+	print_alloc_info(p);
 }

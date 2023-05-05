@@ -10,10 +10,10 @@ typedef struct {
   size_t size;
   char message[MAX_NUM_MESSAGE_CHARS];
   void (*print_func)(void *p);
-  size_t mallocs_index;
-} malloc_info_t;
+  size_t allocs_index;
+} alloc_info_t;
 
-extern long num_unfreed_mallocs;
-extern size_t num_mallocs;
-extern void *mallocs[MAX_NUM_MALLOCS];
+extern long num_unfreed_allocs;
+extern size_t num_allocs;
+extern void *allocs[MAX_NUM_MALLOCS];
 

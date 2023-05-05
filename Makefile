@@ -79,7 +79,7 @@ RUNWITH =
 test: all
 	
 	./tests/1_main  | grep -q "TEST: PASSED" 
-	./tests/2_main  | grep -q "ERROR: wrong number of unfreed mallocs" 
+	./tests/2_main  | grep -q "ERROR: wrong number of unfreed allocs" 
 	./tests/3_main  | grep -q "Error: malloc size may be negative, unsigned value was -1" 
 	./tests/4_main  | grep -q "file_name   : tests/4_main.c" 
 	./tests/5_main  | grep -q "This is a number: 10" 

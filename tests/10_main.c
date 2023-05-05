@@ -1,6 +1,6 @@
 
 
-// tests assert_n_unfreed_mallocs
+// tests assert_n_unfreed_allocs
 
 
 
@@ -11,9 +11,9 @@
 
 #include "../help/help.h"
 
-long num_unfreed_mallocs = 0;
-size_t num_mallocs = 0;
-void *mallocs[MAX_NUM_MALLOCS];
+long num_unfreed_allocs = 0;
+size_t num_allocs = 0;
+void *allocs[MAX_NUM_MALLOCS];
 
 typedef struct {
 	int i;
@@ -30,13 +30,13 @@ void print_struct(void *v) {
 int main(void) {
 	
 	struct_t *s1 = malloc(sizeof(*s1));
-	add_print_func_to_malloc(s1, print_struct);
+	add_print_func_to_alloc(s1, print_struct);
 	s1->i = 1;
 	s1->c = "s1";
 	s1->f = 3;
 
 	struct_t *s2 = malloc(sizeof(*s2));
-	add_print_func_to_malloc(s2, print_struct);
+	add_print_func_to_alloc(s2, print_struct);
 	s2->i = 1;
 	s2->c = "s2";
 	s2->f = 3;
@@ -44,8 +44,8 @@ int main(void) {
 	free(s1);
 	free(s2);
 
-	assert(num_mallocs == 2);
-	if (num_unfreed_mallocs == 0) {
+	assert(num_allocs == 2);
+	if (num_unfreed_allocs == 0) {
 		printf("TEST: PASSED");
 	}
 }

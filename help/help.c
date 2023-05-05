@@ -32,20 +32,20 @@ void check_null(void *p, char *file_name, size_t line_number) {
 }
 
 
-malloc_info_t *info_from_malloc(void *p) {
+alloc_info_t *info_from_alloc(void *p) {
 
   assert(p);
 
-  malloc_info_t *info = (malloc_info_t *)p;
+  alloc_info_t *info = (alloc_info_t *)p;
   info -= 1;
   return info;
 }
 
 void check_pos_unfreed() {
 
-  if (num_unfreed_mallocs < 0) {
-    printf("Error: Unfreed_mallocs < 0");
-    printf("  There are mallocs in files where the include statement is missing\n");
+  if (num_unfreed_allocs < 0) {
+    printf("Error: Unfreed_allocs < 0");
+    printf("  There are allocs in files where the include statement is missing\n");
     PRINT_HEADER
     exit(1);
   }
@@ -74,7 +74,7 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
     PRINT_LOCATION
   }
 
-  malloc_info_t *p = malloc(sizeof(malloc_info_t) + size);
+  alloc_info_t *p = malloc(sizeof(alloc_info_t) + size);
 
   p->file_name = file_name;
   p->line_number = line_number;
@@ -83,17 +83,17 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
   p->print_func = NULL;
 
 
-  p->mallocs_index = num_mallocs;
+  p->allocs_index = num_allocs;
 
 
   p += 1;
 
 
-  assert(num_mallocs < MAX_NUM_MALLOCS);
-  mallocs[num_mallocs] = p;
-  num_mallocs++;
+  assert(num_allocs < MAX_NUM_MALLOCS);
+  allocs[num_allocs] = p;
+  num_allocs++;
 
-  num_unfreed_mallocs++;
+  num_unfreed_allocs++;
 
   if (p == NULL) {
     printf("\n\nError: malloc of size %lu failed \n", size);
@@ -101,7 +101,7 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
     exit(1);
   }
 
-  if (PRINT_MALLOC_AND_FREE) {
+  if (PRINT_ALLOC_AND_FREE) {
     printf("MALLOC %p bytes %lu ", (void *)p, size);
     PRINT_LOCATION
   }
@@ -117,22 +117,22 @@ void free_null(void **pp, char *file_name, size_t line_number) {
 
   check_null(p, file_name, line_number);
 
-  if (PRINT_MALLOC_AND_FREE) {
+  if (PRINT_ALLOC_AND_FREE) {
     printf("FREE   %p ", p);
     PRINT_LOCATION
   }
 
-  num_unfreed_mallocs--;
+  num_unfreed_allocs--;
   check_pos_unfreed();
 
-  malloc_info_t *info = info_from_malloc(p);
+  alloc_info_t *info = info_from_alloc(p);
 
-  if (info->mallocs_index >= MAX_NUM_MALLOCS) {
-    printf("Error: mallocs_index is not valid");
+  if (info->allocs_index >= MAX_NUM_MALLOCS) {
+    printf("Error: allocs_index is not valid");
     exit(1);
   }
 
-  mallocs[info->mallocs_index] = NULL;
+  allocs[info->allocs_index] = NULL;
 
   free(info);
   *pp = NULL;
@@ -145,16 +145,16 @@ void free_null(void **pp, char *file_name, size_t line_number) {
 // Called functions
 //
 
-void print_func_malloc(void *p) {
+void print_func_alloc(void *p) {
 #if ENABLE_HELP
 
-  malloc_info_t *info = info_from_malloc(p);
+  alloc_info_t *info = info_from_alloc(p);
   (*info->print_func)(p);
 
 #endif
 }
 
-void print_malloc_info(void *p) {
+void print_alloc_info(void *p) {
 #if ENABLE_HELP
 
   if (p == NULL) {
@@ -162,7 +162,7 @@ void print_malloc_info(void *p) {
     return;
   }
 
-  malloc_info_t *info = info_from_malloc(p);
+  alloc_info_t *info = info_from_alloc(p);
   assert(MAX_NUM_MESSAGE_CHARS != 0);
 
   printf("UNFREED       ---\n");
@@ -182,17 +182,17 @@ void print_malloc_info(void *p) {
 #endif
 }
 
-void add_print_func_to_malloc(void *p, void (*print_func)(void *p)) {
+void add_print_func_to_alloc(void *p, void (*print_func)(void *p)) {
 #if ENABLE_HELP
 
   if (!print_func) {
-    printf("Error: NULL function passed into add_print_func_to_malloc");
+    printf("Error: NULL function passed into add_print_func_to_alloc");
     exit(1);
   }
-  malloc_info_t *info = info_from_malloc(p);
+  alloc_info_t *info = info_from_alloc(p);
 
   if (info->print_func) {
-    printf("Error: overwriting print function in add_print_func_to_malloc (function already set)");
+    printf("Error: overwriting print function in add_print_func_to_alloc (function already set)");
     exit(1);
   }
 
@@ -207,7 +207,7 @@ void free_without_null(void *p, char *file_name, size_t line_number) {
 
   check_null(p, file_name, line_number);
 
-  num_unfreed_mallocs--;
+  num_unfreed_allocs--;
   check_pos_unfreed();
 
 #endif
@@ -216,28 +216,28 @@ void free_without_null(void *p, char *file_name, size_t line_number) {
 }
 
 
-void print_all_mallocs(void) {
-  assert(num_mallocs > 0);
-  int i = num_mallocs;
+void print_all_allocs(void) {
+  assert(num_allocs > 0);
+  int i = num_allocs;
 
   while (i--) { // print reverse
-    print_malloc_info(mallocs[i]);
+    print_alloc_info(allocs[i]);
   }
 }
 
 
-void assert_n_unfreed_mallocs(long n) {
+void assert_n_unfreed_allocs(long n) {
 #if ENABLE_HELP
 
-  if (n != num_unfreed_mallocs) {
+  if (n != num_unfreed_allocs) {
 
-    printf("\n\nERROR: wrong number of unfreed mallocs\n");
+    printf("\n\nERROR: wrong number of unfreed allocs\n");
     printf("	expected : %zu\n", n);
-    printf("	found    : %zu\n\n", num_unfreed_mallocs);
+    printf("	found    : %zu\n\n", num_unfreed_allocs);
     printf("\n");
-    printf("	mallocs are listed below,\n	in reverse allocation order\n");
+    printf("	allocs are listed below,\n	in reverse allocation order\n");
 
-    print_all_mallocs();
+    print_all_allocs();
 
     printf("\n\n");
 

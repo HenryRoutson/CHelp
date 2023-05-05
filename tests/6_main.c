@@ -1,14 +1,14 @@
 
-// tsets add_print_func_to_malloc
+// tsets add_print_func_to_alloc
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include "../help/help.h"
 
-long num_unfreed_mallocs = 0;
-size_t num_mallocs = 0;
-void *mallocs[MAX_NUM_MALLOCS];
+long num_unfreed_allocs = 0;
+size_t num_allocs = 0;
+void *allocs[MAX_NUM_MALLOCS];
 
 typedef struct {
 	int i;
@@ -29,7 +29,7 @@ int main(void) {
 	s->c = "2";
 	s->f = 3;
 
-	add_print_func_to_malloc(s, print_struct);
-	print_malloc_info((void *) s);
+	add_print_func_to_alloc(s, print_struct);
+	print_alloc_info((void *) s);
 
 }
