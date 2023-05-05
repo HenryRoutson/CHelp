@@ -1,16 +1,12 @@
 
 
 
-Malloc -> alloc
+
 Calloc
 
 
 strdup support
 other functions
-
-
-update unfreed < 0
-
 
 
 

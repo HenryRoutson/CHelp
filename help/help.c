@@ -11,8 +11,6 @@
 
 #define PRINT_LOCATION \
   printf("on line %zu \nin file %s\n\n", line_number, file_name);
-#define PRINT_HEADER \
-  printf("#include \"help/help.h\"");
 
 //
 // --------------------------------
@@ -44,9 +42,15 @@ alloc_info_t *info_from_alloc(void *p) {
 void check_pos_unfreed() {
 
   if (num_unfreed_allocs < 0) {
-    printf("Error: Unfreed_allocs < 0");
-    printf("  There are allocs in files where the include statement is missing\n");
-    PRINT_HEADER
+    printf("Error: Unfreed_allocs < 0\n");
+    printf("\n");
+    printf("    There are allocs in files where include is missing\n");
+    printf("        Fix: #include \"help/help.h\"\n");
+    printf("\n");
+    printf("  OR\n");
+    printf("\n");
+    printf("    There are implicit allocations.\n");
+    printf("        Fix: num_allocs++;\n");
     exit(1);
   }
 }
