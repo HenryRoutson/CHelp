@@ -12,19 +12,12 @@
 
 #include <stdbool.h>
 
-
-
-
-#define ENABLE_HELP true // disable or enable everything
+#define ENABLE_HELP true // enable or disable everything
 
 #define PRINT_MALLOC_AND_FREE true // print out malloc and free when called
 #define FREE_NULL_ERROR true // will freeing a null pointer throw an error?
- 
-// if your messages are being cutoff, increase this value
-#define MAX_NUM_MESSAGE_CHARS 128 
-
-// - Warning:  program may assert crash if this value isn't large enough
-#define MAX_NUM_MALLOCS 1024 
+#define MAX_NUM_MESSAGE_CHARS 128  // if your messages are being cutoff, increase this value
+#define MAX_NUM_MALLOCS 1024  // - Warning:  program may assert crash if this value isn't large enough
 
 
 /*
@@ -47,6 +40,10 @@ void *mallocs[MAX_NUM_MALLOCS];
 
 assert_n_unfreed_mallocs(size_t n)
 
+        Step 3: Remember not all mallocs are explicit
+                and you may have to use 
+                num_mallocs++;
+                occasionally
 
 
 

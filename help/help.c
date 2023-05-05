@@ -31,23 +31,8 @@ void check_null(void *p, char *file_name, size_t line_number) {
   }
 }
 
-void check_malloc_is_saved(void *p) {
-  for (size_t i = 0; i < num_mallocs; i++) {
-    if (p == mallocs[i]) { return; }
-  }
-
-  // not in mallocs array
-  // file with malloc doesn't contain help.h header
-
-  printf("Error: malloc being freed cannot be found in array");
-  printf("  Make sure all files contain the header\n");
-  PRINT_HEADER
-
-}
 
 malloc_info_t *info_from_malloc(void *p) {
-
-  check_malloc_is_saved(p);
 
   assert(p);
 
@@ -224,10 +209,6 @@ void free_without_null(void *p, char *file_name, size_t line_number) {
 
   num_unfreed_mallocs--;
   check_pos_unfreed();
-
-
-  check_malloc_is_saved(p);
-
 
 #endif
 
