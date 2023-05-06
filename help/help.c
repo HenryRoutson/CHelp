@@ -90,15 +90,14 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
   p->file_name = file_name;
   p->line_number = line_number;
   p->size = size;
+  p->count = 0; // indicate malloc
   p->message[0] = 0;
   p->print_func = NULL;
 
 
   p->allocs_index = num_allocs;
 
-
   p += 1;
-
 
   assert(num_allocs < MAX_NUM_MALLOCS);
   allocs[num_allocs] = p;
@@ -113,12 +112,70 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
   }
 
   if (PRINT_ALLOC_AND_FREE) {
-    printf("MALLOC %p bytes %lu ", (void *)p, size);
+    printf("ALLOC %p bytes %lu ", (void *)p, size);
     PRINT_LOCATION
   }
 
   return (void *)p;
 }
+
+
+
+
+
+void *safe_calloc(size_t size, size_t count, char *file_name, size_t line_number) {
+  // always assert after malloc
+
+  assert(file_name);
+
+  if (size == 0 || count == 0) {
+    printf("\nError: trying to calloc 0 bytes\n");
+    printf(" size: %lu, count: %lu\n", size, count);
+    exit(1);
+  }
+
+  if ((long)size < 0 || (long)count < 0) {
+    printf("\nError: calloc size may be negative, unsigned value was %li\n", (long)size);
+    printf(" size: %lu, count: %lu\n", size, count);
+    PRINT_LOCATION
+  }
+
+  alloc_info_t *p = malloc(sizeof(alloc_info_t) + size * count);
+  memset(p, 0, sizeof(alloc_info_t));
+
+  p->file_name = file_name;
+  p->line_number = line_number;
+  p->size = size;
+  p->count = count;
+  p->message[0] = 0;
+  p->print_func = NULL;
+
+
+  p->allocs_index = num_allocs;
+
+  p += 1;
+
+  assert(num_allocs < MAX_NUM_MALLOCS);
+  allocs[num_allocs] = p;
+  num_allocs++;
+
+  num_unfreed_allocs++;
+
+  if (p == NULL) {
+    printf("\n\nError: malloc of size %lu failed \n", size);
+    PRINT_LOCATION
+    exit(1);
+  }
+
+  if (PRINT_ALLOC_AND_FREE) {
+    printf("ALLOC %p bytes %lu ", (void *)p, size);
+    PRINT_LOCATION
+  }
+
+  return (void *)p;
+}
+
+
 
 void free_null(void **pp, char *file_name, size_t line_number) {
   // always null after free
@@ -175,13 +232,22 @@ void print_alloc_info(void *p) {
   alloc_info_t *info = info_from_alloc(p);
   assert(MAX_NUM_MESSAGE_CHARS != 0);
 
- printf("UNFREED       ---\n");
+  printf("UNFREED       ---\n");
   printf("file_name   : %s\n", info->file_name);
   printf("line_number : %zu\n", info->line_number);
+
+
+  #if PRINT_ALLOC_SIZE
+  printf("size: %lu\n", info->size);
+  if (info->count) {
+    printf("count: %lu\n", info->count);
+  }
+  #endif
 
   if (info->message[0]) {
     printf("message     : \n%s", info->message);
   }
+  
   if (info->print_func) {
     printf("print_func  : \n");
     (*info->print_func)(p);

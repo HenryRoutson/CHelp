@@ -2,8 +2,6 @@
 
 
 
-Calloc
-
 strdup support
 other functions
 

@@ -18,7 +18,7 @@ int main(void) {
 
 	// test num_unfreed_allocs
 	int *p = malloc(1);
-	int *c = malloc(1);
+	int *c = calloc(1,1);
 	n_unfreed(2);
 	free(p);
 	n_unfreed(1);

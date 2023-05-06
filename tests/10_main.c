@@ -47,7 +47,6 @@ int main(void) {
 	free(s2);
 
 	n_unfreed(0);
-
 	
 	printf("TEST: PASSED");
 	
