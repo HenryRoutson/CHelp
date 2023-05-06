@@ -1,12 +1,17 @@
 
 // code by Henry Routson https://github.com/henryroutson/CHelp
 
+#include "help_readme.h"
+#if ENABLE_HELP
+
+
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "help_readme.h"
+
 #include "help_structs.h"
 
 #define PRINT_LOCATION \
@@ -41,6 +46,7 @@ alloc_info_t *info_from_alloc(void *p) {
 
 void check_pos_unfreed() {
 
+
   if (num_unfreed_allocs < 0) {
     printf("Error: Unfreed_allocs < 0\n");
     printf("\n");
@@ -61,6 +67,7 @@ void check_pos_unfreed() {
 // --------------------------------
 // #define MACRO functions
 // (not called directly)
+
 
 void *safe_malloc(size_t size, char *file_name, size_t line_number) {
   // always assert after malloc
@@ -144,22 +151,21 @@ void free_null(void **pp, char *file_name, size_t line_number) {
 
 }
 
+
+
 //
 // --------------------------------
 // Called functions
 //
 
 void print_func_alloc(void *p) {
-#if ENABLE_HELP
+  assert(p);
 
   alloc_info_t *info = info_from_alloc(p);
   (*info->print_func)(p);
-
-#endif
 }
 
 void print_alloc_info(void *p) {
-#if ENABLE_HELP
 
   if (p == NULL) {
     printf("  FREED       ---\n");
@@ -169,7 +175,7 @@ void print_alloc_info(void *p) {
   alloc_info_t *info = info_from_alloc(p);
   assert(MAX_NUM_MESSAGE_CHARS != 0);
 
-  printf("UNFREED       ---\n");
+ printf("UNFREED       ---\n");
   printf("file_name   : %s\n", info->file_name);
   printf("line_number : %zu\n", info->line_number);
 
@@ -183,16 +189,17 @@ void print_alloc_info(void *p) {
 
   printf("              ---\n");
 
-#endif
 }
 
 void add_print_func_to_alloc(void *p, void (*print_func)(void *p)) {
-#if ENABLE_HELP
-
+  
+  assert(p);
   if (!print_func) {
     printf("Error: NULL function passed into add_print_func_to_alloc");
     exit(1);
   }
+
+
   alloc_info_t *info = info_from_alloc(p);
 
   if (info->print_func) {
@@ -202,36 +209,33 @@ void add_print_func_to_alloc(void *p, void (*print_func)(void *p)) {
 
   info->print_func = print_func;
 
-#endif
 }
 
 void free_without_null(void *p, char *file_name, size_t line_number) {
 
-#if ENABLE_HELP
 
   check_null(p, file_name, line_number);
 
   num_unfreed_allocs--;
   check_pos_unfreed();
 
-#endif
-
   free(p);
 }
 
 
 void print_all_allocs(void) {
+
   assert(num_allocs > 0);
   int i = num_allocs;
 
   while (i--) { // print reverse
     print_alloc_info(allocs[i]);
   }
+
 }
 
 
-void assert_n_unfreed_allocs(long n) {
-#if ENABLE_HELP
+void n_unfreed(long n) {
 
   if (n != num_unfreed_allocs) {
 
@@ -248,5 +252,8 @@ void assert_n_unfreed_allocs(long n) {
     exit(0);
   }
 
-#endif
 }
+
+
+
+#endif

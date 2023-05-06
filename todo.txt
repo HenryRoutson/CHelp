@@ -4,14 +4,15 @@
 
 Calloc
 
-
 strdup support
 other functions
 
-
-
-
 improve make file
+Write better tests
+
+Get working code and remove free to test
+
+export as c library?
 
 NOT DOING
-Malloc more and check if out of bounds is modified   - leave to valgrind
+alloc more and check if out of bounds is modified   - leave to valgrind

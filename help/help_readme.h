@@ -30,15 +30,17 @@ REQUIRED
 
         Step 1: Include the below code before main()
 
+#if ENABLE_HELP
 long num_unfreed_allocs = 0;
 size_t num_allocs = 0;
 void *allocs[MAX_NUM_MALLOCS];
+#endif
 
         Step 2: Add the below code before the end of main()
         Step 2: Add the below code anywhere you know 
                 the number of unfreed allocs
 
-assert_n_unfreed_allocs(size_t n)
+n_unfreed(size_t n)
 
         Step 3: Remember not all allocs are explicit
                 and you may have to use 

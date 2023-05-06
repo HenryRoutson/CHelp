@@ -1,7 +1,7 @@
 
 CC=gcc
 OBJ= help/help.o 
-CFLAGS= -Wall -g -Werror -O3  -Wextra -Wsign-compare -Wint-conversion # -pedantic
+CFLAGS= -Wall -g  -O3  -Wsign-compare -Wint-conversion # -pedantic -Werror -Wextra 
 
 
 

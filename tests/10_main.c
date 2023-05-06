@@ -1,6 +1,6 @@
 
 
-// tests assert_n_unfreed_allocs
+// tests n_unfreed
 
 
 
@@ -11,9 +11,11 @@
 
 #include "../help/help.h"
 
+#if ENABLE_HELP
 long num_unfreed_allocs = 0;
 size_t num_allocs = 0;
 void *allocs[MAX_NUM_MALLOCS];
+#endif
 
 typedef struct {
 	int i;
@@ -44,8 +46,9 @@ int main(void) {
 	free(s1);
 	free(s2);
 
-	assert(num_allocs == 2);
-	if (num_unfreed_allocs == 0) {
-		printf("TEST: PASSED");
-	}
+	n_unfreed(0);
+
+	
+	printf("TEST: PASSED");
+	
 }

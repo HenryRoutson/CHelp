@@ -1,15 +1,17 @@
 
 
-// tests assert_n_unfreed_allocs
+// tests n_unfreed
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include "../help/help.h"
 
+#if ENABLE_HELP
 long num_unfreed_allocs = 0;
 size_t num_allocs = 0;
 void *allocs[MAX_NUM_MALLOCS];
+#endif
 
 typedef struct {
 	int i;
@@ -39,5 +41,5 @@ int main(void) {
 	
 	free(s1);
 
-	assert_n_unfreed_allocs(0);
+	n_unfreed(0);
 }

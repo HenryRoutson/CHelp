@@ -7,9 +7,11 @@
 
 #include "../help/help.h"
 
+#if ENABLE_HELP
 long num_unfreed_allocs = 0;
 size_t num_allocs = 0;
 void *allocs[MAX_NUM_MALLOCS];
+#endif
 
 int main(void) {
 
@@ -17,19 +19,20 @@ int main(void) {
 	// test num_unfreed_allocs
 	int *p = malloc(1);
 	int *c = malloc(1);
-	assert_n_unfreed_allocs(2);
+	n_unfreed(2);
 	free(p);
-	assert_n_unfreed_allocs(1);
+	n_unfreed(1);
 	free(c);
-	assert_n_unfreed_allocs(0);
+	n_unfreed(0);
 
 	// test nulled memory
 	int *n;
 	n = malloc(1);
-	assert_n_unfreed_allocs(1);
+	n_unfreed(1);
 	free(n);
+
+	n_unfreed(0);
+
+	printf("TEST: PASSED\n");
 	
-	if (num_unfreed_allocs == 0) {
-		printf("TEST: PASSED\n");
-	}
 }

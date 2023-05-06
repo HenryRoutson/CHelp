@@ -13,7 +13,8 @@ typedef struct {
   size_t allocs_index;
 } alloc_info_t;
 
+#if ENABLE_HELP
 extern long num_unfreed_allocs;
 extern size_t num_allocs;
 extern void *allocs[MAX_NUM_MALLOCS];
-
+#endif
