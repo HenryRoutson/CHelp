@@ -3,10 +3,5 @@
 
 improve make file
 
-Get working code and remove free to test
-
-export as c library?
-
-
 NOT DOING
 alloc more and check if out of bounds is modified   - leave to valgrind
