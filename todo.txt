@@ -1,12 +1,7 @@
 
 
 
-
-strdup support
-other functions
-
 improve make file
-Write better tests
 
 Get working code and remove free to test
 

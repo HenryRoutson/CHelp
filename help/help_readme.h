@@ -14,7 +14,7 @@
 
 #define ENABLE_HELP true // enable or disable everything
 
-#define PRINT_ALLOC_SIZE false // print size and count for malloc and calloc
+#define PRINT_ALLOC_SIZE true // print size and count for malloc and calloc
 #define PRINT_ALLOC_AND_FREE true // print out malloc and free when called
 #define FREE_NULL_ERROR true // will freeing a null pointer throw an error?
 #define MAX_NUM_MESSAGE_CHARS 128  // if your messages are being cutoff, increase this value
@@ -47,8 +47,9 @@ n_unfreed(size_t n)
                 and you may have to use 
                 num_allocs++;
                 occasionally
+                for example with functions like strdup
 
-
+                for simplicity only malloc and calloc are supported
 
 
 
