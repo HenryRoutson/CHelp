@@ -7,8 +7,6 @@ Get working code and remove free to test
 
 export as c library?
 
-how to use larger tests?
-automate larger tests
 
 NOT DOING
 alloc more and check if out of bounds is modified   - leave to valgrind
