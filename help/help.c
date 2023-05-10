@@ -277,13 +277,17 @@ void add_print_func_to_alloc(void *p, void (*print_func)(void *p)) {
 
 }
 
-void free_without_null(void *p, char *file_name, size_t line_number) {
+void free_sans_null(void *p, char *file_name, size_t line_number) {
 
+  // sans meaning without
+
+  #if ENABLE_HELP
 
   check_null(p, file_name, line_number);
-
   num_unfreed_allocs--;
   check_pos_unfreed();
+
+  #endif
 
   free(p);
 }

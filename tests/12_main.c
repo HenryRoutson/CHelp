@@ -14,6 +14,11 @@ size_t num_allocs = 0;
 void *allocs[MAX_NUM_MALLOCS];
 #endif
 
+
+void *echo(void *p) {
+	return p;
+} 
+
 int main(void) {
 	
 	int *p = malloc(100);
@@ -22,6 +27,8 @@ int main(void) {
 
 
 	print_alloc_info(p);
+
+	free_sans_null(echo(p));
 
 
 	printf("TEST: PASSED"); // if didnt crash
