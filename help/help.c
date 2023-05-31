@@ -48,7 +48,7 @@ void check_pos_unfreed() {
 
 
   if (num_unfreed_allocs < 0) {
-    printf("Error: Unfreed_allocs < 0\n");
+    printf("Error 1: Unfreed_allocs < 0\n");
     printf("\n");
     printf("    There are allocs in files where include is missing\n");
     printf("        Fix: #include \"help/help.h\"\n");
@@ -75,12 +75,12 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
   assert(file_name);
 
   if (size == 0) {
-    printf("\nError: trying to malloc 0 bytes\n");
+    printf("\nError 2: trying to malloc 0 bytes\n");
     exit(1);
   }
 
   if ((long)size < 0) {
-    printf("\nError: malloc size may be negative, unsigned value was %li\n",
+    printf("\nError 3: malloc size may be negative, unsigned value was %li\n",
            (long)size);
     PRINT_LOCATION
   }
@@ -106,7 +106,7 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
   num_unfreed_allocs++;
 
   if (p == NULL) {
-    printf("\n\nError: malloc of size %lu failed \n", size);
+    printf("\n\nError 4: malloc of size %lu failed \n", size);
     PRINT_LOCATION
     exit(1);
   }
@@ -129,13 +129,13 @@ void *safe_calloc(size_t size, size_t count, char *file_name, size_t line_number
   assert(file_name);
 
   if (size == 0 || count == 0) {
-    printf("\nError: trying to calloc 0 bytes\n");
+    printf("\nError 5: trying to calloc 0 bytes\n");
     printf(" size: %lu, count: %lu\n", size, count);
     exit(1);
   }
 
   if ((long)size < 0 || (long)count < 0) {
-    printf("\nError: calloc size may be negative, unsigned value was %li\n", (long)size);
+    printf("\nError 6: calloc size may be negative, unsigned value was %li\n", (long)size);
     printf(" size: %lu, count: %lu\n", size, count);
     PRINT_LOCATION
   }
@@ -162,7 +162,7 @@ void *safe_calloc(size_t size, size_t count, char *file_name, size_t line_number
   num_unfreed_allocs++;
 
   if (p == NULL) {
-    printf("\n\nError: malloc of size %lu failed \n", size);
+    printf("\n\nError 7: malloc of size %lu failed \n", size);
     PRINT_LOCATION
     exit(1);
   }
@@ -196,7 +196,7 @@ void free_null(void **pp, char *file_name, size_t line_number) {
   alloc_info_t *info = info_from_alloc(p);
 
   if (info->allocs_index >= MAX_NUM_MALLOCS) {
-    printf("Error: allocs_index is not valid");
+    printf("Error 8: allocs_index is not valid");
     exit(1);
   }
 
@@ -261,7 +261,7 @@ void add_print_func_to_alloc(void *p, void (*print_func)(void *p)) {
   
   assert(p);
   if (!print_func) {
-    printf("Error: NULL function passed into add_print_func_to_alloc");
+    printf("Error 9: NULL function passed into add_print_func_to_alloc");
     exit(1);
   }
 
@@ -269,7 +269,7 @@ void add_print_func_to_alloc(void *p, void (*print_func)(void *p)) {
   alloc_info_t *info = info_from_alloc(p);
 
   if (info->print_func) {
-    printf("Error: overwriting print function in add_print_func_to_alloc (function already set)");
+    printf("Error 10: overwriting print function in add_print_func_to_alloc (function already set)");
     exit(1);
   }
 
