@@ -71,7 +71,7 @@ n_unfreed(size_t n)
 
 int main() {
 
-    char *unfreed_allocation = strdup("A string to copy")
+    char *unfreed_allocation = strdup("A string to copy");
     num_allocs++;
 
     free(unfreed_allocation);
