@@ -49,7 +49,7 @@ n_unfreed(size_t n)
                 occasionally
                 for example with functions like strdup
 
-                for simplicity only malloc and calloc are supported
+                for simplicity only malloc and calloc increment num_allocs
 
 
 
