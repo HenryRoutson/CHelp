@@ -72,6 +72,7 @@ format:
 clean:
 	find . -name '*.o' -type f -delete
 	rm -f -rf $(EXE) $(TESTS) 
+	rm -rf tests/*dSYM
 
 RUNWITH = 
 # RUNWITH = valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all
