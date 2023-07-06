@@ -17,7 +17,7 @@ void *allocs[MAX_NUM_MALLOCS];
 int main() {
 
     char *unfreed_allocation = strdup("A string to copy");
-    incriment_num_allocs();
+    add_alloc(NULL);
 
     free(unfreed_allocation);
 

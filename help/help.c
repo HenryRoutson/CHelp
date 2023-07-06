@@ -23,11 +23,13 @@
 //
 
 
-void incriment_num_allocs() {
-    #if ENABLE_HELP
+void add_alloc(void *p) {
+
+    assert(num_allocs < MAX_NUM_MALLOCS);
+    allocs[num_allocs] = p;
+
     num_allocs++;
     num_unfreed_allocs++;
-    #endif
 }
 
 void check_not_null(void *p, char *file_name, size_t line_number) {
@@ -48,6 +50,14 @@ alloc_info_t *info_from_alloc(void *p) {
 
   alloc_info_t *info = (alloc_info_t *)p;
   info -= 1;
+
+  if (!(info->allocs_index < MAX_NUM_MALLOCS)) {
+
+    printf("Invalid index %li for max %li\n\n\n", info->allocs_index, (long) MAX_NUM_MALLOCS);
+    printf("Make sure this allocation is using either malloc or calloc");
+    exit(1);
+  }
+
   return info;
 }
 
@@ -57,12 +67,10 @@ void check_pos_unfreed() {
     printf("Error 1: Unfreed_allocs < 0\n");
     printf("\n");
     printf("    There are allocs in files where include is missing\n");
-    printf("        Fix: #include \"help/help.h\"\n");
-    printf("\n");
-    printf("  OR\n");
-    printf("\n");
-    printf("    There are implicit allocations.\n");
-    printf("        Fix: num_allocs++;\n");
+    printf("        Fix: #include #include \"../help/help.h\" // path to help.h \n\n");
+    printf("  OR\n\n");
+    printf("    There are implicit allocations, such as with strdup().\n");
+    printf("        Fix: add_alloc(p);\n\n");
     exit(1);
   }
 }
@@ -80,8 +88,6 @@ void free_without_null(void *p, char *file_name, size_t line_number) {
   check_pos_unfreed();
 
   alloc_info_t *info = info_from_alloc(p);
-
-  assert(info->allocs_index < MAX_NUM_MALLOCS);
   allocs[info->allocs_index] = NULL;
 
   free(info);
@@ -105,19 +111,18 @@ void *init_info(alloc_info_t *p, size_t size, size_t count, char *file_name, siz
 
   p->allocs_index = num_allocs;
 
-  p += 1;
+  p += 1; // go to start of allocated memory, ignoring data stored before it
 
-  assert(num_allocs < MAX_NUM_MALLOCS);
-  allocs[num_allocs] = p;
+  void *memory = p;
 
-  incriment_num_allocs();
+  add_alloc(memory);
 
   if (PRINT_ALLOC_AND_FREE) {
-    printf("ALLOC %p bytes %lu ", (void *)p, size);
+    printf("ALLOC %p bytes %lu ", memory, size);
     PRINT_LOCATION
   }
 
-  return p;
+  return memory;
 }
 
 
@@ -142,9 +147,6 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
   void *memory = init_info(info, size, 0, file_name, line_number);
   return memory;
 }
-
-
-
 
 
 void *safe_calloc(size_t size, size_t count, char *file_name, size_t line_number) {
@@ -223,7 +225,6 @@ void set_alloc_print_func(void *p, void (*print_func)(void *p)) {
     printf("Error 9: NULL function passed into set_alloc_print_func");
     exit(1);
   }
-
 
   alloc_info_t *info = info_from_alloc(p);
 

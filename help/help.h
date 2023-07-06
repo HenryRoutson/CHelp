@@ -21,9 +21,9 @@ void print_alloc_info(void *p);
 void set_alloc_print_func(void *p, void (*print_func)(void *p));
 void n_unfreed(long n);
 void print_all_allocs();
-void incriment_num_allocs();
 
 // only used in macros    DONT USE
+void add_alloc(void *p);
 alloc_info_t *info_from_alloc(void *p); 
 void *safe_malloc(size_t size, char *file_name, size_t line_number);
 void *safe_calloc(size_t size, size_t count, char *file_name, size_t line_number);
@@ -41,15 +41,13 @@ void free_null(void **pp, char *file_name, size_t line_number);
 
 #if !ENABLE_HELP
 
-// remove macro
-
 #define free_without_null(pointer) free(pointer)
 #define add_message_to_alloc(p, format_and_args...)
 #define print_alloc_info(p);
 #define set_alloc_print_func(p, print_func);
 #define n_unfreed(n);
 #define print_all_allocs();
-#define incriment_num_allocs();
+#define add_alloc();
 
 #endif
 
