@@ -12,7 +12,7 @@
 
 #include <stdbool.h>
 
-#define ENABLE_HELP false // enable or disable everything
+#define ENABLE_HELP true // enable or disable everything
 
 #define PRINT_ALLOC_SIZE true // print size and count for malloc and calloc
 #define PRINT_ALLOC_AND_FREE true // print out malloc and free when called
@@ -30,6 +30,11 @@ REQUIRED
 
 
         Step 1: Include the below code before main()
+                (. is current directory)
+                (.. is parent directory)
+                (... and so on)
+
+#include "../help/help.h" // path to help.h 
 
 #if ENABLE_HELP
 long num_unfreed_allocs = 0;
@@ -78,6 +83,7 @@ int main() {
 
     n_unfreed(0);
 }
+
 
 
 OPTIONAL
@@ -135,7 +141,7 @@ H o w   t o   u s e   A D D _ P R I N T _ F U N C _ T O _ M A L L O C
                 s->c = "2";
                 s->f = 3;
 
-                add_print_func_to_alloc(s, print_struct);
+                set_alloc_print_func(s, print_struct);
                 print_alloc_info((void *) s);
 
         }
@@ -144,38 +150,116 @@ H o w   t o   u s e   A D D _ P R I N T _ F U N C _ T O _ M A L L O C
 
 
 
+ALL FUNCTIONS YOU CAN USE
+
+1 void print_alloc_info(void *p); 
+
+    // prints all info in an allocation from the info struct
+
+    typedef struct {
+        char *file_name;
+        size_t line_number;
+        size_t size;
+        size_t count; // if calloc
+        char message[MAX_NUM_MESSAGE_CHARS];
+        void (*print_func)(void *p);
+        size_t allocs_index;
+    } alloc_info_t;
+
+    // see test 4
+
+    UNFREED       ---
+    file_name   : tests/4_main.c
+    line_number : 22
+    size: 100
+
+2 void set_alloc_print_func(void *p, void (*print_func)(void *p));
+
+    // allows you to attatch a custom print function to an allocation
+
+    // see test 6 as a simple example
+
+    UNFREED       ---
+    file_name   : tests/6_main.c
+    line_number : 29
+    size: 24
+    print_func  : 
+    1 2 3.000000
+
+
+
+3 void n_unfreed(long n);
+
+    // checks there are n unfreed allocations
+    // prints error and exits if fails
+
+    // see test 9
+
+    ERROR: wrong number of unfreed allocs
+        expected : 0
+        found    : 1
+
+
+        allocs are listed below,
+        in reverse allocation order
+
+    ...
+
+
+
+4 void print_all_allocs();
+
+    // prints all allocations 
+
+    >>> print_all_allocs() 
+    UNFREED       ---
+    file_name   : tests/9_main.c
+    line_number : 36
+    size: 24
+    print_func  : 
+    1 s2 3.000000
+                ---
+    FREED       ---
+    >>> 
+
+
+
+5 void free_without_null(void *pointer);
+
+    // used where a pointer to be freed isn't stored,
+    // but is returned
+
+    // see test 12 
+
+    free_without_null(echo(p));
+
+
+6 void add_message_to_alloc(void *p, format_and_args...);
+
+    // allows you to add a message to an allocation,
+    // this allows you to add information without changing structure
+    // works like printf, with a format string and arguements
+
+    // see test 5
+    add_message_to_alloc(p,  "This is a number: %i\n", 10);
+
+    UNFREED       ---
+    file_name   : tests/5_main.c
+    line_number : 19
+    size: 100
+    message     : 
+    This is a number: 10
 
 
 
 
 
+Other notes
 
+size_t num_allocs = 0;         // <<< is used to index into allocs
+If ENABLE_HELP is disabled, then make test will fail, but make run should pass however
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+if something is not working, run 
+    make clean
 
 */

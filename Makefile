@@ -5,7 +5,7 @@ CFLAGS= -Wall -g  -O3  -Wsign-compare -Wint-conversion # -pedantic -Werror -Wext
 
 
 
-TESTS =  tests/1_main tests/2_main tests/3_main tests/4_main tests/5_main tests/6_main tests/7_main tests/8_main tests/9_main tests/10_main tests/11_main tests/12_main       tests_ext/1_ext_main  tests_ext/2_ext_main
+TESTS = tests/0_main tests/1_main tests/2_main tests/3_main tests/4_main tests/5_main tests/6_main tests/7_main tests/8_main tests/9_main tests/10_main tests/11_main tests/12_main       tests_ext/1_ext_main  tests_ext/2_ext_main
 HEADERS = help/help_structs.h help/help_readme.h help/help.h
 
 # executable depends on object files
@@ -13,6 +13,8 @@ HEADERS = help/help_structs.h help/help_readme.h help/help.h
 all: $(TESTS)
 
 
+tests/0_main: $(OBJ) tests/0_main.o $(HEADERS)
+	$(CC) -o tests/0_main tests/0_main.c $(OBJ) $(CFLAGS)
 
 tests/1_main: $(OBJ) tests/1_main.o $(HEADERS)
 	$(CC) -o tests/1_main tests/1_main.c $(OBJ) $(CFLAGS)
@@ -79,6 +81,7 @@ RUNWITH =
 
 test: all
 	
+	./tests/0_main 
 	./tests/1_main  | grep -q "TEST: PASSED" 
 	./tests/2_main  | grep -q "wrong number of unfreed allocs" 
 	./tests/3_main  | grep -q "malloc size may be negative, unsigned value was -1" 
@@ -97,6 +100,7 @@ test: all
 
 run: all
 	
+	-./tests/0_main 
 	-./tests/1_main
 	-./tests/2_main
 	-./tests/3_main

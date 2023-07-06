@@ -28,7 +28,7 @@ int main(void) {
 
 	print_alloc_info(p);
 
-	free_sans_null(echo(p));
+	free_without_null(echo(p));
 
 
 	printf("TEST: PASSED"); // if didnt crash

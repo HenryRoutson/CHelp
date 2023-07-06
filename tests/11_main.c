@@ -21,4 +21,6 @@ int main(void) {
 	add_message_to_alloc(p,  "Test no formatting");
 
 	print_alloc_info(p);
+
+    free(p);
 }

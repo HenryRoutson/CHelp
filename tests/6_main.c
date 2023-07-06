@@ -1,5 +1,5 @@
 
-// tsets add_print_func_to_alloc
+// tsets set_alloc_print_func
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -31,7 +31,7 @@ int main(void) {
 	s->c = "2";
 	s->f = 3;
 
-	add_print_func_to_alloc(s, print_struct);
+	set_alloc_print_func(s, print_struct);
 	print_alloc_info((void *) s);
 
 }

@@ -15,7 +15,6 @@ void *allocs[MAX_NUM_MALLOCS];
 
 int main(void) {
 
-
 	// test num_unfreed_allocs
 	int *p = malloc(1);
 	int *c = calloc(1,1);

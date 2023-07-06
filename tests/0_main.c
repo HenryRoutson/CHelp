@@ -1,10 +1,10 @@
 
 
-// tests using messages
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+
+#include <string.h>
 
 #include "../help/help.h"
 
@@ -14,12 +14,12 @@ size_t num_allocs = 0;
 void *allocs[MAX_NUM_MALLOCS];
 #endif
 
-int main(void) {
-	
-	int *p = malloc(100);
+int main() {
 
-	add_message_to_alloc(p,  "This is a number: %i\n", 10);
-	print_alloc_info(p);
+    char *unfreed_allocation = strdup("A string to copy");
+    incriment_num_allocs();
 
-    free(p);
+    free(unfreed_allocation);
+
+    n_unfreed(0);
 }
