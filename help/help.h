@@ -41,8 +41,19 @@ void free_null(void **pp, char *file_name, size_t line_number);
 
 
 
-// Extenal allocating functions
-// Add more here if you need
+// implicit allocations
+
+/*
+These are functions which return a pointer allocated with malloc or calloc
+which the help library macros cannot override because the library code is already compiled
+
+you can simply add these functions below if you find any
+But i would really appreciate if you helped me add them for everybody
+https://github.com/HenryRoutson/CHelp/issues/new
+And you could every be credited
+
+*/
+
 #define strdup(p) strdup(p); add_untracked_alloc();
 #define strndup(p) strndup(p); add_untracked_alloc();
 

@@ -25,7 +25,6 @@
 
 REQUIRED
 
-
    s e t u p
 
 
@@ -58,19 +57,10 @@ int main() {
     n_unfreed(0);
 }
 
-
                 Add n_unfreed code anywhere you know 
                 the number of unfreed allocs
 
 n_unfreed(size_t n)
-
-        Step 3: Remember not all allocs are explicit
-                and you may have to use 
-                add_untracked_alloc();
-                occasionally
-                for example with functions like strdup
-
-                for simplicity only malloc and calloc increment num_allocs
 
 ...
 
@@ -83,6 +73,15 @@ int main() {
 
     n_unfreed(0);
 }
+
+
+
+
+
+
+
+
+
 
 
 

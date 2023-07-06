@@ -82,7 +82,7 @@ void check_pos_unfreed() {
     printf("        Fix: #include #include \"../help/help.h\" // path to help.h \n\n");
     printf("  OR\n\n");
     printf("    There are implicit allocations, such as with strdup().\n");
-    printf("        Fix: add_alloc(p);\n\n");
+    printf("    search implicit allocations in help.h if you have tried the other options.\n\n");
     exit(1);
   }
 }
