@@ -38,6 +38,16 @@ void free_null(void **pp, char *file_name, size_t line_number);
 #define free_without_null(pointer) free_without_null((void *)pointer, __FILE__, __LINE__)
 #define add_message_to_alloc(p, format_and_args...) snprintf((char *)&info_from_alloc(p)->message, MAX_NUM_MESSAGE_CHARS, format_and_args);
 
+
+
+
+// Extenal allocating functions
+// Add more here if you need
+#define strdup(p) strdup(p); add_untracked_alloc();
+#define strndup(p) strndup(p); add_untracked_alloc();
+
+
+
 #endif
 
 #if !ENABLE_HELP

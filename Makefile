@@ -81,7 +81,7 @@ RUNWITH =
 
 test: all
 	
-	./tests/0_main 
+	./tests/0_main  | grep -q "UNTRACKED" 
 	./tests/1_main  | grep -q "TEST: PASSED" 
 	./tests/2_main  | grep -q "wrong number of unfreed allocs" 
 	./tests/3_main  | grep -q "malloc size may be negative, unsigned value was -1" 

@@ -66,7 +66,7 @@ n_unfreed(size_t n)
 
         Step 3: Remember not all allocs are explicit
                 and you may have to use 
-                num_allocs++;
+                add_untracked_alloc();
                 occasionally
                 for example with functions like strdup
 
