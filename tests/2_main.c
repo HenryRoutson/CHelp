@@ -21,5 +21,5 @@ int main(void) {
 	int *p = malloc(1);
 	*p = 10;
 
-	n_unfreed(0);
+	n_unfreed(0); // will fail
 }

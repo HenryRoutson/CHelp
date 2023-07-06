@@ -17,6 +17,7 @@ void *allocs[MAX_NUM_MALLOCS];
 int main(void) {
 
 	// test large malloc failure
-	int *l = malloc(-1);
-	free(l);
+
+	int *l = malloc(-1); // will fail
+    free(l);
 }
