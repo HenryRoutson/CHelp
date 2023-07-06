@@ -21,6 +21,7 @@ void print_alloc_info(void *p);
 void set_alloc_print_func(void *p, void (*print_func)(void *p));
 void n_unfreed(long n);
 void print_all_allocs();
+void add_untracked_alloc();
 
 // only used in macros    DONT USE
 void add_alloc(void *p);

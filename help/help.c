@@ -32,6 +32,18 @@ void add_alloc(void *p) {
     num_unfreed_allocs++;
 }
 
+void add_untracked_alloc() {
+
+    add_alloc(allocs);
+
+    // a bit of a hack
+    // but i just need a unique address 
+    // that will identify if something is an untracked 
+    // as null is already taken for freed memory
+    // and i want to avoid adding too much to the main
+    // kind of cool how efficient this is
+}
+
 void check_not_null(void *p, char *file_name, size_t line_number) {
   if (p == NULL && FREE_NULL_ERROR) {
     printf("\n	You may be freeing twice, pointer is NULL\n");
@@ -187,6 +199,11 @@ void print_alloc_info(void *p) {
 
   if (p == NULL) {
     printf("  FREED       ---\n");
+    return;
+  }
+
+  if (p == allocs) {
+    printf("  UNTRACKED       ---\n");
     return;
   }
 
