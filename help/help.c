@@ -23,7 +23,7 @@
 //
 
 
-void not_null(void *p, char *file_name, size_t line_number) {
+void check_not_null(void *p, char *file_name, size_t line_number) {
   if (p == NULL && FREE_NULL_ERROR) {
     printf("\n	You may be freeing twice, pointer is NULL\n");
     PRINT_LOCATION
@@ -161,7 +161,7 @@ void free_null(void **pp, char *file_name, size_t line_number) {
 
   void *p = *pp;
 
-  not_null(p, file_name, line_number);
+  check_not_null(p, file_name, line_number);
 
   if (PRINT_ALLOC_AND_FREE) {
     printf("FREE   %p ", p);
@@ -251,7 +251,7 @@ void free_without_null(void *p, char *file_name, size_t line_number) {
 
   #if ENABLE_HELP
 
-  not_null(p, file_name, line_number);
+  check_not_null(p, file_name, line_number);
   num_unfreed_allocs--;
   check_pos_unfreed();
 

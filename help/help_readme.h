@@ -30,7 +30,7 @@ REQUIRED
 
 
         Step 1: Include the below code before main()
-                (. is current directory)
+                (. is current directory of c file)
                 (.. is parent directory)
                 (... and so on)
 
