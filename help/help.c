@@ -23,6 +23,13 @@
 //
 
 
+void incriment_num_allocs() {
+    #if ENABLE_HELP
+    num_allocs++;
+    num_unfreed_allocs++;
+    #endif
+}
+
 void check_not_null(void *p, char *file_name, size_t line_number) {
   if (p == NULL && FREE_NULL_ERROR) {
     printf("\n	You may be freeing twice, pointer is NULL\n");
@@ -46,7 +53,6 @@ alloc_info_t *info_from_alloc(void *p) {
 
 void check_pos_unfreed() {
 
-
   if (num_unfreed_allocs < 0) {
     printf("Error 1: Unfreed_allocs < 0\n");
     printf("\n");
@@ -61,14 +67,26 @@ void check_pos_unfreed() {
   }
 }
 
+void free_without_null(void *p, char *file_name, size_t line_number) {
 
+  check_not_null(p, file_name, line_number);
 
-//
-// --------------------------------
-// #define MACRO functions
-// (not called directly)
+  if (PRINT_ALLOC_AND_FREE) {
+    printf("FREE   %p ", p);
+    PRINT_LOCATION
+  }
 
+  num_unfreed_allocs--;
+  check_pos_unfreed();
 
+  alloc_info_t *info = info_from_alloc(p);
+
+  assert(info->allocs_index < MAX_NUM_MALLOCS);
+  allocs[info->allocs_index] = NULL;
+
+  free(info);
+
+}
 
 void *init_info(alloc_info_t *p, size_t size, size_t count, char *file_name, size_t line_number) {
 
@@ -92,8 +110,7 @@ void *init_info(alloc_info_t *p, size_t size, size_t count, char *file_name, siz
   assert(num_allocs < MAX_NUM_MALLOCS);
   allocs[num_allocs] = p;
 
-  num_allocs++;
-  num_unfreed_allocs++;
+  incriment_num_allocs();
 
   if (PRINT_ALLOC_AND_FREE) {
     printf("ALLOC %p bytes %lu ", (void *)p, size);
@@ -158,39 +175,11 @@ void *safe_calloc(size_t size, size_t count, char *file_name, size_t line_number
 void free_null(void **pp, char *file_name, size_t line_number) {
   // always null after free
   assert(pp);
-
   void *p = *pp;
-
-  check_not_null(p, file_name, line_number);
-
-  if (PRINT_ALLOC_AND_FREE) {
-    printf("FREE   %p ", p);
-    PRINT_LOCATION
-  }
-
-  num_unfreed_allocs--;
-  check_pos_unfreed();
-
-  alloc_info_t *info = info_from_alloc(p);
-
-  if (info->allocs_index >= MAX_NUM_MALLOCS) {
-    printf("Error 7: allocs_index is not valid,\n");
-    printf("         index %lu is too large for array of size %li\n", info->allocs_index, MAX_NUM_MALLOCS);
-    exit(1);
-  }
-
-  allocs[info->allocs_index] = NULL;
-
-  free(info);
+  free_without_null(p, file_name, line_number);
   *pp = NULL;
 }
 
-
-
-//
-// --------------------------------
-// Called functions
-//
 
 void print_alloc_info(void *p) {
 
@@ -247,20 +236,6 @@ void set_alloc_print_func(void *p, void (*print_func)(void *p)) {
 
 }
 
-void free_without_null(void *p, char *file_name, size_t line_number) {
-
-  #if ENABLE_HELP
-
-  check_not_null(p, file_name, line_number);
-  num_unfreed_allocs--;
-  check_pos_unfreed();
-
-  #endif
-
-  free(p);
-}
-
-
 void print_all_allocs(void) {
 
   assert(num_allocs > 0);
@@ -294,18 +269,5 @@ void n_unfreed(long n) {
   }
 
 }
-
-
-
-
-
-void incriment_num_allocs() {
-    #if ENABLE_HELP
-    num_allocs++;
-    num_unfreed_allocs++;
-    #endif
-}
-
-
 
 #endif
