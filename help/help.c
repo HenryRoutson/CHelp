@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define UNTRACKED_POINTER allocs
 
 #include "help_structs.h"
 
@@ -34,9 +35,9 @@ void add_alloc(void *p) {
 
 void add_untracked_alloc() {
 
-    add_alloc(allocs);
+    add_alloc(UNTRACKED_POINTER);
 
-    // a bit of a hack
+    // a bit of a hack as it points to allocs
     // but i just need a unique address 
     // that will identify if something is an untracked 
     // as null is already taken for freed memory

@@ -38,6 +38,23 @@ void free_null(void **pp, char *file_name, size_t line_number);
 #define free_without_null(pointer) free_without_null((void *)pointer, __FILE__, __LINE__)
 #define add_message_to_alloc(p, format_and_args...) snprintf((char *)&info_from_alloc(p)->message, MAX_NUM_MESSAGE_CHARS, format_and_args);
 
+// main macro - to make life easier
+
+#if ENABLE_HELP
+
+#define CHELP_MAIN_MACRO \
+long num_unfreed_allocs = 0; \
+size_t num_allocs = 0; \
+void *allocs[MAX_NUM_MALLOCS];
+
+#endif
+
+
+#if !ENABLE_HELP
+#define CHELP_MAIN_MACRO
+#endif
+
+
 
 
 
