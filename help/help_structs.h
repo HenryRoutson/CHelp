@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 typedef struct {
+  size_t verification;
   char *file_name;
   size_t line_number;
   size_t size;

@@ -1,7 +1,11 @@
 
 
 
-improve make file
 
+define vocabulary and unify
+Get rid of untracked allocations by requiring reallocation
+create tests for safe_realloc
+
+improve make file
 NOT DOING
 alloc more and check if out of bounds is modified   - leave to valgrind

@@ -35,6 +35,8 @@ void free_null(void **pp, char *file_name, size_t line_number);
 #define malloc(size) safe_malloc(size, __FILE__, __LINE__)
 #define calloc(size, count) safe_calloc(size, count, __FILE__, __LINE__)
 #define free(pointer) free_null((void **)&pointer, __FILE__, __LINE__)
+#define realloc(pointer, size) safe_realloc(pointer, size, __FILE__, __LINE__)
+
 #define free_without_null(pointer) free_without_null((void *)pointer, __FILE__, __LINE__)
 #define add_message_to_alloc(p, format_and_args...) snprintf((char *)&info_from_alloc(p)->message, MAX_NUM_MESSAGE_CHARS, format_and_args);
 

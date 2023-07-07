@@ -11,7 +11,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+#define VERIFICATION 123456789 // some unlikely numbder to verify an allocation has info
+
 #define UNTRACKED_POINTER allocs
+#define REALLOCED_POINTER &num_unfreed_allocs
+
+/* a bit of a hack 
+  but i just need a unique address 
+  kind of cool how efficient this is */
 
 #include "help_structs.h"
 
@@ -34,15 +42,7 @@ void add_alloc(void *p) {
 }
 
 void add_untracked_alloc() {
-
     add_alloc(UNTRACKED_POINTER);
-
-    // a bit of a hack as it points to allocs
-    // but i just need a unique address 
-    // that will identify if something is an untracked 
-    // as null is already taken for freed memory
-    // and i want to avoid adding too much to the main
-    // kind of cool how efficient this is
 }
 
 void check_not_null(void *p, char *file_name, size_t line_number) {
@@ -64,13 +64,14 @@ alloc_info_t *info_from_alloc(void *p) {
   alloc_info_t *info = (alloc_info_t *)p;
   info -= 1;
 
-  if (!(info->allocs_index < MAX_NUM_MALLOCS)) {
-
-    printf("Invalid index %li for max %li\n\n\n", info->allocs_index, (long) MAX_NUM_MALLOCS);
-    printf("Make sure this allocation is using either malloc or calloc");
+  if (info->verification != VERIFICATION) {
+    printf("Error 11: Invalid verification number\n");
+    printf("          Trying to get information about allocation but non is there\n");
+    printf("          You might have passed in the wrong allocation\n");
     exit(1);
   }
 
+  assert(info->allocs_index < MAX_NUM_MALLOCS); // if fails, chelp bug
   return info;
 }
 
@@ -115,6 +116,7 @@ void *init_info(alloc_info_t *p, size_t size, size_t count, char *file_name, siz
     exit(1);
   }
 
+  p->verification = VERIFICATION;
   p->file_name = file_name;
   p->line_number = line_number;
   p->size = size;
@@ -187,6 +189,36 @@ void *safe_calloc(size_t size, size_t count, char *file_name, size_t line_number
 
 
 
+
+void *safe_realloc(void *pointer, size_t size, char *file_name, size_t line_number) {
+
+  if (PRINT_ALLOC_AND_FREE) {
+    printf("REALLOC %p bytes %lu ", pointer, size);
+    PRINT_LOCATION
+  }
+
+  // TODO: change
+
+  // could be reallocing a pointer without info
+  // so can't get index
+
+  for (size_t i = 0; i < num_allocs; i++) { 
+    if (allocs[i] == pointer) {
+      allocs[i] = REALLOCED_POINTER;
+      break;
+    }
+  }
+   
+  // otherwise this pointer is untracked, IE from strdup or similar
+
+  void *new_pointer = realloc(pointer, size);
+
+  add_alloc(new_pointer);
+  num_unfreed_allocs--; // pointer does not need to be freed
+
+  return new_pointer;
+}
+
 void free_null(void **pp, char *file_name, size_t line_number) {
   // always null after free
   assert(pp);
@@ -203,10 +235,16 @@ void print_alloc_info(void *p) {
     return;
   }
 
-  if (p == allocs) {
+  if (p == UNTRACKED_POINTER) {
     printf("  UNTRACKED       ---\n");
     return;
   }
+
+  if (p == REALLOCED_POINTER) {
+    printf("  REALLOCED       ---\n");
+    return;
+  }
+
 
   alloc_info_t *info = info_from_alloc(p);
   assert(MAX_NUM_MESSAGE_CHARS != 0);
