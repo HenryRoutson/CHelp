@@ -65,8 +65,11 @@ void add_alloc(void *alloc) {
 }
 
 
-void check_not_null(void *pointer, char *file_name, size_t line_number) {
-  if (pointer == NULL && FREE_NULL_ERROR) {
+void check_not_null(void *alloc, char *file_name, size_t line_number) {
+
+  // free_null will set alloc to null on free
+
+  if (alloc == NULL && FREE_NULL_ERROR) {
     printf("\n	You may be freeing twice, pointer is NULL\n");
     PRINT_LOCATION
 
@@ -109,56 +112,53 @@ void check_pos_unfreed() {
   } 
 }
 
-void free_without_null(void *p, char *file_name, size_t line_number) {
+void free_without_null(void *alloc, char *file_name, size_t line_number) {
 
-  check_not_null(p, file_name, line_number);
+  check_not_null(alloc, file_name, line_number);
 
   if (PRINT_ALLOC_AND_FREE) {
-    printf("FREE   %p ", p);
+    printf("FREE   %p ", alloc);
     PRINT_LOCATION
   }
 
   num_unfreed_allocs--;
   check_pos_unfreed();
 
-  alloc_info_t *info = info_from_alloc(p);
+  alloc_info_t *info = info_from_alloc(alloc);
   alloc_array[info->allocs_index] = NULL;
 
   free(info);
 
 }
 
-void *init_info(alloc_info_t *p, size_t size, size_t count_if_calloc, char *file_name, size_t line_number) {
+void *init_info(alloc_info_t *info, size_t size, size_t count_if_calloc, char *file_name, size_t line_number) {
 
-  if (p == NULL) {
+  if (info == NULL) { // as called after allocations 
     printf("\n\nError 4: alloc of size %lu and count %lu (0 if calloc) failed \n", size, count_if_calloc);
     PRINT_LOCATION
     exit(1);
   }
 
-  p->verification = VERIFICATION;
-  p->file_name = file_name;
-  p->line_number = line_number;
-  p->size = size;
-  p->realloc_count = 0;
-  p->count_if_calloc = count_if_calloc;
-  p->message[0] = 0;
-  p->print_func = NULL;
+  info->verification = VERIFICATION;
+  info->file_name = file_name;
+  info->line_number = line_number;
+  info->size = size;
+  info->realloc_count = 0;
+  info->count_if_calloc = count_if_calloc;
+  info->message[0] = 0; // NULL end string
+  info->print_func = NULL;
+  info->allocs_index = num_allocs;
 
-  p->allocs_index = num_allocs;
+  void *alloc = info + 1; // go to start of allocated memory, ignoring data stored before it
 
-  p += 1; // go to start of allocated memory, ignoring data stored before it
-
-  void *memory = p;
-
-  add_alloc(memory);
+  add_alloc(alloc);
 
   if (PRINT_ALLOC_AND_FREE) {
-    printf("ALLOC %p bytes %lu ", memory, size);
+    printf("ALLOC %p bytes %lu ", alloc, size);
     PRINT_LOCATION
   }
 
-  return memory;
+  return alloc;
 }
 
 
@@ -182,10 +182,10 @@ size_t min2(size_t n1, size_t n2) {
 }
 
 
-void *safe_realloc(void *old_memory, size_t new_size, char *file_name, size_t line_number) {
+void *safe_realloc(void *old_alloc, size_t new_size, char *file_name, size_t line_number) {
 
 
-  alloc_info_t *old_info = info_from_alloc(old_memory);
+  alloc_info_t *old_info = info_from_alloc(old_alloc);
   size_t old_size = old_info->size;
 
   alloc_info_t *new_info = malloc(new_size + sizeof(alloc_info_t));
@@ -197,14 +197,14 @@ void *safe_realloc(void *old_memory, size_t new_size, char *file_name, size_t li
 
   free(old_info);
 
-  void *new_memory = new_info + 1;
+  void *new_alloc = new_info + 1;
 
   if (PRINT_ALLOC_AND_FREE) {
-    printf("REALLOC %p > %p bytes %lu ", old_memory, new_memory, new_size);
+    printf("REALLOC %p > %p bytes %lu ", old_alloc, new_alloc, new_size);
     PRINT_LOCATION
   }
 
-  return new_memory;
+  return new_alloc;
 }
 
 
@@ -225,8 +225,8 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
   }
 
   alloc_info_t *info = malloc(sizeof(alloc_info_t) + size);
-  void *memory = init_info(info, size, 0, file_name, line_number);
-  return memory;
+  void *alloc = init_info(info, size, 0, file_name, line_number);
+  return alloc;
 }
 
 
@@ -248,29 +248,29 @@ void *safe_calloc(size_t size, size_t count, char *file_name, size_t line_number
   }
 
   alloc_info_t *info = malloc(sizeof(alloc_info_t) + size * count);
-  void *memory = init_info(info, size, count, file_name, line_number);
-  memset(memory, 0, sizeof(size * count));
-  return memory;
+  void *alloc = init_info(info, size, count, file_name, line_number);
+  memset(alloc, 0, sizeof(size * count));
+  return alloc;
 }
 
 
-void free_null(void **pp, char *file_name, size_t line_number) {
+void free_null(void **p_alloc, char *file_name, size_t line_number) {
   // always null after free
-  assert(pp);
-  void *p = *pp;
-  free_without_null(p, file_name, line_number);
-  *pp = NULL;
+  assert(p_alloc);
+  void *alloc = *p_alloc;
+  free_without_null(alloc, file_name, line_number);
+  *p_alloc = NULL;
 }
 
 
-void print_alloc_info(void *p) {
+void print_alloc_info(void *alloc) {
 
-  if (p == NULL) {
+  if (alloc == NULL) {
     printf("  FREED       ---\n");
     return;
   }
 
-  alloc_info_t *info = info_from_alloc(p);
+  alloc_info_t *info = info_from_alloc(alloc);
   assert(MAX_NUM_MESSAGE_CHARS != 0);
 
   printf("UNFREED       ---\n");
@@ -295,22 +295,22 @@ void print_alloc_info(void *p) {
   
   if (info->print_func) {
     printf("print_func  : \n");
-    (*info->print_func)(p);
+    (*info->print_func)(alloc); // print alloc data
   }
 
   printf("              ---\n");
 
 }
 
-void set_alloc_print_func(void *p, void (*print_func)(void *p)) {
+void set_alloc_print_func(void *alloc, void (*print_func)(void *p)) {
   
-  assert(p);
+  assert(alloc);
   if (!print_func) {
     printf("Error 9: NULL function passed into set_alloc_print_func");
     exit(1);
   }
 
-  alloc_info_t *info = info_from_alloc(p);
+  alloc_info_t *info = info_from_alloc(alloc);
 
   if (info->print_func) {
     printf("Error 10: overwriting print function in set_alloc_print_func (function already set)");
@@ -318,10 +318,9 @@ void set_alloc_print_func(void *p, void (*print_func)(void *p)) {
   }
 
   info->print_func = print_func;
-
 }
 
-void print_all_allocs(void) {
+void print_all_allocs() {
 
   assert(num_allocs > 0);
   int i = num_allocs;
@@ -336,12 +335,12 @@ void print_all_allocs(void) {
 }
 
 
-void n_unfreed(long n) {
+void n_unfreed(long n_expected) {
 
-  if (n != num_unfreed_allocs) {
+  if (n_expected != num_unfreed_allocs) {
 
     printf("\n\nERROR: wrong number of unfreed allocs\n");
-    printf("	expected : %zu\n", n);
+    printf("	expected : %zu\n", n_expected);
     printf("	found    : %zu\n\n", num_unfreed_allocs);
     printf("\n");
     printf("	allocs are listed below,\n	in reverse allocation order\n");
