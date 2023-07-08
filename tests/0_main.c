@@ -13,17 +13,16 @@ int main() {
 
   char *string = "A string to copy";
   size_t n_string_bytes = strlen(string) + 1;
-  printf("n_string_bytes %lu", n_string_bytes); // get rid of ignored warning
+  printf("n_string_bytes %lu", n_string_bytes); // gets rid of warning
 
-  char *unfreed_allocation = strdup(string);
-  track_alloc((void **) &unfreed_allocation, n_string_bytes); // <<<< allocation is tracked immediately after creation (pointer value will change)
-  // num bytes just has to be bigger, not exact
+  char *alloc = strdup(string);
+  track_alloc(&alloc, n_string_bytes); 
 
   n_unfreed(1);
 
-  print_all_allocs(); // should show untracked
+  print_all_allocs(); 
 
-  free(unfreed_allocation);
+  free(alloc);
 
   n_unfreed(0);
 }
