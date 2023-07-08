@@ -5,7 +5,7 @@ CFLAGS= -Wall -g  -O3  -Wsign-compare -Wint-conversion # -pedantic -Werror -Wext
 
 
 
-TESTS = tests/0_main tests/1_main tests/2_main tests/3_main tests/4_main tests/5_main tests/6_main tests/7_main tests/8_main tests/9_main tests/10_main tests/11_main tests/12_main       tests_ext/1_ext_main  tests_ext/2_ext_main
+TESTS = tests/0_main tests/1_main tests/2_main tests/3_main tests/4_main tests/5_main tests/6_main tests/7_main tests/8_main tests/9_main tests/10_main tests/11_main tests/12_main tests/13_main     tests_ext/1_ext_main  tests_ext/2_ext_main
 HEADERS = help/help_structs.h help/help_readme.h help/help.h
 
 # executable depends on object files
@@ -52,6 +52,8 @@ tests/11_main: $(OBJ) tests/11_main.o $(HEADERS)
 tests/12_main: $(OBJ) tests/12_main.o $(HEADERS)
 	$(CC) -o tests/12_main tests/12_main.c $(OBJ) $(CFLAGS)
 
+tests/13_main: $(OBJ) tests/13_main.o $(HEADERS)
+	$(CC) -o tests/13_main tests/13_main.c $(OBJ) $(CFLAGS)
 
 
 # tests with external files
@@ -94,6 +96,7 @@ test: all
 	./tests/10_main | grep -q "TEST: PASSED" 
 	./tests/11_main | grep -q "Test no formatting" 
 	./tests/12_main | grep -q "TEST: PASSED" 
+	./tests/13_main | grep -q "line_number : 11" 
 
 	./tests_ext/1_ext_main  | grep -q "TEST: PASSED" 
 	! ./tests_ext/2_ext_main > /dev/null
@@ -113,6 +116,7 @@ run: all
 	-./tests/10_main 
 	-./tests/11_main 
 	-./tests/12_main 
+	-./tests/13_main 
 
 	-./tests_ext/1_ext_main
 	-./tests_ext/2_ext_main

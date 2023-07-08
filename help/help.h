@@ -24,12 +24,14 @@ void print_all_allocs();
 void track_alloc(void **pp, size_t size, char *file_name, size_t line_number);
 
 // only used in macros    DONT USE
-void add_alloc(void *p);
-alloc_info_t *info_from_alloc(void *p); 
 void *safe_malloc(size_t size, char *file_name, size_t line_number);
 void *safe_calloc(size_t size, size_t count, char *file_name, size_t line_number);
+void *safe_realloc(void *old_memory, size_t new_size, char *file_name, size_t line_number);
 void free_without_null(void *pointer, char *file_name, size_t line_number);
 void free_null(void **pp, char *file_name, size_t line_number);
+
+void add_alloc(void *p);
+alloc_info_t *info_from_alloc(void *p); 
 
 // replace macros         CAN USE  (first part)
 #define malloc(size) safe_malloc(size, __FILE__, __LINE__)

@@ -1,8 +1,8 @@
 
 
-
-
-
+rename count
+can you reduce size of allocation with realloc?
+reallocation count
 Get rid of untracked allocations by requiring reallocation
 track reallocs
 create tests for safe_realloc

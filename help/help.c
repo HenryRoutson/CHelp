@@ -141,7 +141,7 @@ void *init_info(alloc_info_t *p, size_t size, size_t count, char *file_name, siz
 
 void track_alloc(void **p_untracked_alloc, size_t size, char *file_name, size_t line_number) {
 
-  alloc_info_t *info = malloc(size + sizeof(alloc_info_t)); // can't realloc so you don't overwrite 
+  alloc_info_t *info = malloc(size + sizeof(alloc_info_t));
   init_info(info, size, 0, file_name, line_number);
 
   void *tracked_alloc = info + 1;
@@ -150,6 +150,39 @@ void track_alloc(void **p_untracked_alloc, size_t size, char *file_name, size_t 
 
   *p_untracked_alloc = tracked_alloc;
 }
+
+
+
+size_t min2(size_t n1, size_t n2) {
+  if (n1 > n2) { return n2; }
+  return n1;
+}
+
+
+void *safe_realloc(void *old_memory, size_t new_size, char *file_name, size_t line_number) {
+
+
+  alloc_info_t *old_info = info_from_alloc(old_memory);
+  size_t old_size = old_info->size;
+
+  alloc_info_t *new_info = malloc(new_size + sizeof(alloc_info_t));
+
+  // realloc can reduce or increase the size of an allocation
+  memcpy(new_info, old_info, sizeof(alloc_info_t) + min2(old_size, new_size));
+  new_info->size = new_size;
+
+  free(old_info);
+
+  void *new_memory = new_info + 1;
+
+  if (PRINT_ALLOC_AND_FREE) {
+    printf("REALLOC %p > %p bytes %lu ", old_memory, new_memory, new_size);
+    PRINT_LOCATION
+  }
+
+  return new_memory;
+}
+
 
 void *safe_malloc(size_t size, char *file_name, size_t line_number) {
   // always assert after malloc
@@ -196,26 +229,6 @@ void *safe_calloc(size_t size, size_t count, char *file_name, size_t line_number
   return memory;
 }
 
-
-
-/*
-void *safe_realloc(void *pointer, size_t size, char *file_name, size_t line_number) {
-
-  if (PRINT_ALLOC_AND_FREE) {
-    printf("REALLOC %p bytes %lu ", pointer, size);
-    PRINT_LOCATION
-  }
-
-  alloc_info_t *info = info_from_alloc(pointer);
-
-  void *new_pointer = realloc(pointer, size);
-
-  add_alloc(new_pointer);
-  num_unfreed_allocs--; // pointer does not need to be freed
-
-  return new_pointer;
-}
-*/
 
 void free_null(void **pp, char *file_name, size_t line_number) {
   // always null after free
