@@ -1,6 +1,69 @@
 
-CC=gcc
-OBJ= help/help.o 
+
+CC = gcc
+OBJ = help/help.o 
+
+
+
+
+# o depends on c
+%.o: %.c %.h
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+# In plain English:
+# using the gcc compiler and the chelp object files, compile main_template.c to produce a main_template executable
+
+template: $(OBJ)
+	$(CC) $(OBJ) main_template.c -o main_template
+	./main_template
+	-rm main_template
+
+
+
+# run 
+# make template
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# you can delete below this point if you want
+
+# TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING
+# TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING
+# TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 CFLAGS= -Wall -g  -O3  -Wsign-compare -Wint-conversion # -pedantic -Werror -Wextra 
 
 
@@ -66,10 +129,6 @@ tests_ext/1_ext_main: $(OBJ) tests_ext/1_ext_main.o $(EXTERN) $(HEADERS)
 tests_ext/2_ext_main: $(OBJ) tests_ext/2_ext_main.o $(EXTERN) $(HEADERS)
 	$(CC) -o tests_ext/2_ext_main tests_ext/2_ext_main.c $(EXTERN) $(OBJ) $(CFLAGS)
 
-# o depends on c
-%.o: %.c %.h
-	$(CC) $(CFLAGS) -c -o $@ $<
-
 format:
 	clang-format -style=file -i *.c  *.h
 
@@ -120,3 +179,6 @@ run: all
 
 	-./tests_ext/1_ext_main
 	-./tests_ext/2_ext_main
+
+
+	
