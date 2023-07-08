@@ -1,10 +1,36 @@
 
 // code by Henry Routson https://github.com/henryroutson/CHelp
 
+
+/*
+Notes
+
+       | Allocation |    is replaced by
+       ^ start
+
+| Info | Allocation |
+^ start
+
+Where info stores information about the allocation
+
+The two important names
+
+Info       : pointer to meta information about an allocation
+Allocation : pointer to allocation memory actually being used by the running program
+
+It is possible for Info to be stored after the Allocation,
+but this would increase the possibility of the info being overwritten with something like a dynamic array, and it also makes reallocation easier, as info stays in the same location
+
+| Info | Allocation |
+| Info |       Allocation       |
+
+but freeing becomes more complex because the pointer to the start of the allocation is not the same as the actual start of the allocation, which is the Info.
+
+*/
+
+
 #include "help_readme.h"
 #if ENABLE_HELP
-
-
 
 #include <assert.h>
 #include <stdio.h>
@@ -12,7 +38,7 @@
 #include <string.h>
 
 
-#define VERIFICATION 123456789 // some unlikely numbder to verify an allocation has info
+#define VERIFICATION 123456789 // some unlikely number to verify an allocation has info
 
 /* a bit of a hack 
   but i just need a unique address 
@@ -29,10 +55,10 @@
 //
 
 
-void add_alloc(void *p) {
+void add_alloc(void *a) {
 
     assert(num_allocs < MAX_NUM_MALLOCS);
-    allocs[num_allocs] = p;
+    allocs[num_allocs] = a;
 
     num_allocs++;
     num_unfreed_allocs++;

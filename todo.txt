@@ -2,10 +2,6 @@
 
 
 
-reallocation count
-Get rid of untracked allocations by requiring reallocation
-track reallocs
-create tests for safe_realloc
 define vocabulary and unify
 
 
