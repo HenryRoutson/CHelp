@@ -1,10 +1,6 @@
 
 This is a memory debugger I'm writing to make writing c easier
 
-To set it up, just copy all of the files starting with help in your c project
-And then read the file help_readme.h to setup and configure
-
-
 Features
 
 + Auto assert allocs and check if the size is negative or zero
@@ -18,3 +14,17 @@ Pros
 + Runs in O(1) overhead
 + Uses static memory allocation
 + Uses Automated testing 
+
+
+
+Setup
+
+copy 
+  help (folder)  
+into your repo
+
+see main_template.c to see setup required
+
+config is in test/help_config.h
+documentation is in help.h
+

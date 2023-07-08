@@ -1,7 +1,7 @@
 
 // code by Henry Routson https://github.com/henryroutson/CHelp
 
-#include "help_readme.h"
+#include "help_config.h"
 #include <stdlib.h>
 
 typedef struct {

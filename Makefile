@@ -1,10 +1,8 @@
 
 
+CFLAGS= -Wall -g  -O3  -Wsign-compare -Wint-conversion # -pedantic -Werror -Wextra 
 CC = gcc
 OBJ = help/help.o 
-
-
-
 
 # o depends on c
 %.o: %.c %.h
@@ -14,7 +12,7 @@ OBJ = help/help.o
 # using the gcc compiler and the chelp object files, compile main_template.c to produce a main_template executable
 
 template: $(OBJ)
-	$(CC) $(OBJ) main_template.c -o main_template
+	$(CC) $(CFLAGS) $(OBJ) main_template.c -o main_template
 	./main_template
 	-rm main_template
 
@@ -64,12 +62,12 @@ template: $(OBJ)
 
 
 
-CFLAGS= -Wall -g  -O3  -Wsign-compare -Wint-conversion # -pedantic -Werror -Wextra 
+
 
 
 
 TESTS = tests/0_main tests/1_main tests/2_main tests/3_main tests/4_main tests/5_main tests/6_main tests/7_main tests/8_main tests/9_main tests/10_main tests/11_main tests/12_main tests/13_main     tests_ext/1_ext_main  tests_ext/2_ext_main
-HEADERS = help/help_structs.h help/help_readme.h help/help.h
+HEADERS = help/help_structs.h help/help_config.h help/help.h
 
 # executable depends on object files
 

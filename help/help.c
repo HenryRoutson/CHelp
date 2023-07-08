@@ -29,7 +29,7 @@ but freeing becomes more complex because the pointer to the start of the allocat
 */
 
 
-#include "help_readme.h"
+#include "help_config.h"
 #if ENABLE_HELP
 
 #include <assert.h>
@@ -74,7 +74,7 @@ void check_not_null(void *alloc, char *file_name, size_t line_number) {
     PRINT_LOCATION
 
     printf("\n\n	exit() program, freeing nulls is not allowed");
-    printf("\n		change this bevaviour in help_readme.h\n\n\n");
+    printf("\n		change this bevaviour in help_config.h\n\n\n");
     exit(1);
   }
 }
@@ -106,7 +106,7 @@ void check_pos_unfreed() {
     printf("        Fix: #include #include \"../help/help.h\" // path to help.h \n\n");
     printf("  OR\n\n");
     printf("    There are implicit allocations, such as with strdup().\n");
-    printf("    search implicit allocations in help_readme.h if you have tried the other options.\n");
+    printf("    search implicit allocations in help_config.h if you have tried the other options.\n");
     printf("        Fix: void track_alloc(void **p_untracked_alloc, size_t size)\n");
     exit(1);
   } 

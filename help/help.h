@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 
-#include "help_readme.h"
+#include "help_config.h"
 #include "help_structs.h"
 
 #if ENABLE_HELP
