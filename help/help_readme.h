@@ -258,13 +258,20 @@ ALL FUNCTIONS YOU CAN USE
 
 // implicit allocations
 
-
 These are functions which return a pointer allocated with malloc or calloc
-which the help library macros cannot override because the library code is already compiled
+which the chelp library macros cannot override because the library code is already compiled
 For example strdup() duplicates a string, 
-returing a pointer to memory to be freed
+returing a pointer to memory which needs to be freed
+
+Using 
+void track_alloc(void **pp, size_t size)
+will add traacking information to your allocation and incriment the number of unfreed allocations
+
+if you really don't know how large the allocation is, the size only has to be larger than it, so just make it really big
 
 See test 1
+
+
 
 
 

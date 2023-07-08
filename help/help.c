@@ -55,18 +55,18 @@ but freeing becomes more complex because the pointer to the start of the allocat
 //
 
 
-void add_alloc(void *a) {
+void add_alloc(void *alloc) {
 
     assert(num_allocs < MAX_NUM_MALLOCS);
-    alloc_array[num_allocs] = a;
+    alloc_array[num_allocs] = alloc;
 
     num_allocs++;
     num_unfreed_allocs++;
 }
 
 
-void check_not_null(void *p, char *file_name, size_t line_number) {
-  if (p == NULL && FREE_NULL_ERROR) {
+void check_not_null(void *pointer, char *file_name, size_t line_number) {
+  if (pointer == NULL && FREE_NULL_ERROR) {
     printf("\n	You may be freeing twice, pointer is NULL\n");
     PRINT_LOCATION
 
@@ -77,16 +77,15 @@ void check_not_null(void *p, char *file_name, size_t line_number) {
 }
 
 
-alloc_info_t *info_from_alloc(void *p) {
+alloc_info_t *info_from_alloc(void *alloc) {
 
-  assert(p);
+  assert(alloc);
 
-  alloc_info_t *info = (alloc_info_t *)p;
-  info -= 1;
+  alloc_info_t *info = ((alloc_info_t *) alloc) - 1;
 
   if (info->verification != VERIFICATION) {
     printf("Error 11: Invalid verification number\n");
-    printf("          Trying to get information about allocation but non is there\n");
+    printf("          Trying to get information about allocation, but non is there\n");
     printf("          You might have passed in the wrong allocation\n");
     exit(1);
   }
@@ -100,14 +99,14 @@ void check_pos_unfreed() {
   if (num_unfreed_allocs < 0) {
     printf("Error 1: Unfreed_allocs < 0\n");
     printf("\n");
-    printf("    There are allocs in files where include is missing\n");
+    printf("    There are allocs in files where #include is missing\n");
     printf("        Fix: #include #include \"../help/help.h\" // path to help.h \n\n");
     printf("  OR\n\n");
     printf("    There are implicit allocations, such as with strdup().\n");
     printf("    search implicit allocations in help_readme.h if you have tried the other options.\n");
-    printf("        Fix: \n");
+    printf("        Fix: void track_alloc(void **p_untracked_alloc, size_t size)\n");
     exit(1);
-  }
+  } 
 }
 
 void free_without_null(void *p, char *file_name, size_t line_number) {
