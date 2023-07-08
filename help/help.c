@@ -14,9 +14,6 @@
 
 #define VERIFICATION 123456789 // some unlikely numbder to verify an allocation has info
 
-#define UNTRACKED_POINTER allocs
-#define REALLOCED_POINTER &num_unfreed_allocs
-
 /* a bit of a hack 
   but i just need a unique address 
   kind of cool how efficient this is */
@@ -118,6 +115,7 @@ void *init_info(alloc_info_t *p, size_t size, size_t count_if_calloc, char *file
   p->file_name = file_name;
   p->line_number = line_number;
   p->size = size;
+  p->realloc_count = 0;
   p->count_if_calloc = count_if_calloc;
   p->message[0] = 0;
   p->print_func = NULL;
@@ -170,6 +168,7 @@ void *safe_realloc(void *old_memory, size_t new_size, char *file_name, size_t li
   // realloc can reduce or increase the size of an allocation
   memcpy(new_info, old_info, sizeof(alloc_info_t) + min2(old_size, new_size));
   new_info->size = new_size;
+  new_info->realloc_count ++;
 
   free(old_info);
 
@@ -246,17 +245,6 @@ void print_alloc_info(void *p) {
     return;
   }
 
-  if (p == UNTRACKED_POINTER) {
-    printf("  UNTRACKED       ---\n");
-    return;
-  }
-
-  if (p == REALLOCED_POINTER) {
-    printf("  REALLOCED       ---\n");
-    return;
-  }
-
-
   alloc_info_t *info = info_from_alloc(p);
   assert(MAX_NUM_MESSAGE_CHARS != 0);
 
@@ -271,6 +259,10 @@ void print_alloc_info(void *p) {
     printf("calloc count: %lu\n", info->count_if_calloc);
   }
   #endif
+
+  if (info->realloc_count) {
+    printf("realloc_count: %lu\n", info->realloc_count);
+  }
 
   if (info->message[0]) {
     printf("message     : \n%s", info->message);
