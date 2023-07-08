@@ -161,11 +161,12 @@ ALL FUNCTIONS YOU CAN USE
         size_t size;
         size_t count; // if calloc
         char message[MAX_NUM_MESSAGE_CHARS];
-        void (*print_func)(void *p);
+        void (*print_func)(void *rp);
         size_t allocs_index;
     } alloc_info_t;
 
     // see test 4
+    https://github.com/HenryRoutson/CHelp/blob/main/tests/4_main.c
 
     UNFREED       ---
     file_name   : tests/4_main.c
@@ -177,6 +178,7 @@ ALL FUNCTIONS YOU CAN USE
     // allows you to attatch a custom print function to an allocation
 
     // see test 6 as a simple example
+    https://github.com/HenryRoutson/CHelp/blob/main/tests/6_main.c
 
     UNFREED       ---
     file_name   : tests/6_main.c
@@ -193,6 +195,7 @@ ALL FUNCTIONS YOU CAN USE
     // prints error and exits if fails
 
     // see test 9
+    https://github.com/HenryRoutson/CHelp/blob/main/tests/9_main.c
 
     ERROR: wrong number of unfreed allocs
         expected : 0
@@ -229,6 +232,7 @@ ALL FUNCTIONS YOU CAN USE
     // but is returned
 
     // see test 12 
+    https://github.com/HenryRoutson/CHelp/blob/main/tests/12_main.c
 
     free_without_null(echo(p));
 
@@ -240,6 +244,8 @@ ALL FUNCTIONS YOU CAN USE
     // works like printf, with a format string and arguements
 
     // see test 5
+    https://github.com/HenryRoutson/CHelp/blob/main/tests/5_main.c
+
     add_message_to_alloc(p,  "This is a number: %i\n", 10);
 
     UNFREED       ---
@@ -269,7 +275,9 @@ will add traacking information to your allocation and incriment the number of un
 
 if you really don't know how large the allocation is, the size only has to be larger than it, so just make it really big
 
-See test 1
+See test 0 in the tests file
+https://github.com/HenryRoutson/CHelp/blob/main/tests/0_main.c
+
 
 
 
