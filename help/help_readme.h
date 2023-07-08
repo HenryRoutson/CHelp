@@ -12,7 +12,7 @@
 
 #include <stdbool.h>
 
-#define ENABLE_HELP false // enable or disable everything
+#define ENABLE_HELP true // enable or disable everything
 
 #define PRINT_ALLOC_SIZE true // print size and count for malloc and calloc
 #define PRINT_ALLOC_AND_FREE true // print out malloc and free when called
