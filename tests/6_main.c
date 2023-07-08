@@ -1,5 +1,5 @@
 
-// tsets set_alloc_print_func
+//   H o w    t o    u s e    SET_ALLOC_PRINT_FUNCTION
 
 #include <stdlib.h>
 #include <stdio.h>

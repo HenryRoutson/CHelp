@@ -43,16 +43,18 @@ alloc_info_t *info_from_alloc(void *alloc);
 #define add_message_to_alloc(alloc, format_and_args...) snprintf((char *)&info_from_alloc(alloc)->message, MAX_NUM_MESSAGE_CHARS, format_and_args);
 #define track_alloc(p_untracked_alloc, size) track_alloc(p_untracked_alloc, size, __FILE__, __LINE__)
 
-// main macro - to make life easier
 
-#if ENABLE_HELP
+
+
+
+
+
+// main macro - to make life easier
 
 #define CHELP_MAIN_MACRO \
 long num_unfreed_allocs = 0; \
 size_t num_allocs = 0; \
 void *alloc_array[MAX_NUM_MALLOCS];
-
-#endif
 
 #endif
 

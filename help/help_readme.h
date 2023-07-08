@@ -12,7 +12,7 @@
 
 #include <stdbool.h>
 
-#define ENABLE_HELP true // enable or disable everything
+#define ENABLE_HELP false // enable or disable everything
 
 #define PRINT_ALLOC_SIZE true // print size and count for malloc and calloc
 #define PRINT_ALLOC_AND_FREE true // print out malloc and free when called
@@ -77,73 +77,6 @@ int main() {
 
 
 
-
-
-
-
-
-
-
-
-OPTIONAL
-
-
-
-H o w    t o    u s e    A D D _ M E S S A G E _ T O _ M A L L O C
-
-
-        #include <stdlib.h>
-
-        #include "help/help.h"
-
-        long num_unfreed_allocs = 0;
-        size_t num_allocs = 0;
-        void *alloc_array[MAX_NUM_MALLOCS];
-
-        int main() {
-
-                int *p = malloc(100);
-                add_message_to_alloc(p, "message in malloc, this can be formatted like %s", "this");
-                print_alloc_info(p); // this will print out the message
-
-        }
-
-
-
-
-H o w   t o   u s e   A D D _ P R I N T _ F U N C _ T O _ M A L L O C
-
-        #include <stdio.h>
-        #include <stdlib.h>
-
-        #include "help.h"
-
-        long num_unfreed_allocs = 0;
-        size_t num_allocs = 0;
-        void *alloc_array[MAX_NUM_MALLOCS];
-
-        typedef struct { // some struct
-                int i;
-                char *c;
-                float f;
-        } struct_t;
-
-        void print_struct(void *v) { // some print function
-                struct_t *s = v;
-                printf("%i %s %f\n", s->i, s->c, s->f);
-        }
-
-        int main() {
-
-                struct_t *s = malloc(sizeof(*s));
-                s->i = 1;
-                s->c = "2";
-                s->f = 3;
-
-                set_alloc_print_func(s, print_struct);
-                print_alloc_info((void *) s);
-
-        }
 
 
 
@@ -255,28 +188,22 @@ ALL FUNCTIONS YOU CAN USE
     message     : 
     This is a number: 10
 
+7 void track_alloc(void **p_untracked_alloc, size_t size);
 
+    //          implicit allocations
 
+    These are functions which return a pointer allocated with malloc or calloc
+    which the chelp library macros cannot override because the library code is already compiled
+    For example strdup() duplicates a string, 
+    returing a pointer to memory which needs to be freed
 
+    //
 
+    Using track_alloc will add traacking information to your allocation and incriment the number of unfreed allocations
+    if you really don't know how large the allocation is, the size only has to be larger than it, so just make it really big
 
-
-
-// implicit allocations
-
-These are functions which return a pointer allocated with malloc or calloc
-which the chelp library macros cannot override because the library code is already compiled
-For example strdup() duplicates a string, 
-returing a pointer to memory which needs to be freed
-
-Using 
-void track_alloc(void **pp, size_t size)
-will add traacking information to your allocation and incriment the number of unfreed allocations
-
-if you really don't know how large the allocation is, the size only has to be larger than it, so just make it really big
-
-See test 0 in the tests file
-https://github.com/HenryRoutson/CHelp/blob/main/tests/0_main.c
+    See test 0 in the tests file
+    https://github.com/HenryRoutson/CHelp/blob/main/tests/0_main.c
 
 
 

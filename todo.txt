@@ -1,8 +1,9 @@
 
 
+move ALL FUNCTIONS YOU CAN USE from help_readme to avoid duplication and get syntax highlighting
 
-check all functions are defined
-define vocabulary and unify
+
+
 
 
 NOT DOING
