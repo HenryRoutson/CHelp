@@ -106,10 +106,10 @@ void free_without_null(void *p, char *file_name, size_t line_number) {
 
 }
 
-void *init_info(alloc_info_t *p, size_t size, size_t count, char *file_name, size_t line_number) {
+void *init_info(alloc_info_t *p, size_t size, size_t count_if_calloc, char *file_name, size_t line_number) {
 
   if (p == NULL) {
-    printf("\n\nError 4: alloc of size %lu and count %lu (0 if malloc) failed \n", size, count);
+    printf("\n\nError 4: alloc of size %lu and count %lu (0 if calloc) failed \n", size, count_if_calloc);
     PRINT_LOCATION
     exit(1);
   }
@@ -118,7 +118,7 @@ void *init_info(alloc_info_t *p, size_t size, size_t count, char *file_name, siz
   p->file_name = file_name;
   p->line_number = line_number;
   p->size = size;
-  p->count = count;
+  p->count_if_calloc = count_if_calloc;
   p->message[0] = 0;
   p->print_func = NULL;
 
@@ -267,8 +267,8 @@ void print_alloc_info(void *p) {
 
   #if PRINT_ALLOC_SIZE
   printf("size: %lu\n", info->size);
-  if (info->count) {
-    printf("count: %lu\n", info->count);
+  if (info->count_if_calloc) {
+    printf("calloc count: %lu\n", info->count_if_calloc);
   }
   #endif
 

@@ -9,7 +9,7 @@ typedef struct {
   char *file_name;
   size_t line_number;
   size_t size;
-  size_t count; // if calloc
+  size_t count_if_calloc;
   char message[MAX_NUM_MESSAGE_CHARS];
   void (*print_func)(void *p);
   size_t allocs_index;
