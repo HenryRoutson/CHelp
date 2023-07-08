@@ -13,6 +13,7 @@ int main() {
 
   char *string = "A string to copy";
   size_t n_string_bytes = strlen(string) + 1;
+  printf("n_string_bytes %lu", n_string_bytes); // get rid of ignored warning
 
   char *unfreed_allocation = strdup(string);
   track_alloc((void **) &unfreed_allocation, n_string_bytes); // <<<< allocation is tracked immediately after creation (pointer value will change)

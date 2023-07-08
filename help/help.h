@@ -50,7 +50,7 @@ alloc_info_t *info_from_alloc(void *p);
 #define CHELP_MAIN_MACRO \
 long num_unfreed_allocs = 0; \
 size_t num_allocs = 0; \
-void *allocs[MAX_NUM_MALLOCS];
+void *alloc_array[MAX_NUM_MALLOCS];
 
 #endif
 
@@ -71,6 +71,8 @@ void *allocs[MAX_NUM_MALLOCS];
 #define n_unfreed(n);
 #define print_all_allocs();
 #define add_alloc();
+#define CHELP_MAIN_MACRO
+#define track_alloc(pp, size)
 
 #endif
 

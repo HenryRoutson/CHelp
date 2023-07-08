@@ -58,7 +58,7 @@ but freeing becomes more complex because the pointer to the start of the allocat
 void add_alloc(void *a) {
 
     assert(num_allocs < MAX_NUM_MALLOCS);
-    allocs[num_allocs] = a;
+    alloc_array[num_allocs] = a;
 
     num_allocs++;
     num_unfreed_allocs++;
@@ -123,7 +123,7 @@ void free_without_null(void *p, char *file_name, size_t line_number) {
   check_pos_unfreed();
 
   alloc_info_t *info = info_from_alloc(p);
-  allocs[info->allocs_index] = NULL;
+  alloc_array[info->allocs_index] = NULL;
 
   free(info);
 
@@ -330,7 +330,7 @@ void print_all_allocs(void) {
   printf(">>> print_all_allocs() \n");
 
   while (i--) { // print reverse
-    print_alloc_info(allocs[i]);
+    print_alloc_info(alloc_array[i]);
   }
 
   printf(">>> \n");

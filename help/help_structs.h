@@ -19,5 +19,5 @@ typedef struct {
 #if ENABLE_HELP
 extern long num_unfreed_allocs;
 extern size_t num_allocs;
-extern void *allocs[MAX_NUM_MALLOCS];
+extern void *alloc_array[MAX_NUM_MALLOCS];
 #endif

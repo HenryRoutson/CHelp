@@ -38,7 +38,7 @@ REQUIRED
 #if ENABLE_HELP
 long num_unfreed_allocs = 0;
 size_t num_allocs = 0;
-void *allocs[MAX_NUM_MALLOCS];
+void *alloc_array[MAX_NUM_MALLOCS];
 #endif
 
 int main() {
@@ -98,7 +98,7 @@ H o w    t o    u s e    A D D _ M E S S A G E _ T O _ M A L L O C
 
         long num_unfreed_allocs = 0;
         size_t num_allocs = 0;
-        void *allocs[MAX_NUM_MALLOCS];
+        void *alloc_array[MAX_NUM_MALLOCS];
 
         int main() {
 
@@ -120,7 +120,7 @@ H o w   t o   u s e   A D D _ P R I N T _ F U N C _ T O _ M A L L O C
 
         long num_unfreed_allocs = 0;
         size_t num_allocs = 0;
-        void *allocs[MAX_NUM_MALLOCS];
+        void *alloc_array[MAX_NUM_MALLOCS];
 
         typedef struct { // some struct
                 int i;
