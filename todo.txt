@@ -2,10 +2,13 @@
 
 
 
-define vocabulary and unify
-Get rid of untracked allocations by requiring reallocation
-create tests for safe_realloc
 
-improve make file
+Get rid of untracked allocations by requiring reallocation
+track reallocs
+create tests for safe_realloc
+define vocabulary and unify
+
+
 NOT DOING
 alloc more and check if out of bounds is modified   - leave to valgrind
+improve make file - can't be bothered

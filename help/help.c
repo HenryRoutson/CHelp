@@ -41,9 +41,6 @@ void add_alloc(void *p) {
     num_unfreed_allocs++;
 }
 
-void add_untracked_alloc() {
-    add_alloc(UNTRACKED_POINTER);
-}
 
 void check_not_null(void *p, char *file_name, size_t line_number) {
   if (p == NULL && FREE_NULL_ERROR) {
@@ -84,7 +81,8 @@ void check_pos_unfreed() {
     printf("        Fix: #include #include \"../help/help.h\" // path to help.h \n\n");
     printf("  OR\n\n");
     printf("    There are implicit allocations, such as with strdup().\n");
-    printf("    search implicit allocations in help.h if you have tried the other options.\n\n");
+    printf("    search implicit allocations in help_readme.h if you have tried the other options.\n");
+    printf("        Fix: \n");
     exit(1);
   }
 }
@@ -141,6 +139,17 @@ void *init_info(alloc_info_t *p, size_t size, size_t count, char *file_name, siz
 }
 
 
+void track_alloc(void **p_untracked_alloc, size_t size, char *file_name, size_t line_number) {
+
+  alloc_info_t *info = malloc(size + sizeof(alloc_info_t)); // can't realloc so you don't overwrite 
+  init_info(info, size, 0, file_name, line_number);
+
+  void *tracked_alloc = info + 1;
+  memcpy(tracked_alloc, *p_untracked_alloc, size);
+  free(*p_untracked_alloc);
+
+  *p_untracked_alloc = tracked_alloc;
+}
 
 void *safe_malloc(size_t size, char *file_name, size_t line_number) {
   // always assert after malloc
@@ -189,7 +198,7 @@ void *safe_calloc(size_t size, size_t count, char *file_name, size_t line_number
 
 
 
-
+/*
 void *safe_realloc(void *pointer, size_t size, char *file_name, size_t line_number) {
 
   if (PRINT_ALLOC_AND_FREE) {
@@ -197,19 +206,7 @@ void *safe_realloc(void *pointer, size_t size, char *file_name, size_t line_numb
     PRINT_LOCATION
   }
 
-  // TODO: change
-
-  // could be reallocing a pointer without info
-  // so can't get index
-
-  for (size_t i = 0; i < num_allocs; i++) { 
-    if (allocs[i] == pointer) {
-      allocs[i] = REALLOCED_POINTER;
-      break;
-    }
-  }
-   
-  // otherwise this pointer is untracked, IE from strdup or similar
+  alloc_info_t *info = info_from_alloc(pointer);
 
   void *new_pointer = realloc(pointer, size);
 
@@ -218,6 +215,7 @@ void *safe_realloc(void *pointer, size_t size, char *file_name, size_t line_numb
 
   return new_pointer;
 }
+*/
 
 void free_null(void **pp, char *file_name, size_t line_number) {
   // always null after free

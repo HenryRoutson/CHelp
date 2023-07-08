@@ -21,7 +21,7 @@ void print_alloc_info(void *p);
 void set_alloc_print_func(void *p, void (*print_func)(void *p));
 void n_unfreed(long n);
 void print_all_allocs();
-void add_untracked_alloc();
+void track_alloc(void **pp, size_t size, char *file_name, size_t line_number);
 
 // only used in macros    DONT USE
 void add_alloc(void *p);
@@ -39,6 +39,7 @@ void free_null(void **pp, char *file_name, size_t line_number);
 
 #define free_without_null(pointer) free_without_null((void *)pointer, __FILE__, __LINE__)
 #define add_message_to_alloc(p, format_and_args...) snprintf((char *)&info_from_alloc(p)->message, MAX_NUM_MESSAGE_CHARS, format_and_args);
+#define track_alloc(pp, size) track_alloc(pp, size, __FILE__, __LINE__)
 
 // main macro - to make life easier
 
@@ -55,27 +56,6 @@ void *allocs[MAX_NUM_MALLOCS];
 #if !ENABLE_HELP
 #define CHELP_MAIN_MACRO
 #endif
-
-
-
-
-
-// implicit allocations
-
-/*
-These are functions which return a pointer allocated with malloc or calloc
-which the help library macros cannot override because the library code is already compiled
-
-you can simply add these functions below if you find any
-But i would really appreciate if you helped me add them for everybody
-https://github.com/HenryRoutson/CHelp/issues/new
-And you could every be credited
-
-*/
-
-#define strdup(p) strdup(p); add_untracked_alloc();
-#define strndup(p) strndup(p); add_untracked_alloc();
-
 
 
 #endif

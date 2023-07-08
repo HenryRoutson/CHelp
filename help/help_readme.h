@@ -15,7 +15,7 @@
 #define ENABLE_HELP true // enable or disable everything
 
 #define PRINT_ALLOC_SIZE true // print size and count for malloc and calloc
-#define PRINT_ALLOC_AND_FREE true // print out malloc and free when called
+#define PRINT_ALLOC_AND_FREE false // print out malloc and free when called
 #define FREE_NULL_ERROR true // will freeing a null pointer throw an error?
 #define MAX_NUM_MESSAGE_CHARS 128  // if your messages are being cutoff, increase this value
 #define MAX_NUM_MALLOCS 1024  // - Warning:  program may assert crash if this value isn't large enough
@@ -253,6 +253,27 @@ ALL FUNCTIONS YOU CAN USE
 
 
 
+
+
+
+// implicit allocations
+
+
+These are functions which return a pointer allocated with malloc or calloc
+which the help library macros cannot override because the library code is already compiled
+For example strdup() duplicates a string, 
+returing a pointer to memory to be freed
+
+See test 1
+
+
+
+
+
+
+
+
+
 Other notes
 
 size_t num_allocs = 0;         // <<< is used to index into allocs
@@ -260,5 +281,10 @@ If ENABLE_HELP is disabled, then make test will fail, but make run should pass h
 
 if something is not working, run 
     make clean
+
+
+
+
+
 
 */
