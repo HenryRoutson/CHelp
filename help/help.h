@@ -67,7 +67,7 @@ void set_alloc_print_func(void *alloc, void (*print_func)(void *p));
 
 void n_unfreed(long n_expected);
 /**
- * @brief  checks there are n unfreed allocations, prints error and exits if fails
+ * @brief checks there are n unfreed allocations, prints error and exits if fails. Place this at the end of main().
  * @see test 9 https://github.com/HenryRoutson/CHelp/blob/main/tests/9_main.c
  * 
  * 
@@ -91,7 +91,7 @@ void n_unfreed(long n_expected);
 
 void print_all_allocs();
 /**
- * @brief prints info from all allocations
+ * @brief prints info from all remaining allocations, FREED have no info.
  * 
  *      >>> print_all_allocs() 
  *      UNFREED       ---
@@ -124,7 +124,7 @@ void free_without_null(void *alloc, char *file_name, size_t line_number);
 
 
 
-void add_message_to_alloc(void *alloc, char *format_string, ...); // purely for demonstration
+void add_message_to_alloc(void *alloc, char *format_string, ...);
 /**
  * @brief Allows adding formatted message to allocation, works like printf
  * @see test 5 https://github.com/HenryRoutson/CHelp/blob/main/tests/5_main.c
@@ -155,13 +155,12 @@ void track_alloc(void **p_untracked_alloc, size_t size, char *file_name, size_t 
  *            implicit allocations
  * 
  *  These are functions which return a pointer allocated with malloc or calloc
- *  which the chelp library macros cannot override because the library code is already compiled
+ *  which the CHelp library macros cannot override because the library code is already compiled
  *  For example strdup() duplicates a string, 
  *  returing a pointer to memory which needs to be freed
  * 
  *                ------------
  * 
- *  Note: if you really don't know how large the allocation is, the size only has to be larger than it, so just make it really big
  * 
  * 
  * Example: 
