@@ -1,6 +1,11 @@
 
+Create tests for track alloc
+Create track_string - including logic for null byte
 
-seperate config and create
+Create 1:count, 2:macro and 3:full versions
+
+seperate config from setup
+Move docs to markdown
 
 
 
