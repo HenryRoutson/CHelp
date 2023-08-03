@@ -66,7 +66,7 @@ template: $(OBJ)
 
 
 
-TESTS = tests/0_main tests/1_main tests/2_main tests/3_main tests/4_main tests/5_main tests/6_main tests/7_main tests/8_main tests/9_main tests/10_main tests/11_main tests/12_main tests/13_main     tests_ext/1_ext_main  tests_ext/2_ext_main
+TESTS = tests/0_main tests/1_main tests/2_main tests/3_main tests/4_main tests/5_main tests/6_main tests/7_main tests/8_main tests/9_main tests/10_main tests/11_main tests/12_main tests/13_main     tests_ext/1_ext_main tests_ext/2_ext_main
 HEADERS = help/help_structs.h help/help_config.h help/help.h
 
 # executable depends on object files

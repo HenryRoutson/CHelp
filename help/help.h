@@ -147,7 +147,7 @@ void add_message_to_alloc(void *alloc, char *format_string, ...);
 
 
 
-void track_alloc(void **p_untracked_alloc, size_t size, char *file_name, size_t line_number);
+void *track_alloc(void *untracked_alloc, size_t size, char *file_name, size_t line_number);
 /**
  * @brief Track allocations like strdup which use implicit allocation
  * @see test 0 https://github.com/HenryRoutson/CHelp/blob/main/tests/0_main.c
@@ -160,14 +160,6 @@ void track_alloc(void **p_untracked_alloc, size_t size, char *file_name, size_t 
  *  returing a pointer to memory which needs to be freed
  * 
  *                ------------
- * 
- * 
- * 
- * Example: 
- * 
- * 
- *        char *alloc = strdup(string);
- *        track_alloc(&alloc, n_string_bytes); 
  * 
  */
 
@@ -220,11 +212,12 @@ void track_alloc(void **p_untracked_alloc, size_t size, char *file_name, size_t 
 
 
 
-// function definitions
+// function definitions using macros
 
 void *safe_malloc(size_t size, char *file_name, size_t line_number);
 void *safe_calloc(size_t size, size_t count, char *file_name, size_t line_number);
 void *safe_realloc(void *old_alloc, size_t new_size, char *file_name, size_t line_number);
+char *safe_strdup(char *string, char *file_name, size_t line_number);
 void free_null(void **p_alloc, char *file_name, size_t line_number);
 void add_alloc(void *alloc);
 alloc_info_t *info_from_alloc(void *alloc); 
@@ -241,7 +234,8 @@ alloc_info_t *info_from_alloc(void *alloc);
 #define realloc(old_alloc, new_size) safe_realloc(old_alloc, new_size, __FILE__, __LINE__)
 #define free_without_null(alloc) free_without_null((void *)alloc, __FILE__, __LINE__)
 #define add_message_to_alloc(alloc, format_and_args...) snprintf((char *)&info_from_alloc(alloc)->message, MAX_NUM_MESSAGE_CHARS, format_and_args);
-#define track_alloc(p_untracked_alloc, size) track_alloc((void **) p_untracked_alloc, size, __FILE__, __LINE__)
+#define track_alloc(untracked_alloc, size) track_alloc((void *) untracked_alloc, size, __FILE__, __LINE__)
+#define strdup(p_char) safe_strdup(p_char, __FILE__, __LINE__)
 
 
 
@@ -266,7 +260,7 @@ void *alloc_array[MAX_NUM_MALLOCS];
 #define print_all_allocs();
 #define add_alloc(alloc);
 #define CHELP_MAIN_MACRO
-#define track_alloc(pp, size)
+#define track_alloc(p, size) p
 
 #endif
 

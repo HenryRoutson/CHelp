@@ -107,7 +107,7 @@ void check_pos_unfreed() {
     printf("  OR\n\n");
     printf("    There are implicit allocations, such as with strdup().\n");
     printf("    search implicit allocations in help_config.h if you have tried the other options.\n");
-    printf("        Fix: void track_alloc(void **p_untracked_alloc, size_t size)\n");
+    printf("        Fix: use track_alloc\n");
     exit(1);
   } 
 }
@@ -162,16 +162,24 @@ void *init_info(alloc_info_t *info, size_t size, size_t count_if_calloc, char *f
 }
 
 
-void track_alloc(void **p_untracked_alloc, size_t size, char *file_name, size_t line_number) {
+void *track_alloc(void *untracked_alloc, size_t size, char *file_name, size_t line_number) {
 
   alloc_info_t *info = malloc(size + sizeof(alloc_info_t));
-  init_info(info, size, 0, file_name, line_number);
+  void *tracked_alloc = init_info(info, size, 0, file_name, line_number);
+  
+  memcpy(tracked_alloc, untracked_alloc, size);
+  free(untracked_alloc);
 
-  void *tracked_alloc = info + 1;
-  memcpy(tracked_alloc, *p_untracked_alloc, size);
-  free(*p_untracked_alloc);
+  return untracked_alloc; // needs to overwrite original allocation
+}
 
-  *p_untracked_alloc = tracked_alloc;
+
+
+char *safe_strdup(char *string, char *file_name, size_t line_number) {
+
+  size_t size = strlen(string) + 1; // 1 for NULL byte, can inf loop here if missing
+  char *alloc = track_alloc(strdup(string), size, file_name, line_number); 
+  return alloc;
 }
 
 

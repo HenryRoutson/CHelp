@@ -15,5 +15,5 @@ int main(void) {
 	add_message_to_alloc(p,  "This is a number: %i\n", 10); // format strings can be used
 	print_alloc_info(p);
 
-    free(p);
+  free(p);
 }

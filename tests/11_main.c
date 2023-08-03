@@ -17,5 +17,5 @@ int main(void) {
 
 	print_alloc_info(p);
 
-    free(p);
+  free(p);
 }

@@ -1,12 +1,14 @@
 
 Create tests for track alloc
-Create track_string - including logic for null byte
+
+rename init_info
 
 Create 1:count, 2:macro and 3:full versions
 
 seperate config from setup
 Move docs to markdown
 
+run valgrind on everything
 
 
 NOT DOING
