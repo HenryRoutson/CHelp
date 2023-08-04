@@ -12,6 +12,7 @@ CHELP_MAIN_MACRO
 int main() {
 
   char *alloc = strdup("A string to copy"); 
+  printf("alloc %p\n", alloc);
 
   #ifdef ENABLE_HELP
   n_unfreed(1);

@@ -55,13 +55,155 @@ but freeing becomes more complex because the pointer to the start of the allocat
 //
 
 
-void add_alloc(void *alloc) {
+
+
+alloc_info_t *info_from_alloc(void *alloc) {
+
+  // can fail, returning NULL
+
+  if (!alloc) {
+    printf("Error: Alloc is NULL\n");
+    return NULL;
+  }
+
+  alloc_info_t *info = ((alloc_info_t *) alloc) - 1;
+
+  bool is_verified = info->verification == VERIFICATION;
+  if (!is_verified) {
+    printf("Error 11: Invalid verification number for %p\n", alloc);
+    printf("          Trying to get information about allocation, but non is there\n");
+    printf("          Note: IS_TRACKED_CHECK == %i\n", IS_TRACKED_CHECK);
+    return NULL;
+  }
+  
+  assert(info->allocs_index < MAX_NUM_MALLOCS); // if fails, chelp bug
+
+  return info;
+}
+
+alloc_info_t *info_from_alloc_dbg(void *alloc, char *file_name, size_t line_number) {
+
+  alloc_info_t *info = info_from_alloc(alloc);
+  if (!info) {
+    PRINT_LOCATION
+    exit(1);
+  }
+
+  return info;
+}
+
+
+
+
+void print_alloc_info(void *alloc) {
+
+  if (alloc == NULL) {
+    printf("  FREED       ---\n");
+    return;
+  }
+  assert(MAX_NUM_MESSAGE_CHARS != 0);
+
+  printf("UNFREED       ---\n");
+  printf("pointer     : %p\n", alloc);
+
+  alloc_info_t *info = info_from_alloc(alloc);
+  assert(info);
+
+  if (DEBUG_CHELP) {
+    printf("info        : %p\n",          info);
+    printf("dif         : %li\n", alloc - (void *) info);
+  }
+  
+  printf("file_name   : %s\n", info->file_name);
+  printf("line_number : %zu\n", info->line_number);
+
+
+  #if PRINT_ALLOC_SIZE
+  printf("size: %lu\n", info->size);
+  if (info->count_if_calloc) {
+    printf("calloc count: %lu\n", info->count_if_calloc);
+  }
+  #endif
+
+  if (info->realloc_count) {
+    printf("realloc_count: %lu\n", info->realloc_count);
+  }
+
+  if (info->message[0]) {
+    printf("message     : \n%s", info->message);
+  }
+  
+  if (info->print_func) {
+    printf("print_func  : \n");
+    (*info->print_func)(alloc); // print alloc data
+  }
+
+  printf("              ---\n");
+
+}
+
+void print_all_allocs() {
+
+  assert(num_allocs > 0);
+  int i = num_allocs;
+
+  printf(">>> print_all_allocs() %lu\n", num_allocs);
+
+  while (i--) { // print reverse
+    print_alloc_info(alloc_array[i]);
+  }
+
+  printf(">>> \n");
+}
+
+
+
+
+
+bool is_tracked(void *alloc) {
+
+  for (size_t i = 0; i < num_allocs; i++) {
+    if (alloc_array[i] == alloc) {
+      return true;
+    }
+  }
+  
+  return false;
+}
+
+void should_be_tracked(void *alloc, bool should_be_tracked, char *file_name, size_t line_number)  {
+
+  if (IS_TRACKED_CHECK) {
+
+    bool alloc_is_tracked = is_tracked(alloc);
+    bool track_match = alloc_is_tracked == should_be_tracked;
+    if (!track_match) {
+      printf("ERROR 12: alloc is tracked        == %i\n", alloc_is_tracked);
+      printf("          alloc should be tracked == %i\n", should_be_tracked);
+      printf("          alloc == %p\n", alloc);
+      PRINT_LOCATION
+      print_all_allocs();
+      exit(1);
+    }
+
+  }
+}
+
+
+
+
+
+void add_alloc(void *alloc, char *file_name, size_t line_number) {
+
+    should_be_tracked(alloc, false, file_name, line_number);
 
     assert(num_allocs < MAX_NUM_MALLOCS);
     alloc_array[num_allocs] = alloc;
 
     num_allocs++;
     num_unfreed_allocs++;
+
+    should_be_tracked(alloc, true, file_name, line_number);
 }
 
 
@@ -79,24 +221,6 @@ void check_not_null(void *alloc, char *file_name, size_t line_number) {
   }
 }
 
-
-alloc_info_t *info_from_alloc(void *alloc) {
-
-  assert(alloc);
-
-  alloc_info_t *info = ((alloc_info_t *) alloc) - 1;
-
-  if (info->verification != VERIFICATION) {
-    printf("Error 11: Invalid verification number\n");
-    printf("          Trying to get information about allocation, but non is there\n");
-    printf("          You might have passed in the wrong allocation\n");
-    exit(1);
-  }
-
-  assert(info->allocs_index < MAX_NUM_MALLOCS); // if fails, chelp bug
-  return info;
-}
-
 void check_pos_unfreed() {
 
   if (num_unfreed_allocs < 0) {
@@ -112,11 +236,12 @@ void check_pos_unfreed() {
   } 
 }
 
-void free_without_null(void *alloc, char *file_name, size_t line_number) {
+void free_without_null(void *alloc, char *file_name, size_t line_number, bool print_free) {
 
   check_not_null(alloc, file_name, line_number);
+  should_be_tracked(alloc, true, file_name, line_number);
 
-  if (PRINT_ALLOC_AND_FREE) {
+  if (print_free) {
     printf("FREE   %p ", alloc);
     PRINT_LOCATION
   }
@@ -124,8 +249,10 @@ void free_without_null(void *alloc, char *file_name, size_t line_number) {
   num_unfreed_allocs--;
   check_pos_unfreed();
 
-  alloc_info_t *info = info_from_alloc(alloc);
+  alloc_info_t *info = info_from_alloc_dbg(alloc, file_name, line_number);
+  assert(info->allocs_index < num_allocs);
   alloc_array[info->allocs_index] = NULL;
+  should_be_tracked(alloc, false, file_name, line_number);
 
   free(info);
 
@@ -151,7 +278,7 @@ void *init_info(alloc_info_t *info, size_t size, size_t count_if_calloc, char *f
 
   void *alloc = info + 1; // go to start of allocated memory, ignoring data stored before it
 
-  add_alloc(alloc);
+  add_alloc(alloc, file_name, line_number);
 
   if (PRINT_ALLOC_AND_FREE) {
     printf("ALLOC %p bytes %lu ", alloc, size);
@@ -170,7 +297,11 @@ void *track_alloc(void *untracked_alloc, size_t size, char *file_name, size_t li
   memcpy(tracked_alloc, untracked_alloc, size);
   free(untracked_alloc);
 
-  return untracked_alloc; // needs to overwrite original allocation
+  if (DEBUG_CHELP) {
+    printf("track_alloc: %p -> %p\n", untracked_alloc, tracked_alloc);
+  }
+
+  return tracked_alloc; // needs to overwrite original allocation
 }
 
 
@@ -192,25 +323,32 @@ size_t min2(size_t n1, size_t n2) {
 
 void *safe_realloc(void *old_alloc, size_t new_size, char *file_name, size_t line_number) {
 
+  should_be_tracked(old_alloc, true, file_name, line_number);
 
-  alloc_info_t *old_info = info_from_alloc(old_alloc);
+  alloc_info_t *old_info = info_from_alloc_dbg(old_alloc, file_name, line_number);
   size_t old_size = old_info->size;
 
-  alloc_info_t *new_info = malloc(new_size + sizeof(alloc_info_t));
+  alloc_info_t *new_info = malloc(sizeof(alloc_info_t) + new_size);
+  assert(new_info);
 
   // realloc can reduce or increase the size of an allocation
   memcpy(new_info, old_info, sizeof(alloc_info_t) + min2(old_size, new_size));
   new_info->size = new_size;
   new_info->realloc_count ++;
 
-  free(old_info);
+  free_without_null(old_alloc, file_name, line_number, false);
+
 
   void *new_alloc = new_info + 1;
+  add_alloc(new_alloc, file_name, line_number);
 
   if (PRINT_ALLOC_AND_FREE) {
     printf("REALLOC %p > %p bytes %lu ", old_alloc, new_alloc, new_size);
     PRINT_LOCATION
   }
+
+
+  should_be_tracked(new_alloc, true, file_name, line_number);
 
   return new_alloc;
 }
@@ -266,49 +404,10 @@ void free_null(void **p_alloc, char *file_name, size_t line_number) {
   // always null after free
   assert(p_alloc);
   void *alloc = *p_alloc;
-  free_without_null(alloc, file_name, line_number);
+  free_without_null(alloc, file_name, line_number, PRINT_ALLOC_AND_FREE);
   *p_alloc = NULL;
 }
 
-
-void print_alloc_info(void *alloc) {
-
-  if (alloc == NULL) {
-    printf("  FREED       ---\n");
-    return;
-  }
-
-  alloc_info_t *info = info_from_alloc(alloc);
-  assert(MAX_NUM_MESSAGE_CHARS != 0);
-
-  printf("UNFREED       ---\n");
-  printf("file_name   : %s\n", info->file_name);
-  printf("line_number : %zu\n", info->line_number);
-
-
-  #if PRINT_ALLOC_SIZE
-  printf("size: %lu\n", info->size);
-  if (info->count_if_calloc) {
-    printf("calloc count: %lu\n", info->count_if_calloc);
-  }
-  #endif
-
-  if (info->realloc_count) {
-    printf("realloc_count: %lu\n", info->realloc_count);
-  }
-
-  if (info->message[0]) {
-    printf("message     : \n%s", info->message);
-  }
-  
-  if (info->print_func) {
-    printf("print_func  : \n");
-    (*info->print_func)(alloc); // print alloc data
-  }
-
-  printf("              ---\n");
-
-}
 
 void set_alloc_print_func(void *alloc, void (*print_func)(void *p)) {
   
@@ -319,6 +418,7 @@ void set_alloc_print_func(void *alloc, void (*print_func)(void *p)) {
   }
 
   alloc_info_t *info = info_from_alloc(alloc);
+  assert(info);
 
   if (info->print_func) {
     printf("Error 10: overwriting print function in set_alloc_print_func (function already set)");
@@ -328,19 +428,7 @@ void set_alloc_print_func(void *alloc, void (*print_func)(void *p)) {
   info->print_func = print_func;
 }
 
-void print_all_allocs() {
 
-  assert(num_allocs > 0);
-  int i = num_allocs;
-
-  printf(">>> print_all_allocs() \n");
-
-  while (i--) { // print reverse
-    print_alloc_info(alloc_array[i]);
-  }
-
-  printf(">>> \n");
-}
 
 
 void n_unfreed(long n_expected) {

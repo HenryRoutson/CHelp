@@ -112,7 +112,7 @@ void print_all_allocs();
 
 
 
-void free_without_null(void *alloc, char *file_name, size_t line_number);
+void free_without_null(void *alloc, char *file_name, size_t line_number, bool print_free);
 /**
  * @brief pointer to be freed isn't stored, and cannot be nulled: free_without_null(echo(p));
  * @see test 12  https://github.com/HenryRoutson/CHelp/blob/main/tests/12_main.c
@@ -212,7 +212,7 @@ void *track_alloc(void *untracked_alloc, size_t size, char *file_name, size_t li
 
 
 
-// function definitions using macros
+// function definitions 
 
 void *safe_malloc(size_t size, char *file_name, size_t line_number);
 void *safe_calloc(size_t size, size_t count, char *file_name, size_t line_number);
@@ -221,6 +221,7 @@ char *safe_strdup(char *string, char *file_name, size_t line_number);
 void free_null(void **p_alloc, char *file_name, size_t line_number);
 void add_alloc(void *alloc);
 alloc_info_t *info_from_alloc(void *alloc); 
+void should_be_tracked(void *alloc, bool should_be_tracked);
 
 
 
@@ -232,7 +233,7 @@ alloc_info_t *info_from_alloc(void *alloc);
 #define calloc(size, count) safe_calloc(size, count, __FILE__, __LINE__)
 #define free(alloc) free_null((void **)&alloc, __FILE__, __LINE__)
 #define realloc(old_alloc, new_size) safe_realloc(old_alloc, new_size, __FILE__, __LINE__)
-#define free_without_null(alloc) free_without_null((void *)alloc, __FILE__, __LINE__)
+#define free_without_null(alloc) free_without_null((void *)alloc, __FILE__, __LINE__, PRINT_ALLOC_AND_FREE)
 #define add_message_to_alloc(alloc, format_and_args...) snprintf((char *)&info_from_alloc(alloc)->message, MAX_NUM_MESSAGE_CHARS, format_and_args);
 #define track_alloc(untracked_alloc, size) track_alloc((void *) untracked_alloc, size, __FILE__, __LINE__)
 #define strdup(p_char) safe_strdup(p_char, __FILE__, __LINE__)

@@ -1,4 +1,6 @@
 
+Fix bug in ./tests/13_main
+
 Create tests for track alloc
 
 rename init_info
