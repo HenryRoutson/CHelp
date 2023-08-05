@@ -1,6 +1,6 @@
 
 // code by Henry Routson https://github.com/henryroutson/CHelp
-// Credit https://www.youtube.com/watch?v=443UNeGrFoM
+// Credit https://www.youtube.com/watch?v=443UNeGrFoM at 48:48
 
 // This is the config file
 

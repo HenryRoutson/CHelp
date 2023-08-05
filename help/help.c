@@ -73,6 +73,7 @@ alloc_info_t *info_from_alloc(void *alloc) {
     printf("Error 11: Invalid verification number for %p\n", alloc);
     printf("          Trying to get information about allocation, but non is there\n");
     printf("          Note: IS_TRACKED_CHECK == %i\n", IS_TRACKED_CHECK);
+    printf("\n\n\n");
     return NULL;
   }
   
@@ -107,7 +108,9 @@ void print_alloc_info(void *alloc) {
   printf("pointer     : %p\n", alloc);
 
   alloc_info_t *info = info_from_alloc(alloc);
-  assert(info);
+  if (!info) {
+    exit(1);
+  }
 
   if (DEBUG_CHELP) {
     printf("info        : %p\n",          info);
@@ -252,9 +255,11 @@ void free_without_null(void *alloc, char *file_name, size_t line_number, bool pr
   alloc_info_t *info = info_from_alloc_dbg(alloc, file_name, line_number);
   assert(info->allocs_index < num_allocs);
   alloc_array[info->allocs_index] = NULL;
+
   should_be_tracked(alloc, false, file_name, line_number);
 
   free(info);
+
 
 }
 
@@ -328,6 +333,7 @@ void *safe_realloc(void *old_alloc, size_t new_size, char *file_name, size_t lin
   alloc_info_t *old_info = info_from_alloc_dbg(old_alloc, file_name, line_number);
   size_t old_size = old_info->size;
 
+  // realloc may return an old pointer
   alloc_info_t *new_info = malloc(sizeof(alloc_info_t) + new_size);
   assert(new_info);
 
@@ -337,7 +343,6 @@ void *safe_realloc(void *old_alloc, size_t new_size, char *file_name, size_t lin
   new_info->realloc_count ++;
 
   free_without_null(old_alloc, file_name, line_number, false);
-
 
   void *new_alloc = new_info + 1;
   add_alloc(new_alloc, file_name, line_number);
