@@ -213,8 +213,21 @@ void alloc_array_index_check() {
   if (ENABLE_CHELP_CHECKS) {
 
     for (size_t i = 0; i < num_allocs; i++) {
-      alloc_info_t *info = alloc_array[i];
-      assert(info->allocs_index == i);
+
+      if (!alloc_array[i]) { continue; }
+      alloc_info_t *info = info_from_alloc(alloc_array[i]);
+
+      if (info->allocs_index != i) {
+
+        printf("ERROR: alloc %p found at wrong index\n", alloc_array[i]);
+        printf("info->allocs_index == %li\n", info->allocs_index);
+        printf("found at index     == %li\n\n\n", i);
+
+
+        print_all_allocs();
+        exit(1);
+
+      }
     }
     
   }
