@@ -18,7 +18,7 @@
 #define FREE_NULL_ERROR true // will freeing a null pointer throw an error?
 #define MAX_NUM_MESSAGE_CHARS 128  // if your messages are being cutoff, increase this value
 #define MAX_NUM_MALLOCS 1024  // - Warning:  program may assert crash if this value isn't large enough
-#define IS_TRACKED_CHECK true // Adds extra checks, at performance cost
+#define ENABLE_CHELP_CHECKS true // Adds extra checks, at performance cost
 
 #define DEBUG_CHELP true
 

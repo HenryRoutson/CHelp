@@ -72,7 +72,7 @@ alloc_info_t *info_from_alloc(void *alloc) {
   if (!is_verified) {
     printf("Error 11: Invalid verification number for %p\n", alloc);
     printf("          Trying to get information about allocation, but non is there\n");
-    printf("          Note: IS_TRACKED_CHECK == %i\n", IS_TRACKED_CHECK);
+    printf("          Note: ENABLE_CHELP_CHECKS == %i\n", ENABLE_CHELP_CHECKS);
     printf("\n\n\n");
     return NULL;
   }
@@ -176,7 +176,7 @@ bool is_tracked(void *alloc) {
 
 void should_be_tracked(void *alloc, bool should_be_tracked, char *file_name, size_t line_number)  {
 
-  if (IS_TRACKED_CHECK) {
+  if (ENABLE_CHELP_CHECKS) {
 
     bool alloc_is_tracked = is_tracked(alloc);
     bool track_match = alloc_is_tracked == should_be_tracked;
@@ -192,6 +192,33 @@ void should_be_tracked(void *alloc, bool should_be_tracked, char *file_name, siz
   }
 }
 
+void n_unfreed_check() {
+
+  if (ENABLE_CHELP_CHECKS) {
+
+    long actual_n_unfreed = 0;
+    for (size_t i = 0; i < num_allocs; i++) {
+      if (alloc_array[i] != NULL) {
+        actual_n_unfreed++;
+      }
+    }
+
+    assert(num_unfreed_allocs == actual_n_unfreed);
+  }
+}
+
+
+void alloc_array_index_check() {
+
+  if (ENABLE_CHELP_CHECKS) {
+
+    for (size_t i = 0; i < num_allocs; i++) {
+      alloc_info_t *info = alloc_array[i];
+      assert(info->allocs_index == i);
+    }
+    
+  }
+}
 
 
 
@@ -199,6 +226,7 @@ void should_be_tracked(void *alloc, bool should_be_tracked, char *file_name, siz
 void add_alloc(void *alloc, char *file_name, size_t line_number) {
 
     should_be_tracked(alloc, false, file_name, line_number);
+    n_unfreed_check();
 
     assert(num_allocs < MAX_NUM_MALLOCS);
     alloc_array[num_allocs] = alloc;
@@ -207,6 +235,8 @@ void add_alloc(void *alloc, char *file_name, size_t line_number) {
     num_unfreed_allocs++;
 
     should_be_tracked(alloc, true, file_name, line_number);
+    n_unfreed_check();
+    alloc_array_index_check();
 }
 
 
@@ -243,9 +273,11 @@ void free_without_null(void *alloc, char *file_name, size_t line_number, bool pr
 
   check_not_null(alloc, file_name, line_number);
   should_be_tracked(alloc, true, file_name, line_number);
+  n_unfreed_check();
 
   if (print_free) {
-    printf("FREE   %p ", alloc);
+    printf("FREE   %p\n", alloc);
+    printf("n_unfreed %li -> %li\n", num_unfreed_allocs, num_unfreed_allocs -1);
     PRINT_LOCATION
   }
 
@@ -254,9 +286,13 @@ void free_without_null(void *alloc, char *file_name, size_t line_number, bool pr
 
   alloc_info_t *info = info_from_alloc_dbg(alloc, file_name, line_number);
   assert(info->allocs_index < num_allocs);
+
+  printf("\n\n\n\n %li\n\n\n\n", info->allocs_index);
   alloc_array[info->allocs_index] = NULL;
 
+  n_unfreed_check();
   should_be_tracked(alloc, false, file_name, line_number);
+
 
   free(info);
 
@@ -335,16 +371,21 @@ void *safe_realloc(void *old_alloc, size_t new_size, char *file_name, size_t lin
 
   // realloc may return an old pointer
   alloc_info_t *new_info = malloc(sizeof(alloc_info_t) + new_size);
+  void *new_alloc = new_info + 1;
   assert(new_info);
 
   // realloc can reduce or increase the size of an allocation
-  memcpy(new_info, old_info, sizeof(alloc_info_t) + min2(old_size, new_size));
-  new_info->size = new_size;
-  new_info->realloc_count ++;
+  memcpy(new_info, old_alloc, min2(old_size, new_size));
 
-  free_without_null(old_alloc, file_name, line_number, false);
+  init_info(new_info, new_size, 0, file_name, line_number);
+  new_info->realloc_count = old_info->realloc_count + 1;
 
-  void *new_alloc = new_info + 1;
+  printf("\n\n\n%li %li \n\n", old_info->allocs_index, new_info->allocs_index);
+  assert(old_info->allocs_index < new_info->allocs_index);
+
+  free_without_null(old_alloc, file_name, line_number, true); // don't print
+
+  
   add_alloc(new_alloc, file_name, line_number);
 
   if (PRINT_ALLOC_AND_FREE) {
@@ -354,6 +395,7 @@ void *safe_realloc(void *old_alloc, size_t new_size, char *file_name, size_t lin
 
 
   should_be_tracked(new_alloc, true, file_name, line_number);
+  alloc_array_index_check();
 
   return new_alloc;
 }
