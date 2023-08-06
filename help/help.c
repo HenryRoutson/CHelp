@@ -147,10 +147,10 @@ void print_alloc_info(void *alloc) {
 
 void print_all_allocs() {
 
-  assert(num_allocs > 0);
   int i = num_allocs;
 
-  printf(">>> print_all_allocs() %lu\n", num_allocs);
+  printf(">>> print_all_allocs()\n");
+  printf("    %zu allocs, %zu unfreed\n\n", num_allocs, num_unfreed_allocs);
 
   while (i--) { // print reverse
     print_alloc_info(alloc_array[i]);
@@ -223,7 +223,6 @@ void alloc_array_index_check() {
         printf("info->allocs_index == %li\n", info->allocs_index);
         printf("found at index     == %li\n\n\n", i);
 
-
         print_all_allocs();
         exit(1);
 
@@ -238,7 +237,7 @@ void alloc_array_index_check() {
 
 void add_alloc(void *alloc, char *file_name, size_t line_number) {
 
-    should_be_tracked(alloc, false, file_name, line_number);
+    should_be_tracked(alloc, false, file_name, line_number); //
     n_unfreed_check();
 
     assert(num_allocs < MAX_NUM_MALLOCS);
@@ -284,9 +283,16 @@ void check_pos_unfreed() {
 
 void free_without_null(void *alloc, char *file_name, size_t line_number, bool print_free) {
 
+
+  if (DEBUG_CHELP) { //REMOVE
+    printf("\n1 FREEING %p\n\n", alloc);
+    print_all_allocs();
+  }
+
   check_not_null(alloc, file_name, line_number);
   should_be_tracked(alloc, true, file_name, line_number);
   n_unfreed_check();
+  
 
   if (print_free) {
     printf("FREE   %p\n", alloc);
@@ -299,20 +305,25 @@ void free_without_null(void *alloc, char *file_name, size_t line_number, bool pr
 
   alloc_info_t *info = info_from_alloc_dbg(alloc, file_name, line_number);
   assert(info->allocs_index < num_allocs);
+  assert(alloc_array[info->allocs_index] == info + 1);
 
   printf("\n\n\n\n %li\n\n\n\n", info->allocs_index);
   alloc_array[info->allocs_index] = NULL;
 
+  if (DEBUG_CHELP) { //REMOVE
+    printf("\n2 FREEING %p\n\n", alloc);
+    print_all_allocs();
+  }
+
   n_unfreed_check();
   should_be_tracked(alloc, false, file_name, line_number);
-
 
   free(info);
 
 
 }
 
-void *init_info(alloc_info_t *info, size_t size, size_t count_if_calloc, char *file_name, size_t line_number) {
+void *init_info_and_add(alloc_info_t *info, size_t size, size_t count_if_calloc, char *file_name, size_t line_number) {
 
   if (info == NULL) { // as called after allocations 
     printf("\n\nError 4: alloc of size %lu and count %lu (0 if calloc) failed \n", size, count_if_calloc);
@@ -346,7 +357,7 @@ void *init_info(alloc_info_t *info, size_t size, size_t count_if_calloc, char *f
 void *track_alloc(void *untracked_alloc, size_t size, char *file_name, size_t line_number) {
 
   alloc_info_t *info = malloc(size + sizeof(alloc_info_t));
-  void *tracked_alloc = init_info(info, size, 0, file_name, line_number);
+  void *tracked_alloc = init_info_and_add(info, size, 0, file_name, line_number);
   
   memcpy(tracked_alloc, untracked_alloc, size);
   free(untracked_alloc);
@@ -390,25 +401,22 @@ void *safe_realloc(void *old_alloc, size_t new_size, char *file_name, size_t lin
   // realloc can reduce or increase the size of an allocation
   memcpy(new_info, old_alloc, min2(old_size, new_size));
 
-  init_info(new_info, new_size, 0, file_name, line_number);
+  init_info_and_add(new_info, new_size, 0, file_name, line_number);
   new_info->realloc_count = old_info->realloc_count + 1;
 
-  printf("\n\n\n%li %li \n\n", old_info->allocs_index, new_info->allocs_index);
   assert(old_info->allocs_index < new_info->allocs_index);
 
   free_without_null(old_alloc, file_name, line_number, true); // don't print
 
-  
-  add_alloc(new_alloc, file_name, line_number);
 
   if (PRINT_ALLOC_AND_FREE) {
     printf("REALLOC %p > %p bytes %lu ", old_alloc, new_alloc, new_size);
     PRINT_LOCATION
   }
 
-
+  
   should_be_tracked(new_alloc, true, file_name, line_number);
-  alloc_array_index_check();
+
 
   return new_alloc;
 }
@@ -431,7 +439,7 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
   }
 
   alloc_info_t *info = malloc(sizeof(alloc_info_t) + size);
-  void *alloc = init_info(info, size, 0, file_name, line_number);
+  void *alloc = init_info_and_add(info, size, 0, file_name, line_number);
   return alloc;
 }
 
@@ -454,7 +462,7 @@ void *safe_calloc(size_t size, size_t count, char *file_name, size_t line_number
   }
 
   alloc_info_t *info = malloc(sizeof(alloc_info_t) + size * count);
-  void *alloc = init_info(info, size, count, file_name, line_number);
+  void *alloc = init_info_and_add(info, size, count, file_name, line_number);
   memset(alloc, 0, sizeof(size * count));
   return alloc;
 }

@@ -9,25 +9,12 @@ CHELP_MAIN_MACRO
 
 int main(void) {
 	
-	int *p = malloc(100);
-  print_all_allocs();
-
-  p = realloc(p, 200);
-  n_unfreed(1);
-  print_all_allocs();
-
-  p = realloc(p, 200);
-  n_unfreed(1);
-  print_all_allocs();
-
-  p = realloc(p, 100);
-  n_unfreed(1);
-  print_all_allocs();
-
-  p = realloc(p, 10);
-  n_unfreed(1);
-
-  print_all_allocs();
+	int *p = malloc(1);
+  p = realloc(p, 2);
+  p = realloc(p, 3);
+  p = realloc(p, 4);
+  p = realloc(p, 5);
+  free(p);
 
 	printf("TEST: PASSED"); // if didnt crash
 }

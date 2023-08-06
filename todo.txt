@@ -1,10 +1,4 @@
 
-Fix bug in ./tests/13_main
-
-Create tests for track alloc
-
-rename init_info
-
 Create 1:count, 2:macro and 3:full versions
 
 seperate config from setup

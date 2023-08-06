@@ -159,7 +159,7 @@ test: all
 	./tests/10_main | grep -q "TEST: PASSED" 
 	./tests/11_main | grep -q "Test no formatting" 
 	./tests/12_main | grep -q "TEST: PASSED" 
-	./tests/13_main | grep -q "line_number : 11" 
+	./tests/13_main | grep -q "TEST: PASSED" 
 	./tests/14_main | grep -q "TEST: PASSED" 
 	./tests/15_main | grep -q "TEST: PASSED" 
 
