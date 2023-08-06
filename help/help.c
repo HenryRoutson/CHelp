@@ -283,16 +283,9 @@ void check_pos_unfreed() {
 
 void free_without_null(void *alloc, char *file_name, size_t line_number, bool print_free) {
 
-
-  if (DEBUG_CHELP) { //REMOVE
-    printf("\n1 FREEING %p\n\n", alloc);
-    print_all_allocs();
-  }
-
   check_not_null(alloc, file_name, line_number);
   should_be_tracked(alloc, true, file_name, line_number);
   n_unfreed_check();
-  
 
   if (print_free) {
     printf("FREE   %p\n", alloc);
@@ -307,13 +300,7 @@ void free_without_null(void *alloc, char *file_name, size_t line_number, bool pr
   assert(info->allocs_index < num_allocs);
   assert(alloc_array[info->allocs_index] == info + 1);
 
-  printf("\n\n\n\n %li\n\n\n\n", info->allocs_index);
   alloc_array[info->allocs_index] = NULL;
-
-  if (DEBUG_CHELP) { //REMOVE
-    printf("\n2 FREEING %p\n\n", alloc);
-    print_all_allocs();
-  }
 
   n_unfreed_check();
   should_be_tracked(alloc, false, file_name, line_number);
