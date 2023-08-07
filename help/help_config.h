@@ -1,6 +1,15 @@
 
 // code by Henry Routson https://github.com/henryroutson/CHelp
+
 // Credit https://www.youtube.com/watch?v=443UNeGrFoM at 48:48
+// https://gamepipeline.org/forge_Debugging_.html
+// 
+// Changes from this codebase
+//    + storing data before allocs to make O(n) pointer search O(1)
+//    + storing allocation and free counts to for leak checks O(1)  
+//    + retaining allocation order
+//    - No overallocation (leaving this to valgrind)
+//    - No multithreading (yet)
 
 // This is the config file
 

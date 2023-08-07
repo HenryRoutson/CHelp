@@ -4,8 +4,7 @@ Create 1:count, 2:macro and 3:full versions
 seperate config from setup
 Move docs to markdown
 
-run valgrind on everything
-
+multithreading, see // https://gamepipeline.org/forge_Debugging_.html
 
 NOT DOING
 alloc more and check if out of bounds is modified   - leave to valgrind
