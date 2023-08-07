@@ -1,4 +1,6 @@
 
+remove negative checks
+
 Create 1:count, 2:macro and 3:full versions
 
 seperate config from setup
