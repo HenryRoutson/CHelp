@@ -14,5 +14,5 @@ int main(void) {
 	// test large malloc failure
 
 	int *l = malloc(-1); // will fail
-    free(l);
+  free(l);
 }

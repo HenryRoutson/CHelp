@@ -28,4 +28,6 @@ int main(void) {
 	set_alloc_print_func(s, NULL);
 	print_alloc_info((void *) s);
 
+  free(s);
+
 }

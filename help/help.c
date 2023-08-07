@@ -450,7 +450,7 @@ void *safe_calloc(size_t size, size_t count, char *file_name, size_t line_number
 
   alloc_info_t *info = malloc(sizeof(alloc_info_t) + size * count);
   void *alloc = init_info_and_add(info, size, count, file_name, line_number);
-  memset(alloc, 0, sizeof(size * count));
+  memset(alloc, 0, size * count);
   return alloc;
 }
 
