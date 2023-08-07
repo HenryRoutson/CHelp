@@ -12,7 +12,7 @@ CHELP_MAIN_MACRO
 int main(void) {
 
 	// test num_unfreed_allocs errors
-	int *p = malloc(1);
+	int *p = malloc(10);
 	*p = 10;
 
 	n_unfreed(0); // will fail

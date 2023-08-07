@@ -15,9 +15,13 @@ int main(void) {
 
   n_unfreed(0);
 
-  track_alloc(untracked_alloc, s);
+  void *tracked_alloc = track_alloc(untracked_alloc, s);
 
   n_unfreed(1);
+
+  free(tracked_alloc);
+
+  n_unfreed(0);
 
 	printf("TEST: PASSED"); // if didnt crash
 }
