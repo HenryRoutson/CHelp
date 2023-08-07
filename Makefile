@@ -146,47 +146,47 @@ RUNWITH =
 
 test: all
 	
-	./tests/0_main  | grep -q "UNFREED" 
-	./tests/1_main  | grep -q "TEST: PASSED" 
-	./tests/2_main  | grep -q "wrong number of unfreed allocs" 
-	./tests/3_main  | grep -q "malloc size may be negative, unsigned value was -1" 
-	./tests/4_main  | grep -q "file_name   : tests/4_main.c" 
-	./tests/5_main  | grep -q "This is a number: 10" 
-	./tests/6_main  | grep -q "1 2 3" 
-	! ./tests/7_main > /dev/null
-	./tests/8_main  | grep -q "1 s1 3.000000" 
-	./tests/9_main  | grep -q "FREED" 
-	./tests/10_main | grep -q "TEST: PASSED" 
-	./tests/11_main | grep -q "Test no formatting" 
-	./tests/12_main | grep -q "TEST: PASSED" 
-	./tests/13_main | grep -q "TEST: PASSED" 
-	./tests/14_main | grep -q "TEST: PASSED" 
-	./tests/15_main | grep -q "TEST: PASSED" 
+	$(RUNWITH) ./tests/0_main  | grep -q "UNFREED" 
+	$(RUNWITH) ./tests/1_main  | grep -q "TEST: PASSED" 
+	$(RUNWITH) ./tests/2_main  | grep -q "wrong number of unfreed allocs" 
+	$(RUNWITH) ./tests/3_main  | grep -q "malloc size may be negative, unsigned value was -1" 
+	$(RUNWITH) ./tests/4_main  | grep -q "file_name   : tests/4_main.c" 
+	$(RUNWITH) ./tests/5_main  | grep -q "This is a number: 10" 
+	$(RUNWITH) ./tests/6_main  | grep -q "1 2 3" 
+	! $(RUNWITH) ./tests/7_main > /dev/null
+	$(RUNWITH) ./tests/8_main  | grep -q "1 s1 3.000000" 
+	$(RUNWITH) ./tests/9_main  | grep -q "FREED" 
+	$(RUNWITH) ./tests/10_main | grep -q "TEST: PASSED" 
+	$(RUNWITH) ./tests/11_main | grep -q "Test no formatting" 
+	$(RUNWITH) ./tests/12_main | grep -q "TEST: PASSED" 
+	$(RUNWITH) ./tests/13_main | grep -q "TEST: PASSED" 
+	$(RUNWITH) ./tests/14_main | grep -q "TEST: PASSED" 
+	$(RUNWITH) ./tests/15_main | grep -q "TEST: PASSED" 
 
-	./tests_ext/1_ext_main  | grep -q "TEST: PASSED" 
-	! ./tests_ext/2_ext_main > /dev/null
+	$(RUNWITH) ./tests_ext/1_ext_main  | grep -q "TEST: PASSED" 
+	! $(RUNWITH) ./tests_ext/2_ext_main > /dev/null
 
 run: all
 	
-	-./tests/0_main 
-	-./tests/1_main
-	-./tests/2_main
-	-./tests/3_main
-	-./tests/4_main
-	-./tests/5_main
-	-./tests/6_main
-	-./tests/7_main
-	-./tests/8_main
-	-./tests/9_main 
-	-./tests/10_main 
-	-./tests/11_main 
-	-./tests/12_main 
-	-./tests/13_main 
-	-./tests/14_main 
-	-./tests/15_main 
+	-$(RUNWITH) ./tests/0_main 
+	-$(RUNWITH) ./tests/1_main
+	-$(RUNWITH) ./tests/2_main
+	-$(RUNWITH) ./tests/3_main
+	-$(RUNWITH) ./tests/4_main
+	-$(RUNWITH) ./tests/5_main
+	-$(RUNWITH) ./tests/6_main
+	-$(RUNWITH) ./tests/7_main
+	-$(RUNWITH) ./tests/8_main
+	-$(RUNWITH) ./tests/9_main 
+	-$(RUNWITH) ./tests/10_main 
+	-$(RUNWITH) ./tests/11_main 
+	-$(RUNWITH) ./tests/12_main 
+	-$(RUNWITH) ./tests/13_main 
+	-$(RUNWITH) ./tests/14_main 
+	-$(RUNWITH) ./tests/15_main 
 
-	-./tests_ext/1_ext_main
-	-./tests_ext/2_ext_main
+	-$(RUNWITH) ./tests_ext/1_ext_main
+	-$(RUNWITH) ./tests_ext/2_ext_main
 
 
 	
