@@ -13,6 +13,7 @@ int main(void) {
 
 	// test large malloc failure
 
-	int *l = malloc(-1); // will fail
+  size_t overflowed = 10*sizeof(int)- 60* sizeof(char);
+	int *l = malloc(overflowed); // will fail
   free(l);
 }

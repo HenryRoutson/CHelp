@@ -151,7 +151,7 @@ test: all
 	$(VGRIND) ./tests/0_main  | grep -q "UNFREED" 
 	$(VGRIND) ./tests/1_main  | grep -q "TEST: PASSED" 
 	$(VGRIND) ./tests/2_main  | grep -q "wrong number of unfreed allocs" # FAILS VGRIND
-	$(VGRIND) ./tests/3_main  | grep -q "malloc size may be negative, unsigned value was -1" 
+	$(VGRIND) ./tests/3_main  | grep -q "malloc size may be negative, unsigned value was" 
 	$(VGRIND) ./tests/4_main  | grep -q "file_name   : tests/4_main.c" 
 	$(VGRIND) ./tests/5_main  | grep -q "This is a number: 10" 
 	$(VGRIND) ./tests/6_main  | grep -q "1 2 3" 
