@@ -112,6 +112,10 @@ Compared to Chelp, Valgrind ...
 
 - Doesn't allow you to print out allocations when they occur.
 
+- Doesn't allow you to have assert the number of allocations you should have across multiple points in your program.
+
+- Doesn't allow you to print all unfreed allocations at any point in your program.
+
 + Has functionality for other errors CHelp doesn't have. 
   You should use CHelp and valgrind in conjunction when developing C.
 
