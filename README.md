@@ -1,13 +1,12 @@
 
 # How CHELP works
 
-explained simply.
-
 At its core, CHelp counts of how many allocations remain at the end of your program.
 If there are more than 0, you have a memory leak.
 
 This is obviously extremely performant.
 
+Done manually the process looks like this.
 
 
 ```C
@@ -33,7 +32,8 @@ int main() {
 ```
 
 
-This process of tracking the number of allocations can be automated
+Tracking the number of unfreed allocations can be automated.
+
 
 ```C
 
@@ -59,7 +59,7 @@ int main() {
 
 ```
 
-And then extracted into external files, and functions to make error output better.
+And then extracted into external files and functions used to make error output better.
 
 ```C
 
