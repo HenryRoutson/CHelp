@@ -92,32 +92,62 @@ Obviously just knowing there is a problem isn't that helpful, so at this point y
 
 # Valgrind 
 
-Compared to Chelp, Valgrind ... 
+Chelp compared to Valgrind ... 
 
 ```
 
-- Isn’t cross platform
+✅ Is cross platform
 
-- Is often run only run occasionally, 
-  allowing bugs to build up
-  and obfuscating what changes caused them.
 
-- Requires you to recreate error contitions.
+✅ Runs in the background, rather than only being run occasionally.
 
-- Is comparatively slow.
+  Which avoids ...
+  1 Allowing bugs to build up and obfuscating what changes caused them.
+  2 Requiring you to rurun recreate error contitions.
 
-- Provides limited information about leaked memory.
+✅ Is comparatively fast.
 
-- Doesn't allow you to attatch extra information to allocations.
+✅ Provides extra information about leaked memory.
 
-- Doesn't allow you to print out allocations when they occur.
+✅ Allows you to attatch extra information to allocations.
 
-- Doesn't allow you to have assert the number of allocations you should have across multiple points in your program.
+✅ Allows you to print out allocations when they occur.
 
-- Doesn't allow you to print all unfreed allocations at any point in your program.
+✅ Allows you to have assert the number of allocations you should have across multiple points in your programs execution.
 
-+ Has functionality for other errors CHelp doesn't have. 
+✅ Allows you to print all unfreed allocations at any point in your program.
+
+❌ 
+  Valgrind has functionality for other errors CHelp doesn't have,
+  and simply cannot support.
   You should use CHelp and valgrind in conjunction when developing C.
 
+
+```
+
+Chelp has a number of features, which in some aspects make it better than Valgrind.
+
+
+# Credit
+
+```
+
+The idea for this project was largely inspired by this video:
+
+How i program C, Eskil Steenberg
+https://www.youtube.com/watch?v=443UNeGrFoM at 48:48
+
+Although implimentation differs significantly
+
+Codebase
+https://gamepipeline.org/forge_Debugging_.html
+
+
+
+✅ storing data before allocs to make O(n) pointer search O(1)
+✅ storing allocation and free counts to for leak checks O(1)  
+✅ retaining allocation order
+❌ No overallocation (leaving this to valgrind)
+❌ No multithreading (yet)
 
 ```

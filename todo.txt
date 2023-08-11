@@ -6,6 +6,8 @@ Move docs to markdown
 
 multithreading, see // https://gamepipeline.org/forge_Debugging_.html
 
+n_unfreed_type() with filter on type, IE for a linked list n_unfreed_type(list.length, node_t)
+
 NOT DOING
 alloc more and check if out of bounds is modified   - leave to valgrind
 improve make file - can't be bothered
