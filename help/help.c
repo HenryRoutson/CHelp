@@ -51,7 +51,6 @@ but freeing becomes more complex because the pointer to the start of the allocat
 
 //
 // --------------------------------
-// Sub Functions
 //
 
 
@@ -504,5 +503,40 @@ void n_unfreed(long n_expected) {
   }
 
 }
+
+
+
+void n_unfreed_with_print_func(size_t n_expected, void (*print_func)(void *p)) {
+
+  size_t actual_n = 0;
+
+  for (size_t i = 0; i < num_allocs; i++) {
+    if (info_from_alloc( alloc_array[i])->print_func == print_func) {
+      actual_n++;
+    }
+  }
+
+  if (actual_n != n_expected) {
+
+    printf("\n\nERROR: wrong number of unfreed allocs\n");
+    printf("           with function pointer %p", print_func);
+
+    printf("	expected : %zu\n", n_expected);
+    printf("	found    : %zu\n\n", actual_n);
+    printf("\n");
+    printf("	allocs are listed below,\n	in reverse allocation order\n");
+
+    print_all_allocs();
+
+    printf("\n\n");
+
+    exit(1);
+  }
+
+}
+
+
+
+
 
 #endif

@@ -1,4 +1,11 @@
 
+
+write test for n unfreed of ...
+improve n unfreed of ...
+Make n_unfreed_of_type faster with cache?
+  Will need another data array 
+    O(number of allocs) -> O(number of alloc types)
+
 Create 1:count, 2:macro and 3:full versions
 
 seperate config from setup
