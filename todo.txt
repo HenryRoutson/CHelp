@@ -1,5 +1,9 @@
 
 
+
+Change to n unfreed of type 
+  and get user defined enum to create types
+
 write test for n unfreed of ...
 improve n unfreed of ...
 Make n_unfreed_of_type faster with cache?
