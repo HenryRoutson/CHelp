@@ -98,7 +98,6 @@ Chelp compared to Valgrind ...
 
 ✅ Is cross platform
 
-
 ✅ Runs in the background, rather than only being run occasionally.
 
   Which avoids ...
@@ -111,7 +110,7 @@ Chelp compared to Valgrind ...
 
 ✅ Allows you to attatch extra information to allocations.
 
-✅ Allows you to print out allocations when they occur.
+✅ Allows you to print out allocations and frees when they occur.
 
 ✅ Allows you to have assert the number of allocations you should have across multiple points in your programs execution.
 
