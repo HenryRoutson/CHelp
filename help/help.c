@@ -71,7 +71,7 @@ alloc_info_t *info_from_alloc(void *alloc) {
   if (!is_verified) {
     printf("Error 11: Invalid verification number for %p\n", alloc);
     printf("          Trying to get information about allocation, but non is there\n");
-    printf("          Note: ENABLE_CHELP_CHECKS == %i\n", ENABLE_CHELP_CHECKS);
+    printf("          Note: DEBUG_CHELP == %i\n", DEBUG_CHELP);
     printf("\n\n\n");
     return NULL;
   }
@@ -111,21 +111,18 @@ void print_alloc_info(void *alloc) {
     exit(1);
   }
 
-  if (DEBUG_CHELP) {
-    printf("info        : %p\n",          info);
-    printf("dif         : %li\n", alloc - (void *) info);
-  }
-  
   printf("file_name   : %s\n", info->file_name);
   printf("line_number : %zu\n", info->line_number);
 
 
-  #if PRINT_ALLOC_SIZE
-  printf("size: %lu\n", info->size);
-  if (info->count_if_calloc) {
-    printf("calloc count: %lu\n", info->count_if_calloc);
+  if (PRINT_ALLOC_SIZE) {
+
+    printf("size: %lu\n", info->size);
+    if (info->count_if_calloc) {
+      printf("calloc count: %lu\n", info->count_if_calloc);
+    }
   }
-  #endif
+
 
   if (info->realloc_count) {
     printf("realloc_count: %lu\n", info->realloc_count);
@@ -175,7 +172,7 @@ bool is_tracked(void *alloc) {
 
 void should_be_tracked(void *alloc, bool should_be_tracked, char *file_name, size_t line_number)  {
 
-  if (ENABLE_CHELP_CHECKS) {
+  if (DEBUG_CHELP) {
 
     bool alloc_is_tracked = is_tracked(alloc);
     bool track_match = alloc_is_tracked == should_be_tracked;
@@ -193,7 +190,7 @@ void should_be_tracked(void *alloc, bool should_be_tracked, char *file_name, siz
 
 void n_unfreed_check() {
 
-  if (ENABLE_CHELP_CHECKS) {
+  if (DEBUG_CHELP) {
 
     long actual_n_unfreed = 0;
     for (size_t i = 0; i < num_allocs; i++) {
@@ -209,7 +206,7 @@ void n_unfreed_check() {
 
 void alloc_array_index_check() {
 
-  if (ENABLE_CHELP_CHECKS) {
+  if (DEBUG_CHELP) {
 
     for (size_t i = 0; i < num_allocs; i++) {
 

@@ -150,3 +150,13 @@ https://gamepipeline.org/forge_Debugging_.html
 ❌ No multithreading (yet)
 
 ```
+
+
+# setup 
+
+```
+
+1 Place help folder in your repo
+2 Copy missing lines from main_template.c into your main.c
+
+```
