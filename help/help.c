@@ -276,15 +276,15 @@ void free_without_null(void *alloc, char *file_name, size_t line_number, bool pr
   alloc_info_t *info = info_from_alloc_dbg(alloc, file_name, line_number);
   assert(info->allocs_index < num_allocs);
   assert(alloc_array[info->allocs_index] == info + 1);
+  assert(info->type >= 0);
 
+  info->type--;
   alloc_array[info->allocs_index] = NULL;
 
   n_unfreed_check();
   should_be_tracked(alloc, false, file_name, line_number);
 
   free(info);
-
-
 }
 
 void *track_info(alloc_info_t *info, size_t size, size_t count_if_calloc, char *file_name, size_t line_number) {
@@ -305,6 +305,7 @@ void *track_info(alloc_info_t *info, size_t size, size_t count_if_calloc, char *
   info->message[0] = 0; // NULL end string
   info->print_func = NULL;
   info->allocs_index = num_allocs;
+  info->type = 0; // 0 is default type
 
   void *alloc = info + 1; // go to start of allocated memory, ignoring data stored before it
 
@@ -394,7 +395,6 @@ void *safe_realloc(void *old_alloc, size_t new_size, char *file_name, size_t lin
 
   
   should_be_tracked(new_alloc, true, file_name, line_number);
-
 
   return new_alloc;
 }
@@ -527,6 +527,29 @@ void n_unfreed_with_print_func(size_t n_expected, void (*print_func)(void *p)) {
 
 }
 
+
+void set_alloc_type(void *alloc, int type, char *name) {
+  alloc_info_t *info = info_from_alloc(alloc);
+  info->type = type;
+
+  char *cur_name = alloc_type_name[type];
+  assert(!cur_name == !!name);
+
+  if (name) { // if setting name
+    assert(!cur_name); // no existing name
+    cur_name = name; // and set
+    
+  } else { // if not setting name
+    assert(cur_name); // assert existing name
+  }
+
+}
+
+
+
+void n_unfreed_of_type(int type, long num) {
+  assert(alloc_type_n_unfreed[type] == num);
+}
 
 
 

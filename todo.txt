@@ -1,11 +1,9 @@
 
 
 
-n unfreed of type and get user defined enum to create types
-  create storage      size_t type_counts[MAX_NUM_TYPES]
-  create function     void n_unfreed_of type(size_t n_expected, int type);
-  create documentation
-write test for n unfreed of type 
+
+write test for n unfreed of type and create enum example
+search TODO
 
 
 

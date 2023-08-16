@@ -17,11 +17,13 @@
 #define FREE_NULL_ERROR true // will freeing a null pointer throw an error?
 
 
-// if your messages are being cutoff, increase this value
-#define MAX_NUM_MESSAGE_CHARS 128  
+
 // - Warning:  program may assert crash if this value isn't large enough
 #define MAX_NUM_MALLOCS 1024  
-
+// if your messages are being cutoff, increase this value
+#define MAX_NUM_MESSAGE_CHARS 128  
+//
+#define MAX_NUM_ALLOC_TYPES 128
 
 
 

@@ -168,6 +168,27 @@ void *track_alloc(void *untracked_alloc, size_t size, char *file_name, size_t li
 
 
 
+void set_alloc_type(void *alloc, int type, char *name);
+/**
+ * @brief set the type of an allocation and give it a name, use an enum.
+ * 
+ * @see TODO
+ */
+
+
+
+
+
+
+void n_unfreed_of_type(int type, long num);
+/**
+ * @brief assert there are n unfreed of a type of alloc
+ * 
+ * @see TODO
+ */
+
+
+
 
 
 
@@ -247,7 +268,9 @@ void should_be_tracked(void *alloc, bool should_be_tracked);
 #define CHELP_MAIN_MACRO \
 long num_unfreed_allocs = 0; \
 size_t num_allocs = 0; \
-void *alloc_array[MAX_NUM_MALLOCS];
+void *alloc_array[MAX_NUM_MALLOCS]; \
+long alloc_type_n_unfreed[MAX_NUM_ALLOC_TYPES] = {0}; \
+char *alloc_type_name[MAX_NUM_ALLOC_TYPES] = { NULL };
 
 #endif
 
