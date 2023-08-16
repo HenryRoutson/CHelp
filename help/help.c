@@ -229,25 +229,6 @@ void alloc_array_index_check() {
 }
 
 
-
-
-void add_alloc(void *alloc, char *file_name, size_t line_number) {
-
-    should_be_tracked(alloc, false, file_name, line_number); //
-    n_unfreed_check();
-
-    assert(num_allocs < MAX_NUM_MALLOCS);
-    alloc_array[num_allocs] = alloc;
-
-    num_allocs++;
-    num_unfreed_allocs++;
-
-    should_be_tracked(alloc, true, file_name, line_number);
-    n_unfreed_check();
-    alloc_array_index_check();
-}
-
-
 void check_not_null(void *alloc, char *file_name, size_t line_number) {
 
   // free_null will set alloc to null on free
@@ -306,7 +287,8 @@ void free_without_null(void *alloc, char *file_name, size_t line_number, bool pr
 
 }
 
-void *init_info_and_add(alloc_info_t *info, size_t size, size_t count_if_calloc, char *file_name, size_t line_number) {
+void *track_info(alloc_info_t *info, size_t size, size_t count_if_calloc, char *file_name, size_t line_number) {
+  // track an allocation which has space for info metadata
 
   if (info == NULL) { // as called after allocations 
     printf("\n\nError 4: alloc of size %lu and count %lu (0 if calloc) failed \n", size, count_if_calloc);
@@ -326,7 +308,18 @@ void *init_info_and_add(alloc_info_t *info, size_t size, size_t count_if_calloc,
 
   void *alloc = info + 1; // go to start of allocated memory, ignoring data stored before it
 
-  add_alloc(alloc, file_name, line_number);
+  should_be_tracked(alloc, false, file_name, line_number); //
+  n_unfreed_check();
+
+  assert(num_allocs < MAX_NUM_MALLOCS);
+  alloc_array[num_allocs] = alloc;
+
+  num_allocs++;
+  num_unfreed_allocs++;
+
+  should_be_tracked(alloc, true, file_name, line_number);
+  n_unfreed_check();
+  alloc_array_index_check();
 
   if (PRINT_ALLOC_AND_FREE) {
     printf("ALLOC %p bytes %lu ", alloc, size);
@@ -338,9 +331,11 @@ void *init_info_and_add(alloc_info_t *info, size_t size, size_t count_if_calloc,
 
 
 void *track_alloc(void *untracked_alloc, size_t size, char *file_name, size_t line_number) {
+  // track an allocation which does not have space for info metadata
+  // replace allocation with new allocation with space
 
   alloc_info_t *info = malloc(size + sizeof(alloc_info_t));
-  void *tracked_alloc = init_info_and_add(info, size, 0, file_name, line_number);
+  void *tracked_alloc = track_info(info, size, 0, file_name, line_number);
   
   memcpy(tracked_alloc, untracked_alloc, size);
   free(untracked_alloc);
@@ -384,7 +379,7 @@ void *safe_realloc(void *old_alloc, size_t new_size, char *file_name, size_t lin
   // realloc can reduce or increase the size of an allocation
   memcpy(new_info, old_alloc, min2(old_size, new_size));
 
-  init_info_and_add(new_info, new_size, 0, file_name, line_number);
+  track_info(new_info, new_size, 0, file_name, line_number);
   new_info->realloc_count = old_info->realloc_count + 1;
 
   assert(old_info->allocs_index < new_info->allocs_index);
@@ -422,7 +417,7 @@ void *safe_malloc(size_t size, char *file_name, size_t line_number) {
   }
 
   alloc_info_t *info = malloc(sizeof(alloc_info_t) + size);
-  void *alloc = init_info_and_add(info, size, 0, file_name, line_number);
+  void *alloc = track_info(info, size, 0, file_name, line_number);
   return alloc;
 }
 
@@ -445,7 +440,7 @@ void *safe_calloc(size_t size, size_t count, char *file_name, size_t line_number
   }
 
   alloc_info_t *info = malloc(sizeof(alloc_info_t) + size * count);
-  void *alloc = init_info_and_add(info, size, count, file_name, line_number);
+  void *alloc = track_info(info, size, count, file_name, line_number);
   memset(alloc, 0, size * count);
   return alloc;
 }
