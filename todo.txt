@@ -1,7 +1,7 @@
 
 
 
-
+add print to type array
 write test for n unfreed of type and create enum example
 search TODO
 
