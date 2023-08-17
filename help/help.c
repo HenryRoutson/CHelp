@@ -141,12 +141,37 @@ void print_alloc_info(void *alloc) {
 
 }
 
+
+bool is_any_typed_allocs() {
+  return num_unfreed_allocs != alloc_type_n_unfreed[0]; // index 0 stores untyped allocs
+}
+
+void print_typed_allocs_n_unfreed() {
+
+  if (!is_any_typed_allocs()) { return; }
+
+  int type = 0;
+  while (alloc_type_name[type]) {
+
+    if (type == MAX_NUM_ALLOC_TYPES - 1) {
+      printf("\n\nERROR: increase MAX_NUM_ALLOC_TYPES\n\n\n");
+      exit(1);
+    }
+
+    printf("n_unfreed: %lu ", alloc_type_n_unfreed[type]);
+    printf("Type: %s\n", alloc_type_name[type]);
+  }
+}
+
+
 void print_all_allocs() {
 
   int i = num_allocs;
 
   printf(">>> print_all_allocs()\n");
   printf("    %zu allocs, %zu unfreed\n\n", num_allocs, num_unfreed_allocs);
+
+  print_typed_allocs_n_unfreed();
 
   while (i--) { // print reverse
     print_alloc_info(alloc_array[i]);
