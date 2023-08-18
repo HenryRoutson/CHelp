@@ -1,7 +1,7 @@
 
 
 
-fix bugs
+combine n_unfreed and n_unfreed_of_type
 write tests for n unfreed of type and create enum example
 search TODO
 

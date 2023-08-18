@@ -525,7 +525,7 @@ void n_unfreed(long n_expected) {
 
   if (n_expected != num_unfreed_allocs) {
 
-    printf("\n\nERROR: wrong number of unfreed allocs\n");
+    printf("\n\nERROR: wrong number of unfreed allocs ⛔️\n");
     printf("	expected : %zu\n", n_expected);
     printf("	actual    : %zu\n\n", num_unfreed_allocs);
     printf("\n");
@@ -566,7 +566,7 @@ void n_unfreed_of_type(int type, long expected_num) {
 
     if (actual_num != expected_num) {
 
-    printf("\n\nERROR: wrong number of unfreed allocs\n");
+    printf("\n\nERROR: wrong number of unfreed allocs ⛔️\n");
     assert(alloc_type_name[type]);
     printf("           of type %s", alloc_type_name[type]);
 
