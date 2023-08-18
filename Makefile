@@ -66,7 +66,7 @@ template: $(OBJ)
 
 
 
-TESTS = tests/0_main tests/1_main tests/2_main tests/3_main tests/4_main tests/5_main tests/6_main tests/7_main tests/8_main tests/9_main tests/10_main tests/11_main tests/12_main tests/13_main tests/14_main tests/15_main   tests_ext/1_ext_main tests_ext/2_ext_main
+TESTS = tests/0_main tests/1_main tests/2_main tests/3_main tests/4_main tests/5_main tests/6_main tests/7_main tests/8_main tests/9_main tests/10_main tests/11_main tests/12_main tests/13_main tests/14_main tests/15_main tests/16_main   tests_ext/1_ext_main tests_ext/2_ext_main
 HEADERS = help/help_structs.h help/help_config.h help/help.h
 
 # executable depends on object files
@@ -122,6 +122,9 @@ tests/14_main: $(OBJ) tests/14_main.o $(HEADERS)
 tests/15_main: $(OBJ) tests/15_main.o $(HEADERS)
 	$(CC) -o tests/15_main tests/15_main.c $(OBJ) $(CFLAGS)
 
+tests/16_main: $(OBJ) tests/16_main.o $(HEADERS)
+	$(CC) -o tests/16_main tests/16_main.c $(OBJ) $(CFLAGS)
+
 
 # tests with external files
 
@@ -164,6 +167,7 @@ test: all
 	$(VGRIND) ./tests/13_main | grep -q "TEST: PASSED" 
 	$(VGRIND) ./tests/14_main | grep -q "TEST: PASSED" 
 	$(VGRIND) ./tests/15_main | grep -q "TEST: PASSED" 
+	$(VGRIND) ./tests/16_main | grep -q "type: " 
 
 	$(VGRIND) ./tests_ext/1_ext_main  | grep -q "TEST: PASSED" 
 	! $(VGRIND) ./tests_ext/2_ext_main > /dev/null 
@@ -186,6 +190,7 @@ run: all
 	-$(VGRIND) ./tests/13_main 
 	-$(VGRIND) ./tests/14_main 
 	-$(VGRIND) ./tests/15_main 
+	-$(VGRIND) ./tests/16_main 
 
 	-$(VGRIND) ./tests_ext/1_ext_main
 	-$(VGRIND) ./tests_ext/2_ext_main

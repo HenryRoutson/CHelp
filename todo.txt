@@ -1,8 +1,8 @@
 
 
 
-add print to type array
-write test for n unfreed of type and create enum example
+fix bugs
+write tests for n unfreed of type and create enum example
 search TODO
 
 

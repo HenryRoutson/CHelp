@@ -39,6 +39,7 @@ but freeing becomes more complex because the pointer to the start of the allocat
 
 
 #define VERIFICATION 123456789 // some unlikely number to verify an allocation has info
+#define UNTYPED_INDX 0
 
 /* a bit of a hack 
   but i just need a unique address 
@@ -131,8 +132,12 @@ void print_alloc_info(void *alloc) {
   if (info->message[0]) {
     printf("message     : \n%s", info->message);
   }
+
+  if (info->type) {
+    printf("type  : %i\n", info->type);
+  }
   
-  if (info->print_func) {
+  if (info->print_func != UNTYPED_INDX) {
     printf("print_func  : \n");
     (*info->print_func)(alloc); // print alloc data
   }
@@ -143,24 +148,30 @@ void print_alloc_info(void *alloc) {
 
 
 bool is_any_typed_allocs() {
-  return num_unfreed_allocs != alloc_type_n_unfreed[0]; // index 0 stores untyped allocs
+  return num_unfreed_allocs != alloc_type_n_unfreed[UNTYPED_INDX]; 
 }
 
 void print_typed_allocs_n_unfreed() {
 
   if (!is_any_typed_allocs()) { return; }
 
-  int type = 0;
-  while (alloc_type_name[type]) {
+  printf("Found typed allocs\n");
 
-    if (type == MAX_NUM_ALLOC_TYPES - 1) {
-      printf("\n\nERROR: increase MAX_NUM_ALLOC_TYPES\n\n\n");
-      exit(1);
-    }
+  int type;
+  for (type = 0; type < MAX_NUM_ALLOC_TYPES; type++) {
+
+    if (!alloc_type_n_unfreed[type]) { break; }
 
     printf("n_unfreed: %lu ", alloc_type_n_unfreed[type]);
-    printf("Type: %s\n", alloc_type_name[type]);
+    printf("type: %s\n", alloc_type_name[type]);
   }
+
+  printf("%i types\n\n", type);
+  if (type == MAX_NUM_ALLOC_TYPES) {
+    printf("\n\n\nERROR: Increase MAX_NUM_ALLOC_TYPES\n\n\n");
+    exit(1);
+  }
+
 }
 
 
@@ -303,7 +314,7 @@ void free_without_null(void *alloc, char *file_name, size_t line_number, bool pr
   assert(alloc_array[info->allocs_index] == info + 1);
   assert(info->type >= 0);
 
-  info->type--;
+  alloc_type_n_unfreed[info->type]--;
   alloc_array[info->allocs_index] = NULL;
 
   n_unfreed_check();
@@ -342,6 +353,7 @@ void *track_info(alloc_info_t *info, size_t size, size_t count_if_calloc, char *
 
   num_allocs++;
   num_unfreed_allocs++;
+  alloc_type_n_unfreed[info->type]++;
 
   should_be_tracked(alloc, true, file_name, line_number);
   n_unfreed_check();
@@ -508,7 +520,7 @@ void n_unfreed(long n_expected) {
 
     printf("\n\nERROR: wrong number of unfreed allocs\n");
     printf("	expected : %zu\n", n_expected);
-    printf("	found    : %zu\n\n", num_unfreed_allocs);
+    printf("	actual    : %zu\n\n", num_unfreed_allocs);
     printf("\n");
     printf("	allocs are listed below,\n	in reverse allocation order\n");
 
@@ -523,23 +535,37 @@ void n_unfreed(long n_expected) {
 
 
 
-void n_unfreed_with_print_func(size_t n_expected, void (*print_func)(void *p)) {
+void set_alloc_type(void *alloc, int type, char *name) {
 
-  size_t actual_n = 0;
+  assert(type != 0);
+  assert(name != NULL);
 
-  for (size_t i = 0; i < num_allocs; i++) {
-    if (info_from_alloc( alloc_array[i])->print_func == print_func) {
-      actual_n++;
-    }
-  }
+  alloc_info_t *info = info_from_alloc(alloc);
+  info->type = type;
 
-  if (actual_n != n_expected) {
+  alloc_type_name[type] = name; 
+
+  alloc_type_n_unfreed[UNTYPED_INDX]--; 
+  alloc_type_n_unfreed[type]++; 
+
+  assert(alloc_type_name[type]);
+
+}
+
+
+
+void n_unfreed_of_type(int type, long expected_num) {
+
+    long actual_num = alloc_type_n_unfreed[type];
+
+    if (actual_num != expected_num) {
 
     printf("\n\nERROR: wrong number of unfreed allocs\n");
-    printf("           with function pointer %p", print_func);
+    assert(alloc_type_name[type]);
+    printf("           of type %s", alloc_type_name[type]);
 
-    printf("	expected : %zu\n", n_expected);
-    printf("	found    : %zu\n\n", actual_n);
+    printf("	expected : %zu\n", expected_num);
+    printf("	actual    : %zu\n\n", actual_num);
     printf("\n");
     printf("	allocs are listed below,\n	in reverse allocation order\n");
 
@@ -549,31 +575,6 @@ void n_unfreed_with_print_func(size_t n_expected, void (*print_func)(void *p)) {
 
     exit(1);
   }
-
-}
-
-
-void set_alloc_type(void *alloc, int type, char *name) {
-  alloc_info_t *info = info_from_alloc(alloc);
-  info->type = type;
-
-  char *cur_name = alloc_type_name[type];
-  assert(!cur_name == !!name);
-
-  if (name) { // if setting name
-    assert(!cur_name); // no existing name
-    cur_name = name; // and set
-    
-  } else { // if not setting name
-    assert(cur_name); // assert existing name
-  }
-
-}
-
-
-
-void n_unfreed_of_type(int type, long num) {
-  assert(alloc_type_n_unfreed[type] == num);
 }
 
 

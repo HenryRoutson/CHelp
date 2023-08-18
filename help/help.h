@@ -192,6 +192,13 @@ void n_unfreed_of_type(int type, long num);
 
 
 
+void set_alloc_type(void *alloc, int type, char *name);
+void n_unfreed_of_type(int type, long expected_num);
+// TODO
+
+
+
+
 
 
 
@@ -270,7 +277,7 @@ long num_unfreed_allocs = 0; \
 size_t num_allocs = 0; \
 void *alloc_array[MAX_NUM_MALLOCS]; \
 long alloc_type_n_unfreed[MAX_NUM_ALLOC_TYPES] = {0}; \
-char *alloc_type_name[MAX_NUM_ALLOC_TYPES] = { NULL };
+char *alloc_type_name[MAX_NUM_ALLOC_TYPES] = { "Untyped", NULL };
 
 #endif
 
