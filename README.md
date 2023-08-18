@@ -116,15 +116,87 @@ Chelp compared to Valgrind ...
 
 ✅ Allows you to print all unfreed allocations at any point in your program.
 
+✅ Allows typed allocs, and for you to assert a number of unfreed allocs of a type. Allowing you to do something like, assert a linked list length is equal to the number of unfreed list_node allocations.
+
+    assert(n_unfreed_of_type(LIST_TYPE, list.length));
+
 ❌ 
   Valgrind has functionality for other errors CHelp doesn't have,
   and simply cannot support.
   You should use CHelp and valgrind in conjunction when developing C.
 
+❌ 
+  No cross language support.
 
 ```
 
 Chelp has a number of features, which in some aspects make it better than Valgrind.
+
+# Example output 
+
+```
+>>> print_all_allocs() 🖨️ 
+    2 allocs, 0 unfreed
+    All allocs freed ✅
+>>> 
+```
+
+
+```
+ERROR: wrong number of unfreed allocs ⛔️
+        expected : 0
+        actual    : 2
+
+
+>>> print_all_allocs() 🖨️
+    2 allocs, 2 unfreed
+
+UNFREED       ---
+pointer     : 0x132e06b08
+file_name   : tests/8_main.c
+line_number : 31
+size: 24
+print_func  : 
+1 s2 3.000000
+              ---
+UNFREED       ---
+pointer     : 0x132e06a28
+file_name   : tests/8_main.c
+line_number : 25
+size: 24
+print_func  : 
+1 s1 3.000000
+              ---
+>>> 
+```
+
+```
+>>> print_all_allocs() 🖨️
+    2 allocs, 2 unfreed
+
+Found typed allocs 📁
+n_unfreed: 0, type: Untyped
+n_unfreed: 1, type: List_node
+n_unfreed: 1, type: QuadTree
+3 types
+
+
+UNFREED       ---
+pointer     : 0x126706048
+file_name   : tests/16_main.c
+line_number : 21
+size: 39
+type  : QuadTree
+              ---
+UNFREED       ---
+pointer     : 0x126705cf8
+file_name   : tests/16_main.c
+line_number : 18
+size: 100
+type  : List_node
+              ---
+>>> 
+```
 
 
 # Credit
@@ -144,8 +216,8 @@ https://gamepipeline.org/forge_Debugging_.html
 ✅ storing data before allocs to make O(n) pointer search O(1)
 ✅ storing allocation and free counts to for leak checks O(1)  
 ✅ retaining allocation order
-❌ No overallocation (leaving this to valgrind)
 ❌ No multithreading (yet)
+❌ No overallocation (leaving this to valgrind)
 
 ```
 

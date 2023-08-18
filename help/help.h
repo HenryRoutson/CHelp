@@ -93,7 +93,7 @@ void print_all_allocs();
 /**
  * @brief prints info from all remaining allocations, FREED have no info.
  * 
- *      >>> print_all_allocs() 
+ *      >>> print_all_allocs()  🖨️
  *      UNFREED       ---
  *      file_name   : tests/9_main.c
  *      line_number : 36

@@ -134,7 +134,7 @@ void print_alloc_info(void *alloc) {
   }
 
   if (info->type) {
-    printf("type  : %i\n", info->type);
+    printf("type  : %s\n", alloc_type_name[info->type]);
   }
   
   if (info->print_func != UNTYPED_INDX) {
@@ -155,14 +155,14 @@ void print_typed_allocs_n_unfreed() {
 
   if (!is_any_typed_allocs()) { return; }
 
-  printf("\nFound typed allocs\n");
+  printf("\nFound typed allocs 📁\n");
 
   int type;
   for (type = 0; type < MAX_NUM_ALLOC_TYPES; type++) {
 
     if (alloc_type_name[type] == NULL) { break; }
 
-    printf("n_unfreed: %lu ", alloc_type_n_unfreed[type]);
+    printf("n_unfreed: %lu, ", alloc_type_n_unfreed[type]);
     printf("type: %s\n", alloc_type_name[type]);
   }
 
@@ -179,7 +179,7 @@ void print_all_allocs() {
 
   int i = num_allocs;
 
-  printf(">>> print_all_allocs()\n");
+  printf(">>> print_all_allocs() 🖨️\n");
   printf("    %zu allocs, %zu unfreed\n", num_allocs, num_unfreed_allocs);
   if (num_unfreed_allocs == 0) {
     printf("    All allocs freed ✅\n");
@@ -429,7 +429,7 @@ void *safe_realloc(void *old_alloc, size_t new_size, char *file_name, size_t lin
 
   assert(old_info->allocs_index < new_info->allocs_index);
 
-  free_without_null(old_alloc, file_name, line_number, true); // don't print
+  free_without_null(old_alloc, file_name, line_number, false); // don't print
 
 
   if (PRINT_ALLOC_AND_FREE) {
