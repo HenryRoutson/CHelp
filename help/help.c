@@ -160,7 +160,7 @@ void print_typed_allocs_n_unfreed() {
   int type;
   for (type = 0; type < MAX_NUM_ALLOC_TYPES; type++) {
 
-    if (!alloc_type_n_unfreed[type]) { break; }
+    if (alloc_type_name[type] == NULL) { break; }
 
     printf("n_unfreed: %lu ", alloc_type_n_unfreed[type]);
     printf("type: %s\n", alloc_type_name[type]);
