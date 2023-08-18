@@ -25,4 +25,6 @@ int main(void) {
 
   free(b);
   free(p);
+
+  print_all_allocs();
 }

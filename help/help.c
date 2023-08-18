@@ -155,7 +155,7 @@ void print_typed_allocs_n_unfreed() {
 
   if (!is_any_typed_allocs()) { return; }
 
-  printf("Found typed allocs\n");
+  printf("\nFound typed allocs\n");
 
   int type;
   for (type = 0; type < MAX_NUM_ALLOC_TYPES; type++) {
@@ -180,9 +180,16 @@ void print_all_allocs() {
   int i = num_allocs;
 
   printf(">>> print_all_allocs()\n");
-  printf("    %zu allocs, %zu unfreed\n\n", num_allocs, num_unfreed_allocs);
+  printf("    %zu allocs, %zu unfreed\n", num_allocs, num_unfreed_allocs);
+  if (num_unfreed_allocs == 0) {
+    printf("    All allocs freed ✅\n");
+    printf(">>> \n");
+    return;
+  }
 
   print_typed_allocs_n_unfreed();
+
+  printf("\n");
 
   while (i--) { // print reverse
     print_alloc_info(alloc_array[i]);
@@ -224,7 +231,7 @@ void should_be_tracked(void *alloc, bool should_be_tracked, char *file_name, siz
   }
 }
 
-void n_unfreed_check() {
+void n_unfreed_check() { 
 
   if (DEBUG_CHELP) {
 
@@ -522,7 +529,6 @@ void n_unfreed(long n_expected) {
     printf("	expected : %zu\n", n_expected);
     printf("	actual    : %zu\n\n", num_unfreed_allocs);
     printf("\n");
-    printf("	allocs are listed below,\n	in reverse allocation order\n");
 
     print_all_allocs();
 
@@ -567,7 +573,6 @@ void n_unfreed_of_type(int type, long expected_num) {
     printf("	expected : %zu\n", expected_num);
     printf("	actual    : %zu\n\n", actual_num);
     printf("\n");
-    printf("	allocs are listed below,\n	in reverse allocation order\n");
 
     print_all_allocs();
 
