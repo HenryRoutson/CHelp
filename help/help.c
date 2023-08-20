@@ -554,8 +554,6 @@ void set_alloc_type(void *alloc, int type, char *name) {
   alloc_type_n_unfreed[UNTYPED_INDX]--; 
   alloc_type_n_unfreed[type]++; 
 
-  assert(alloc_type_name[type]);
-
 }
 
 
