@@ -17,6 +17,11 @@ enum {
 
 ///
 
+
+
+
+long node_count = 0;
+
 typedef struct {
   void *data;
   int *next;
@@ -35,6 +40,14 @@ node_t *create_node() {
   return node;
 }
 
+void remove_node(node_t *node) {
+  // complex logic for removing from linked list, ect...
+
+  n_unfreed_of_type(NODE_TYPE, node_count);
+
+  free(node);
+  node_count--;
+}
 
 
 int main(void) {
@@ -46,8 +59,8 @@ int main(void) {
 
   print_all_allocs();
 
-  free(node1);
-  free(node2);
+  remove_node(node1);
+  remove_node(node2);
 
   print_all_allocs();
 }
